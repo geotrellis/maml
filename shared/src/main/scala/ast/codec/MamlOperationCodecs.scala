@@ -3,9 +3,6 @@ package maml.ast.codec
 import maml.ast._
 import maml.ast.utility._
 import maml.ast.codec._
-import maml.ast.operation._
-import maml.ast.operation.binary._
-import maml.ast.operation.unary._
 
 import io.circe._
 import io.circe.syntax._
@@ -28,6 +25,13 @@ trait MamlOperationCodecs {
       case Some("min") => ma.as[Min]
       case Some("max") => ma.as[Max]
       case Some("classify") => ma.as[Classification]
+      case Some("focalMax") => ma.as[FocalMax]
+      case Some("focalMin") => ma.as[FocalMin]
+      case Some("focalMean") => ma.as[FocalMean]
+      case Some("focalMedian") => ma.as[FocalMedian]
+      case Some("focalMode") => ma.as[FocalMode]
+      case Some("focalSum") => ma.as[FocalSum]
+      case Some("focalStdDev") => ma.as[FocalStdDev]
       case Some(unrecognized) =>
         Left(DecodingFailure(s"Unrecognized node type: $unrecognized", ma.history))
       case None =>
@@ -37,22 +41,36 @@ trait MamlOperationCodecs {
 
   implicit lazy val encodeOperations: Encoder[Operation] = new Encoder[Operation] {
     final def apply(op: Operation): Json = op match {
-      case addition: binary.Addition =>
+      case addition: Addition =>
         addition.asJson
-      case subtraction: binary.Subtraction =>
+      case subtraction: Subtraction =>
         subtraction.asJson
-      case division: binary.Division =>
+      case division: Division =>
         division.asJson
-      case multiplication: binary.Multiplication =>
+      case multiplication: Multiplication =>
         multiplication.asJson
-      case masking: binary.Masking =>
+      case masking: Masking =>
         masking.asJson
-      case min: binary.Min =>
+      case min: Min =>
         min.asJson
-      case max: binary.Max =>
+      case max: Max =>
         max.asJson
-      case classification: unary.Classification =>
+      case classification: Classification =>
         classification.asJson
+      case fMax: FocalMax =>
+        fMax.asJson
+      case fMin: FocalMin =>
+        fMin.asJson
+      case fMean: FocalMean =>
+        fMean.asJson
+      case fMedian: FocalMedian =>
+        fMedian.asJson
+      case fMode: FocalMode =>
+        fMode.asJson
+      case fSum: FocalSum =>
+        fSum.asJson
+      case fStdDev: FocalStdDev =>
+        fStdDev.asJson
       case operation =>
         throw new InvalidParameterException(s"Encoder for $operation not yet implemented")
     }
@@ -98,4 +116,40 @@ trait MamlOperationCodecs {
     Decoder.forProduct3("args", "id", "metadata")(Min.apply)
   implicit lazy val encodeMin: Encoder[Min] =
     Encoder.forProduct4("apply", "args", "id", "metadata")(op => (op.symbol, op.args, op.id, op.metadata))
+
+  implicit lazy val decodeFocalMax: Decoder[FocalMax] =
+    Decoder.forProduct4("args", "id", "metadata", "neighborhood")(FocalMax.apply)
+  implicit lazy val encodeFocalMax: Encoder[FocalMax] =
+    Encoder.forProduct5("apply", "args", "id", "metadata", "neighborhood")(op => (op.symbol, op.args, op.id, op.metadata, op.neighborhood))
+
+  implicit lazy val decodeFocalMin: Decoder[FocalMin] =
+    Decoder.forProduct4("args", "id", "metadata", "neighborhood")(FocalMin.apply)
+  implicit lazy val encodeFocalMin: Encoder[FocalMin] =
+    Encoder.forProduct5("apply", "args", "id", "metadata", "neighborhood")(op => (op.symbol, op.args, op.id, op.metadata, op.neighborhood))
+
+  implicit lazy val decodeFocalMean: Decoder[FocalMean] =
+    Decoder.forProduct4("args", "id", "metadata", "neighborhood")(FocalMean.apply)
+  implicit lazy val encodeFocalMean: Encoder[FocalMean] =
+    Encoder.forProduct5("apply", "args", "id", "metadata", "neighborhood")(op => (op.symbol, op.args, op.id, op.metadata, op.neighborhood))
+
+  implicit lazy val decodeFocalMedian: Decoder[FocalMedian] =
+    Decoder.forProduct4("args", "id", "metadata", "neighborhood")(FocalMedian.apply)
+  implicit lazy val encodeFocalMedian: Encoder[FocalMedian] =
+    Encoder.forProduct5("apply", "args", "id", "metadata", "neighborhood")(op => (op.symbol, op.args, op.id, op.metadata, op.neighborhood))
+
+  implicit lazy val decodeFocalMode: Decoder[FocalMode] =
+    Decoder.forProduct4("args", "id", "metadata", "neighborhood")(FocalMode.apply)
+  implicit lazy val encodeFocalMode: Encoder[FocalMode] =
+    Encoder.forProduct5("apply", "args", "id", "metadata", "neighborhood")(op => (op.symbol, op.args, op.id, op.metadata, op.neighborhood))
+
+  implicit lazy val decodeFocalSum: Decoder[FocalSum] =
+    Decoder.forProduct4("args", "id", "metadata", "neighborhood")(FocalSum.apply)
+  implicit lazy val encodeFocalSum: Encoder[FocalSum] =
+    Encoder.forProduct5("apply", "args", "id", "metadata", "neighborhood")(op => (op.symbol, op.args, op.id, op.metadata, op.neighborhood))
+
+  implicit lazy val decodeFocalStdDev: Decoder[FocalStdDev] =
+    Decoder.forProduct4("args", "id", "metadata", "neighborhood")(FocalStdDev.apply)
+  implicit lazy val encodeFocalStdDev: Encoder[FocalStdDev] =
+    Encoder.forProduct5("apply", "args", "id", "metadata", "neighborhood")(op => (op.symbol, op.args, op.id, op.metadata, op.neighborhood))
+
 }

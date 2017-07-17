@@ -1,9 +1,6 @@
 package maml
 
 import maml.ast.codec._
-import maml.ast.operation._
-import maml.ast.operation.unary._
-import maml.ast.operation.binary._
 import maml.ast.utility._
 import maml.ast.metadata._
 

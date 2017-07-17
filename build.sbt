@@ -16,11 +16,13 @@ lazy val maml = crossProject.in(file(".")).
     resolvers += Resolver.sonatypeRepo("releases"),
     addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full),
     libraryDependencies ++= Seq(
-      "io.circe" %%% "circe-core" % "0.8.0",
-      "io.circe" %%% "circe-generic" % "0.8.0",
-      "io.circe" %%% "circe-generic-extras" % "0.8.0",
-      "io.circe" %%% "circe-parser" % "0.8.0",
-      "io.circe" %%% "circe-optics" % "0.8.0"
+      "org.scalacheck" %% "scalacheck"           % "1.13.4" % "test",
+      "org.scalatest"  %% "scalatest"            % "2.2.6"  % "test",
+      "io.circe"      %%% "circe-core"           % "0.8.0",
+      "io.circe"      %%% "circe-generic"        % "0.8.0",
+      "io.circe"      %%% "circe-generic-extras" % "0.8.0",
+      "io.circe"      %%% "circe-parser"         % "0.8.0",
+      "io.circe"      %%% "circe-optics"         % "0.8.0"
     )
   )
   .jvmSettings()

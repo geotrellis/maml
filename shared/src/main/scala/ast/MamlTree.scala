@@ -1,6 +1,5 @@
 package maml.ast
 
-import maml.ast.leaf.Leaf
 import maml.ast.metadata._
 
 import io.circe.generic.JsonCodec
@@ -13,5 +12,5 @@ trait MamlTree extends Product with Serializable {
   def args: List[MamlTree]
   def metadata: Option[NodeMetadata]
   def find(id: UUID): Option[MamlTree]
-  def sources: Seq[Leaf]
+  def sources: Seq[Source]
 }

@@ -1,7 +1,4 @@
-package com.azavea.rf.tool.ast
-
-import com.azavea.rf.tool.ast.codec._
-import com.azavea.rf.tool.eval._
+package maml.ast
 
 import org.scalatest._
 import io.circe._
@@ -12,9 +9,9 @@ import cats.syntax.either._
 import java.util.UUID
 
 
-class MapAlgebraASTSpec extends FunSpec with Matchers {
+class MamlTreeMethodSpec extends FunSpec with Matchers {
 
-  def randomSourceAST = MapAlgebraAST.Source(UUID.randomUUID, None)
+  def randomSourceAST = TileSource(UUID.randomUUID, None)
 
   it("Can find subtrees by ID") {
     val src1 = randomSourceAST

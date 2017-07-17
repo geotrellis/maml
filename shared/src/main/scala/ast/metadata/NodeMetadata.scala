@@ -11,7 +11,7 @@ case class NodeMetadata(
   label: Option[String] = None,
   description: Option[String] = None,
   histogram: Option[Histogram] = None,
-  colorRamp: Option[ColorRamp] = None,
+  colorRamp: Option[Vector[Int]] = None,
   classMap: Option[ClassMap] = None,
   breaks: Option[Vector[Double]] = None
 ) {
