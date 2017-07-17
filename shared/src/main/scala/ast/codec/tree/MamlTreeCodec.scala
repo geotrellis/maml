@@ -16,7 +16,7 @@ trait MamlTreeCodec
 
   /** TODO: Add codec paths besides `raster source` and `operation` when supported */
   implicit def mamlDecoder = Decoder.instance[MamlTree] { ma =>
-    ma._type match {
+    ma._symbol match {
       case Some(_) =>
         ma.as[Operation]
       case None =>

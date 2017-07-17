@@ -14,3 +14,4 @@ trait MamlTree extends Product with Serializable {
   def find(id: UUID): Option[MamlTree]
   def sources: Seq[Source]
 }
+

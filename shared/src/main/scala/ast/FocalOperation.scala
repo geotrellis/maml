@@ -43,4 +43,3 @@ case class FocalStdDev(args: List[MamlTree], id: UUID, metadata: Option[NodeMeta
   def withArgs(newArgs: List[MamlTree]): MamlTree = copy(args = newArgs)
 }
 
-

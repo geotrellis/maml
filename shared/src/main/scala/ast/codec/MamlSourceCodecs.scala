@@ -14,12 +14,14 @@ trait MamlSourceCodecs {
 
   /** TODO: Add codec paths besides `raster source` and `operation` when supported */
   implicit val mamlSourceDecoder = Decoder.instance[Source] { ma =>
-    ma._symbol match {
+    ma._type match {
       case Some("tile") =>
         ma.as[TileSource]
       case Some("scalar") =>
         ma.as[ScalarSource]
-      case _ =>
+      case Some(unrecognized) =>
+        Left(DecodingFailure(s"Unrecognized Source node with type: $ma", ma.history))
+      case None =>
         Left(DecodingFailure(s"Unrecognized Source node: $ma", ma.history))
     }
   }
@@ -38,11 +40,11 @@ trait MamlSourceCodecs {
   implicit lazy val decodeSource: Decoder[TileSource] =
     Decoder.forProduct2("id", "metadata")(TileSource.apply)
   implicit lazy val encodeSource: Encoder[TileSource] =
-    Encoder.forProduct3("symbol", "id", "metadata")(op => (op.symbol, op.id, op.metadata))
+    Encoder.forProduct3("type", "id", "metadata")(op => (op.`type`, op.id, op.metadata))
 
   implicit lazy val decodeConstant: Decoder[ScalarSource] =
-    Decoder.forProduct3("id", "constant", "metadata")(ScalarSource.apply)
+    Decoder.forProduct3("id", "scalar", "metadata")(ScalarSource.apply)
   implicit lazy val encodeConstant: Encoder[ScalarSource] =
-    Encoder.forProduct4("symbol", "id", "constant", "metadata")(op => (op.symbol, op.id, op.constant, op.metadata))
+    Encoder.forProduct4("type", "id", "scalar", "metadata")(op => (op.`type`, op.id, op.scalar, op.metadata))
 }
 

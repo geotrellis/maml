@@ -66,9 +66,8 @@ trait MamlUtilityCodecs {
     }
   })
 
-  implicit val histogramEncoder: Encoder[Histogram] = new Encoder[Histogram] {
-    final def apply(hist: Histogram): Json = hist.counts.asJson
-  }
+  implicit val histogramEncoder: Encoder[Histogram] =
+    Encoder.forProduct1("counts")(hist => (hist.counts))
 
 	  implicit val neighborhoodDecoder: Decoder[Neighborhood] = Decoder.instance[Neighborhood] { n =>
     n._type match {
