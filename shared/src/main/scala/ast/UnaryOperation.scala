@@ -13,5 +13,11 @@ trait UnaryOperation extends Operation with Product with Serializable {
 case class Classification(args: List[MamlTree], id: UUID, metadata: Option[NodeMetadata], classMap: ClassMap)
     extends UnaryOperation {
   val symbol: String = "classify"
+  def withArgs(newArgs: List[MamlTree]): MamlTree = copy(args = newArgs)
 }
 
+case class Masking(args: List[MamlTree], id: UUID, metadata: Option[NodeMetadata], mask: MultiPolygon)
+    extends UnaryOperation {
+  val symbol: String = "mask"
+  def withArgs(newArgs: List[MamlTree]): MamlTree = copy(args = newArgs)
+}

@@ -18,13 +18,4 @@ class MamlTreeCodecSpec extends PropSpec with Checkers {
       }
     })
   }
-
-  property("bijective serialization on single operation") {
-    check(forAll(Generators.genBinaryOpAST(100)) { (ast: MamlTree) =>
-      ast.asJson.as[MamlTree] match {
-        case Left(f) => fail(f)
-        case Right(mamlTree) => mamlTree == ast
-      }
-    })
-  }
 }

@@ -8,6 +8,7 @@ import java.util.UUID
 
 trait Operation extends MamlTree with Serializable {
   val symbol: String
+  def withArgs(newArgs: List[MamlTree]): MamlTree
 
   def find(id: UUID): Option[MamlTree] =
     if (this.id == id)
@@ -24,35 +25,37 @@ trait Operation extends MamlTree with Serializable {
 case class Addition(args: List[MamlTree], id: UUID, metadata: Option[NodeMetadata])
     extends Operation {
   val symbol: String = "+"
+  def withArgs(newArgs: List[MamlTree]): MamlTree = copy(args = newArgs)
 }
 
 case class Subtraction(args: List[MamlTree], id: UUID, metadata: Option[NodeMetadata])
     extends Operation {
   val symbol: String = "-"
+  def withArgs(newArgs: List[MamlTree]): MamlTree = copy(args = newArgs)
 }
 
 case class Multiplication(args: List[MamlTree], id: UUID, metadata: Option[NodeMetadata])
     extends Operation {
   val symbol = "*"
+  def withArgs(newArgs: List[MamlTree]): MamlTree = copy(args = newArgs)
 }
 
 case class Division(args: List[MamlTree], id: UUID, metadata: Option[NodeMetadata])
     extends Operation {
   val symbol: String = "/"
+  def withArgs(newArgs: List[MamlTree]): MamlTree = copy(args = newArgs)
 }
 
 case class Max(args: List[MamlTree], id: UUID, metadata: Option[NodeMetadata])
     extends Operation {
   val symbol: String = "max"
+  def withArgs(newArgs: List[MamlTree]): MamlTree = copy(args = newArgs)
 }
 
 case class Min(args: List[MamlTree], id: UUID, metadata: Option[NodeMetadata])
     extends Operation {
   val symbol: String = "min"
+  def withArgs(newArgs: List[MamlTree]): MamlTree = copy(args = newArgs)
 }
 
-case class Masking(args: List[MamlTree], id: UUID, metadata: Option[NodeMetadata], mask: MultiPolygon)
-    extends Operation {
-  val symbol: String = "mask"
-}
 

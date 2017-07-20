@@ -25,7 +25,11 @@ lazy val maml = crossProject.in(file(".")).
       "io.circe"      %%% "circe-optics"         % "0.8.0"
     )
   )
-  .jvmSettings()
+  .jvmSettings(
+    libraryDependencies ++= Seq(
+      "org.locationtech.geotrellis" %% "geotrellis-raster" % "1.1.1"
+    )
+  )
   .jsSettings()
 
 lazy val mamlJVM = maml.jvm
