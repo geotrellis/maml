@@ -1,28 +1,31 @@
 package maml.ast
 
-import maml.ast.metadata._
+import MamlKind._
 
 import io.circe.generic.JsonCodec
 
 import java.util.UUID
 
 
-trait Source extends MamlTree {
+trait Source extends Expression {
   val `type`: String
-  def args: List[MamlTree] = List.empty
-
-  def find(id: UUID): Option[MamlTree] =
-    if (this.id == id) Some(this)
-    else None
+  def kind: MamlKind
+  def children: List[Expression] = List.empty
+  override val sources: Seq[Source] = List(this)
 }
 
-case class ScalarSource(id: UUID, scalar: Double, metadata: Option[NodeMetadata]) extends Source {
+case class ScalarSource(scalar: Double) extends Source {
   val `type`: String = "scalar"
-  def sources: Seq[Source] = List()
+  def kind = MamlScalar
 }
 
-case class TileSource(id: UUID, metadata: Option[NodeMetadata]) extends Source {
+case object TileSource extends Source {
   val `type`: String = "tile"
-  def sources: Seq[Source] = List(this)
+  def kind = MamlTile
+}
+
+case object VectorSource extends Source {
+  val `type`: String = "tile"
+  def kind = MamlVector
 }
 

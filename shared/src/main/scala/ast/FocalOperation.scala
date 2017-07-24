@@ -1,45 +1,47 @@
 package maml.ast
 
+import MamlKind._
 import maml.ast._
 import maml.ast.utility._
-import maml.ast.metadata._
 
-import java.util.UUID
 
-trait FocalOperation extends UnaryOperation
+trait FocalExpression extends UnaryExpression {
+  require(children.head.kind == MamlTile, s"TypeError: found type ${children.head.kind}, expected type MamlTile")
+  val kind = MamlTile
+}
 
-case class FocalMax(args: List[MamlTree], id: UUID, metadata: Option[NodeMetadata], neighborhood: Neighborhood) extends FocalOperation {
+case class FocalMax(children: List[Expression], neighborhood: Neighborhood) extends FocalExpression {
   val symbol = "focalMax"
-  def withArgs(newArgs: List[MamlTree]): MamlTree = copy(args = newArgs)
+  def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
-case class FocalMean(args: List[MamlTree], id: UUID, metadata: Option[NodeMetadata], neighborhood: Neighborhood) extends FocalOperation {
+case class FocalMean(children: List[Expression], neighborhood: Neighborhood) extends FocalExpression {
   val symbol = "focalMean"
-  def withArgs(newArgs: List[MamlTree]): MamlTree = copy(args = newArgs)
+  def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
-case class FocalMedian(args: List[MamlTree], id: UUID, metadata: Option[NodeMetadata], neighborhood: Neighborhood) extends FocalOperation {
+case class FocalMedian(children: List[Expression], neighborhood: Neighborhood) extends FocalExpression {
   val symbol = "focalMedian"
-  def withArgs(newArgs: List[MamlTree]): MamlTree = copy(args = newArgs)
+  def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
-case class FocalMin(args: List[MamlTree], id: UUID, metadata: Option[NodeMetadata], neighborhood: Neighborhood) extends FocalOperation {
+case class FocalMin(children: List[Expression], neighborhood: Neighborhood) extends FocalExpression {
   val symbol = "focalMin"
-  def withArgs(newArgs: List[MamlTree]): MamlTree = copy(args = newArgs)
+  def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
-case class FocalMode(args: List[MamlTree], id: UUID, metadata: Option[NodeMetadata], neighborhood: Neighborhood) extends FocalOperation {
+case class FocalMode(children: List[Expression], neighborhood: Neighborhood) extends FocalExpression {
   val symbol = "focalMode"
-  def withArgs(newArgs: List[MamlTree]): MamlTree = copy(args = newArgs)
+  def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
-case class FocalSum(args: List[MamlTree], id: UUID, metadata: Option[NodeMetadata], neighborhood: Neighborhood) extends FocalOperation {
+case class FocalSum(children: List[Expression], neighborhood: Neighborhood) extends FocalExpression {
   val symbol = "focalSum"
-  def withArgs(newArgs: List[MamlTree]): MamlTree = copy(args = newArgs)
+  def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
-case class FocalStdDev(args: List[MamlTree], id: UUID, metadata: Option[NodeMetadata], neighborhood: Neighborhood) extends FocalOperation {
+case class FocalStdDev(children: List[Expression], neighborhood: Neighborhood) extends FocalExpression {
   val symbol = "focalStdDev"
-  def withArgs(newArgs: List[MamlTree]): MamlTree = copy(args = newArgs)
+  def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 

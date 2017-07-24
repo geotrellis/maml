@@ -1,3 +1,3 @@
 package maml.ast
 
-package object codec extends MamlUtilityCodecs
+//package object codec extends MamlUtilityCodecs
