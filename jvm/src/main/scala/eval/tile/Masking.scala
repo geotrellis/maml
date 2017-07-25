@@ -1,4 +1,4 @@
-package maml.tile
+package maml.eval.tile
 
 import geotrellis.raster._
 import geotrellis.raster.mapalgebra.local._

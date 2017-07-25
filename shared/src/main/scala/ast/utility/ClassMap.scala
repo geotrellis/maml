@@ -1,5 +1,7 @@
 package maml.ast.utility
 
+import maml.ast.codec.MamlUtilityCodecs._
+
 import io.circe._
 import io.circe.syntax._
 import io.circe.generic.JsonCodec
@@ -13,7 +15,7 @@ case object GreaterThanOrEqualTo extends ClassBoundaryType
 case object GreaterThan extends ClassBoundaryType
 
 
-//@JsonCodec
+@JsonCodec
 case class ClassMap(
   classifications: Map[Double, Int]
 ) {
@@ -38,7 +40,7 @@ case class ClassMap(
 }
 
 object ClassMap {
-  //@JsonCodec
+  @JsonCodec
   case class Options(
     boundaryType: ClassBoundaryType = LessThanOrEqualTo,
     ndValue: Int = Int.MinValue,

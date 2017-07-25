@@ -18,6 +18,7 @@ lazy val maml = crossProject.in(file(".")).
     libraryDependencies ++= Seq(
       "org.scalacheck" %% "scalacheck"           % "1.13.4" % "test",
       "org.scalatest"  %% "scalatest"            % "3.0.1"  % "test",
+      "org.typelevel"  %% "cats"                 % "0.9.0",
       "io.circe"      %%% "circe-core"           % "0.8.0",
       "io.circe"      %%% "circe-generic"        % "0.8.0",
       "io.circe"      %%% "circe-generic-extras" % "0.8.0",

@@ -1,4 +1,4 @@
-package maml.scalar
+package maml.eval.scalar
 
 trait Scalar {
   def evaluate: Int

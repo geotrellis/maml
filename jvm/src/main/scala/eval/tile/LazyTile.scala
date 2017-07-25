@@ -1,4 +1,4 @@
-package maml.tile
+package maml.eval.tile
 
 import com.typesafe.scalalogging.LazyLogging
 import geotrellis.raster._

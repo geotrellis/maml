@@ -6,8 +6,7 @@ import maml.ast.utility._
 
 
 trait FocalExpression extends UnaryExpression {
-  require(children.head.kind == MamlTile, s"TypeError: found type ${children.head.kind}, expected type MamlTile")
-  val kind = MamlTile
+  val expectedKind: Map[MamlKind, MamlKind] = Map(MamlKind.Tile -> MamlKind.Tile)
 }
 
 case class FocalMax(children: List[Expression], neighborhood: Neighborhood) extends FocalExpression {
