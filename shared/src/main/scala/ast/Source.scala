@@ -6,20 +6,19 @@ import java.util.UUID
 
 
 trait Source extends Expression {
-  def kind: MamlKind
-  def children: List[Expression] = List.empty
-  override val sources: Seq[Source] = List(this)
+  val children: List[Expression] = List.empty
+  override val sources: List[Source] = List(this)
 }
 
 case class ScalarSource(scalar: Double) extends Source {
-  def kind = MamlKind.Scalar
+  val kind = MamlKind.Scalar
 }
 
 case object TileSource extends Source {
-  def kind = MamlKind.Tile
+  val kind = MamlKind.Tile
 }
 
 case object VectorSource extends Source {
-  def kind = MamlKind.Vector
+  val kind = MamlKind.Vector
 }
 

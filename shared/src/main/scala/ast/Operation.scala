@@ -5,8 +5,8 @@ import io.circe.generic.JsonCodec
 
 /** The ur-type for a recursive representation of MapAlgebra operations */
 trait Operation extends Expression {
-  def children: Seq[Expression]
+  val symbol: String
 
-  def sources: Seq[Source] = children.flatMap(_.sources).distinct
+  lazy val sources: List[Source] = children.flatMap(_.sources).distinct
 }
 
