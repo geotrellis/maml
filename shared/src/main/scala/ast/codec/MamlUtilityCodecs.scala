@@ -7,6 +7,7 @@ import io.circe._
 import io.circe.syntax._
 import io.circe.parser._
 import io.circe.optics.JsonPath._
+import cats.syntax.functor._
 
 import java.security.InvalidParameterException
 import java.util.UUID
@@ -29,14 +30,13 @@ trait MamlUtilityCodecs {
   }
 
   implicit lazy val classBoundaryDecoder: Decoder[ClassBoundaryType] =
-    Decoder[String].map {
-      case "lessThan" => LessThan
-      case "lessThanOrEqualTo" => LessThanOrEqualTo
-      case "exact" => Exact
-      case "greaterThanOrEqualTo" => GreaterThanOrEqualTo
-      case "greaterThan" => GreaterThan
-      case unrecognized =>
-        throw new InvalidParameterException(s"'$unrecognized' is not a recognized ClassBoundaryType")
+    Decoder[String].emap {
+      case "lessThan" => Right(LessThan)
+      case "lessThanOrEqualTo" => Right(LessThanOrEqualTo)
+      case "exact" => Right(Exact)
+      case "greaterThanOrEqualTo" => Right(GreaterThanOrEqualTo)
+      case "greaterThan" => Right(GreaterThan)
+      case unrecognized => Left(s"Unable to parse $unrecognized as ClassBoundaryType")
     }
 
   implicit lazy val classBoundaryEncoder: Encoder[ClassBoundaryType] =
@@ -69,37 +69,14 @@ trait MamlUtilityCodecs {
   implicit val histogramEncoder: Encoder[Histogram] =
     Encoder.forProduct1("counts")(hist => (hist.counts))
 
-  implicit val neighborhoodDecoder: Decoder[Neighborhood] = Decoder.instance[Neighborhood] { n =>
-    n.kind match {
-      case Some("square") => n.as[Square]
-      case Some("circle") => n.as[Circle]
-      case Some("nesw") => n.as[Nesw]
-      case Some("wedge") => n.as[Wedge]
-      case Some("annulus") => n.as[Annulus]
-      case unrecognized => Left(DecodingFailure(s"Unrecognized neighborhood: $unrecognized", n.history))
-    }
-  }
-
-  implicit val mamlKindEncoder: Encoder[MamlKind] =
-    Encoder.encodeString.contramap[MamlKind]({ mk =>
-      mk match {
-        case MamlKind.Tile => "tile"
-        case MamlKind.Scalar => "scalar"
-        case unrecognized =>
-          throw new InvalidParameterException(s"Unrecognized mamlKind: $unrecognized")
-      }
-    })
-
-  implicit val mamlKindTileEncoder: Encoder[MamlKind.Tile.type] =
-    Encoder.encodeString.contramap[MamlKind.Tile.type]({ _ => "tile" })
-  implicit val mamlKindScalarEncoder: Encoder[MamlKind.Scalar.type] =
-    Encoder.encodeString.contramap[MamlKind.Scalar.type]({ _ => "scalar" })
-
-  implicit val mamlKindDecoder: Decoder[MamlKind] = Decoder[String].map({
-    case "tile" => MamlKind.Tile
-    case "scalar" => MamlKind.Scalar
-  })
-
+  // This won't actually work - NESW neighborhoods will *always* succeed in decoding to Square
+  implicit val neighborhoodDecoder: Decoder[Neighborhood] = List[Decoder[Neighborhood]](
+    Decoder[Square].widen,
+    Decoder[Circle].widen,
+    Decoder[Nesw].widen,
+    Decoder[Wedge].widen,
+    Decoder[Annulus].widen
+  ).reduce(_ or _)
   implicit val neighborhoodEncoder: Encoder[Neighborhood] = new Encoder[Neighborhood] {
     final def apply(n: Neighborhood): Json = n match {
       case square: Square => square.asJson
@@ -111,6 +88,31 @@ trait MamlUtilityCodecs {
         throw new InvalidParameterException(s"Unrecognized neighborhood: $unrecognized")
     }
   }
+
+  implicit val mamlKindDecoder: Decoder[MamlKind] = Decoder[String].emap({
+    case "tile" => Right(MamlKind.Tile)
+    case "scalar" => Right(MamlKind.Scalar)
+    case "bool" => Right(MamlKind.Bool)
+    case "vector" => Right(MamlKind.Vector)
+    case unrecognized => Left(s"Unrecognized MamlKind: $unrecognized")
+  })
+  implicit val mamlKindEncoder: Encoder[MamlKind] =
+    Encoder.encodeString.contramap[MamlKind]({ mk =>
+      mk match {
+        case MamlKind.Tile => "tile"
+        case MamlKind.Scalar => "scalar"
+        case MamlKind.Bool => "bool"
+        case MamlKind.Vector => "vector"
+        case unrecognized =>
+          throw new InvalidParameterException(s"Unrecognized mamlKind: $unrecognized")
+      }
+    })
+
+  implicit val mamlKindTileEncoder: Encoder[MamlKind.Tile.type] =
+    Encoder.encodeString.contramap[MamlKind.Tile.type]({ _ => "tile" })
+  implicit val mamlKindScalarEncoder: Encoder[MamlKind.Scalar.type] =
+    Encoder.encodeString.contramap[MamlKind.Scalar.type]({ _ => "scalar" })
+
 
   implicit val squareNeighborhoodDecoder: Decoder[Square] =
     Decoder.forProduct1("extent")(Square.apply)

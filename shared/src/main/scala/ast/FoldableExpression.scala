@@ -22,42 +22,83 @@ object FoldableExpression {
     case (MamlKind.Scalar, MamlKind.Tile) => MamlKind.Tile
     case (x1, x2) => throw new InvalidParameterException(s"Expected tile or scalar kind. Found $x1 $x2")
   }
+
+  def tileOrBoolDerivation(exp: FoldableExpression)(k1: MamlKind, k2: MamlKind): MamlKind = (k1, k2) match {
+    case (MamlKind.Tile, MamlKind.Tile) => MamlKind.Tile
+    case (MamlKind.Bool, MamlKind.Bool) => MamlKind.Bool
+    case (MamlKind.Tile, MamlKind.Bool) => MamlKind.Tile
+    case (MamlKind.Bool, MamlKind.Tile) => MamlKind.Tile
+    case (x1, x2) => throw new InvalidParameterException(s"Expected tile or bool kind. Found $x1 $x2")
+  }
 }
 
 case class Addition(children: List[Expression]) extends Operation with FoldableExpression {
   val kindDerivation = FoldableExpression.tileOrScalarDerivation(this)(_, _)
-  val symbol: String = "+"
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
 case class Subtraction(children: List[Expression]) extends Operation with FoldableExpression {
   val kindDerivation = FoldableExpression.tileOrScalarDerivation(this)(_, _)
-  val symbol: String = "-"
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
 case class Multiplication(children: List[Expression]) extends Operation with FoldableExpression {
   val kindDerivation = FoldableExpression.tileOrScalarDerivation(this)(_, _)
-  val symbol = "*"
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
 case class Division(children: List[Expression]) extends Operation with FoldableExpression {
   val kindDerivation = FoldableExpression.tileOrScalarDerivation(this)(_, _)
-  val symbol: String = "/"
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
 case class Max(children: List[Expression]) extends Operation with FoldableExpression {
   val kindDerivation = FoldableExpression.tileOrScalarDerivation(this)(_, _)
-  val symbol: String = "max"
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
 case class Min(children: List[Expression]) extends Operation with FoldableExpression {
   val kindDerivation = FoldableExpression.tileOrScalarDerivation(this)(_, _)
-  val symbol: String = "min"
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
+case class Less(children: List[Expression]) extends Operation with FoldableExpression {
+  val kindDerivation = FoldableExpression.tileOrBoolDerivation(this)(_, _)
+  def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
+}
+
+case class LessOrEqual(children: List[Expression]) extends Operation with FoldableExpression {
+  val kindDerivation = FoldableExpression.tileOrBoolDerivation(this)(_, _)
+  def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
+}
+
+case class Equal(children: List[Expression]) extends Operation with FoldableExpression {
+  val kindDerivation = FoldableExpression.tileOrBoolDerivation(this)(_, _)
+  def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
+}
+
+case class GreaterOrEqual(children: List[Expression]) extends Operation with FoldableExpression {
+  val kindDerivation = FoldableExpression.tileOrBoolDerivation(this)(_, _)
+  def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
+}
+
+case class Greater(children: List[Expression]) extends Operation with FoldableExpression {
+  val kindDerivation = FoldableExpression.tileOrBoolDerivation(this)(_, _)
+  def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
+}
+
+case class Or(children: List[Expression]) extends Operation with FoldableExpression {
+  val kindDerivation = FoldableExpression.tileOrBoolDerivation(this)(_, _)
+  def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
+}
+
+case class Xor(children: List[Expression]) extends Operation with FoldableExpression {
+  val kindDerivation = FoldableExpression.tileOrBoolDerivation(this)(_, _)
+  def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
+}
+
+case class And(children: List[Expression]) extends Operation with FoldableExpression {
+  val kindDerivation = FoldableExpression.tileOrBoolDerivation(this)(_, _)
+  def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
+}
 

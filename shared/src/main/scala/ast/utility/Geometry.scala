@@ -2,6 +2,7 @@ package maml.ast.utility
 
 import io.circe.generic.JsonCodec
 
+
 @JsonCodec
 case class Point(x: Double, y: Double)
 

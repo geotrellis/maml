@@ -16,6 +16,8 @@ object Interpret {
     * without fetching any Rasters. Only interprets the structural validatity of
     * the AST, given the params.
     */
+  // TODO: Add a second argument with sources (to fulfill tile/vector/scalar requirements);
+  //       Invalidate if the provided arguments don't meet MamlKind requirements.
   def pure[M: Monoid](
     expr: Expression
   ): Interpreted[M] = expr match {

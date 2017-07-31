@@ -1,5 +1,6 @@
 package maml.ast.utility
 
+
 trait Neighborhood
 case class Square(extent: Int) extends Neighborhood
 case class Circle(radius: Double) extends Neighborhood

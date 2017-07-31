@@ -15,12 +15,10 @@ trait UnaryExpression extends Expression {
 
 case class Classification(children: List[Expression], classMap: ClassMap) extends Operation with UnaryExpression {
   val kindDerivation: Map[MamlKind, MamlKind] = Map(MamlKind.Tile -> MamlKind.Tile)
-  val symbol: String = "classify"
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
 case class Masking(children: List[Expression], mask: MultiPolygon) extends Operation with UnaryExpression {
   val kindDerivation: Map[MamlKind, MamlKind] = Map(MamlKind.Tile -> MamlKind.Tile)
-  val symbol: String = "mask"
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
