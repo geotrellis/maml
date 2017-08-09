@@ -1,16 +1,32 @@
 package maml.eval.tile
 
-import com.typesafe.scalalogging.LazyLogging
+import maml.eval._
+
 import geotrellis.raster._
 import geotrellis.raster.mapalgebra.local._
 import geotrellis.raster.mapalgebra.focal
 import geotrellis.raster.mapalgebra.focal.Neighborhood
 import geotrellis.raster.render._
 import geotrellis.vector.{ Extent, MultiPolygon, Point }
+import cats._
+import cats.data._
+import cats.data.Validated._
+import cats.data.{NonEmptyList => NEL, _}
+import cats.implicits._
 import spire.syntax.cfor._
+import com.typesafe.scalalogging.LazyLogging
+
+import scala.reflect.ClassTag
 
 
-sealed trait LazyTile extends LazyLogging {
+sealed trait LazyTile extends LazyRep with LazyLogging {
+  def as[A](implicit ct: ClassTag[A]): Interpreted[A] = {
+    val cls = ct.runtimeClass
+    if (classOf[Tile] isAssignableFrom cls)
+      Valid(this.evaluateDouble.asInstanceOf[A])
+    else
+      Invalid(NEL.of(EvalTypeError(cls.getName, List("Tile"))))
+  }
   def children: Array[LazyTile]
   def cols: Int
   def rows: Int

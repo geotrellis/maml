@@ -14,7 +14,7 @@ class ExpressionTreeCodecSpec extends PropSpec with Checkers {
   property("bijective serialization on whole tree") {
     check(forAll(Generators.genExpression()) { (ast: Expression) =>
       ast.asJson.as[Expression] match {
-        case Left(f) => fail(f)
+        case Left(f) => {println(f);fail(f)}
         case Right(exp) => exp == ast
       }
     })

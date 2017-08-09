@@ -47,6 +47,10 @@ case class TypeError(json: Json) extends InterpreterError {
   def repr = s"Type error: something"
 }
 
+case class EvalTypeError(provided: String, expected: List[String]) extends InterpreterError {
+  def repr = s"Type error: tried to evaluate AST as $provided; expected one of $expected"
+}
+
 case class ASTDecodeError(i: Int, msg: DecodingFailure) extends InterpreterError {
   def repr = s"Unable to decode the AST associated with ToolRun ${i}: ${msg}"
 }

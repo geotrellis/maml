@@ -65,7 +65,7 @@ object Generators {
   } yield {
     val mp = MultiPolygon(Array(Polygon(Array(Point(0, 0), Point(0, 10), Point(10, 10), Point(10, 0), Point(0, 0)))))
 
-    Masking(args, mp)
+    Masking(args)
   }
 
   def genFocalOpAST(depth: Int) = for {
