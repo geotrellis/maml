@@ -28,5 +28,9 @@ class EvaluationSpec extends FunSpec with Matchers {
     Addition(List(ScalarSource(42), ScalarSource(1))).interpret.as[Int] should be (Valid(43))
     Addition(List(ScalarSource(42), ScalarSource(1))).interpret.as[Tile] should matchPattern { case Invalid(_) => }
   }
+
+  it("Evaluate to desired output (tile/scalar addition)") {
+    Addition(List(TileSource, ScalarSource(1))).interpret.as[Tile] should be (Valid(???))
+  }
 }
 

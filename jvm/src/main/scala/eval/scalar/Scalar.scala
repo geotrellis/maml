@@ -1,6 +1,8 @@
 package maml.eval.scalar
 
 import maml.eval._
+import maml.error._
+
 import cats._
 import cats.data._
 import cats.data.Validated._
@@ -30,8 +32,8 @@ case class Scalar(value: Double) extends ScalarRep {
   def evaluateDouble: Double = value
 }
 
-case class ScalarFold(scalars: List[ScalarRep], f: (Int, Int) => Int, g: (Double, Double) => Double) extends ScalarRep {
-  def evaluate = scalars.map(_.evaluate).reduce(f)
-  def evaluateDouble = scalars.map(_.evaluateDouble).reduce(g)
+case class ScalarDualCombine(left: ScalarRep, right: ScalarRep, f: (Int, Int) => Int, g: (Double, Double) => Double) extends ScalarRep {
+  def evaluate = f(left.evaluate, right.evaluate)
+  def evaluateDouble = g(left.evaluateDouble, right.evaluateDouble)
 }
 

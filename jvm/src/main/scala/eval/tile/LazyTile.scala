@@ -1,6 +1,8 @@
 package maml.eval.tile
 
 import maml.eval._
+import maml.eval.scalar._
+import maml.error._
 
 import geotrellis.raster._
 import geotrellis.raster.mapalgebra.local._
@@ -87,8 +89,8 @@ object LazyTile {
 
   trait BinaryBranch extends BranchWithArity {
     val arity = 2
-    def fst = children.head
-    def snd = children.head
+    def fst = children(0)
+    def snd = children(1)
   }
 
   trait Terminal extends LazyTile {
@@ -134,5 +136,10 @@ object LazyTile {
   case class DualCombine(children: Array[LazyTile], f: (Int, Int) => Int, g: (Double, Double) => Double) extends BinaryBranch {
     def get(col: Int, row: Int) = f(fst.get(col, row), snd.get(col, row))
     def getDouble(col: Int, row: Int) = g(fst.getDouble(col, row), snd.getDouble(col, row))
+  }
+
+  case class ScalarTileDualCombine(children: Array[LazyTile], scalar: ScalarRep, f: (Int, Int) => Int, g: (Double, Double) => Double) extends UnaryBranch {
+    def get(col: Int, row: Int) = f(fst.get(col, row), scalar.evaluate)
+    def getDouble(col: Int, row: Int) = g(fst.getDouble(col, row), scalar.evaluateDouble)
   }
 }
