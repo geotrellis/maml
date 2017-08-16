@@ -15,18 +15,18 @@ import Validated._
 
 class KindSpec extends FunSpec with Matchers {
   it("Typecheck a valid focal tree") {
-    FocalMax(List(TileSource), Square(1))
+    FocalMax(List(TileSource("test")), Square(1))
   }
 
   it("Refuses to typecheck an invalid focal tree") {
-    an[java.lang.IllegalArgumentException] should be thrownBy FocalMax(List(IntSource(42)), Square(1))
+    an[java.lang.IllegalArgumentException] should be thrownBy FocalMax(List(IntLiteral(42)), Square(1))
   }
 
   it("Should correctly determine the output type for a foldable operation (tile)") {
-    Max(List(IntSource(42), TileSource, IntSource(51))).kind should be (MamlKind.Tile)
+    Max(List(IntLiteral(42), TileSource("test"), IntLiteral(51))).kind should be (MamlKind.Tile)
   }
 
   it("Should correctly determine the output type for a foldable operation (scalar)") {
-    Max(List(IntSource(42), IntSource(51))).kind should be (MamlKind.Int)
+    Max(List(IntLiteral(42), IntLiteral(51))).kind should be (MamlKind.Int)
   }
 }

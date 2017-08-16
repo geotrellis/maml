@@ -15,13 +15,19 @@ trait MamlSourceCodecs extends MamlUtilityCodecs {
   implicit def mamlDecoder: Decoder[Expression]
   implicit def mamlEncoder: Encoder[Expression]
 
-  implicit lazy val decodeSource: Decoder[TileSource.type] = deriveDecoder
-  implicit lazy val encodeSource: Encoder[TileSource.type] = deriveEncoder
+  implicit lazy val decodeTileSource: Decoder[TileSource] = deriveDecoder
+  implicit lazy val encodeTileSource: Encoder[TileSource] = deriveEncoder
 
-  implicit lazy val decodeInt: Decoder[IntSource] = deriveDecoder
-  implicit lazy val encodeInt: Encoder[IntSource] = deriveEncoder
+  implicit lazy val decodeIntSrc: Decoder[IntSource] = deriveDecoder
+  implicit lazy val encodeIntSrc: Encoder[IntSource] = deriveEncoder
 
-  implicit lazy val decodeDouble: Decoder[DoubleSource] = deriveDecoder
-  implicit lazy val encodeDouble: Encoder[DoubleSource] = deriveEncoder
+  implicit lazy val decodeDoubleSrc: Decoder[DoubleSource] = deriveDecoder
+  implicit lazy val encodeDoubleSrc: Encoder[DoubleSource] = deriveEncoder
+
+  implicit lazy val decodeBoolSrc: Decoder[BoolSource] = deriveDecoder
+  implicit lazy val encodeBoolSrc: Encoder[BoolSource] = deriveEncoder
+
+  implicit lazy val decodeGeomSrc: Decoder[GeomSource] = deriveDecoder
+  implicit lazy val encodeGeomSrc: Encoder[GeomSource] = deriveEncoder
 }
 

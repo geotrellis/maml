@@ -21,9 +21,11 @@ trait ExpressionTreeCodec
   /** TODO: Add codec paths besides `raster source` and `operation` when supported */
   implicit def mamlDecoder = Decoder.instance[Expression] { ma =>
     ma._type match {
-      case Some("TileSource") => ma.as[TileSource.type]
+      case Some("TileSource") => ma.as[TileSource]
       case Some("IntSource") => ma.as[IntSource]
       case Some("DoubleSource") => ma.as[DoubleSource]
+      case Some("BoolSource") => ma.as[BoolSource]
+      case Some("GeomSource") => ma.as[GeomSource]
       case Some("Addition") => ma.as[Addition]
       case Some("Subtraction") => ma.as[Subtraction]
       case Some("Multiplication") => ma.as[Multiplication]
@@ -45,9 +47,11 @@ trait ExpressionTreeCodec
 
   implicit def mamlEncoder: Encoder[Expression] = new Encoder[Expression] {
     final def apply(ast: Expression): Json = ast match {
-      case node@TileSource => node.asJson
+      case node: TileSource => node.asJson
       case node: IntSource => node.asJson
       case node: DoubleSource => node.asJson
+      case node: BoolSource => node.asJson
+      case node: GeomSource => node.asJson
       case node: Addition => node.asJson
       case node: Subtraction => node.asJson
       case node: Multiplication => node.asJson

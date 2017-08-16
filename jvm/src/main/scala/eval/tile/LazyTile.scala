@@ -21,7 +21,7 @@ import scala.reflect.ClassTag
 
 
 sealed trait LazyTile extends LazyLogging {
-  def children: Array[LazyTile]
+  def children: List[LazyTile]
   def cols: Int
   def rows: Int
   def get(col: Int, row: Int): Int
@@ -83,12 +83,12 @@ object LazyTile {
   }
 
   trait Terminal extends LazyTile {
-    def children: Array[LazyTile]
+    def children: List[LazyTile]
   }
 
   /** This object represents tile data sources */
   case class Bound(tile: Tile) extends Terminal {
-    def children: Array[LazyTile] = Array.empty
+    def children: List[LazyTile] = List.empty
     def cols: Int = tile.cols
     def rows: Int = tile.rows
     def get(col: Int, row: Int): Int = tile.get(col,row)
@@ -96,43 +96,43 @@ object LazyTile {
   }
 
   /* --- Mapping --- */
-  case class MapInt(children: Array[LazyTile], f: Int => Int) extends UnaryBranch {
+  case class MapInt(children: List[LazyTile], f: Int => Int) extends UnaryBranch {
     def get(col: Int, row: Int) = f(fst.get(col, row))
     def getDouble(col: Int, row: Int) = i2d(fst.get(col, row))
   }
 
-  case class MapDouble(children: Array[LazyTile], f: Double => Double) extends UnaryBranch {
+  case class MapDouble(children: List[LazyTile], f: Double => Double) extends UnaryBranch {
     def get(col: Int, row: Int) = d2i(f(fst.getDouble(col, row)))
     def getDouble(col: Int, row: Int) = f(fst.getDouble(col, row))
   }
 
-  case class DualMap(children: Array[LazyTile], f: Int => Int, g: Double => Double) extends UnaryBranch {
+  case class DualMap(children: List[LazyTile], f: Int => Int, g: Double => Double) extends UnaryBranch {
     def get(col: Int, row: Int) = f(fst.get(col, row))
     def getDouble(col: Int, row: Int) = g(fst.getDouble(col, row))
   }
 
   /* --- Combining --- */
-  case class CombineInt(children: Array[LazyTile], f: (Int, Int) => Int) extends BinaryBranch {
+  case class CombineInt(children: List[LazyTile], f: (Int, Int) => Int) extends BinaryBranch {
     def get(col: Int, row: Int) = f(fst.get(col, row), snd.get(col, row))
     def getDouble(col: Int, row: Int) = i2d(f(fst.get(col, row), snd.get(col, row)))
   }
 
-  case class CombineDouble(children: Array[LazyTile], f: (Double, Double) => Double) extends BinaryBranch {
+  case class CombineDouble(children: List[LazyTile], f: (Double, Double) => Double) extends BinaryBranch {
     def get(col: Int, row: Int) = d2i(f(fst.getDouble(col, row), snd.getDouble(col, row)))
     def getDouble(col: Int, row: Int) = f(fst.getDouble(col, row), snd.getDouble(col, row))
   }
 
-  case class DualCombine(children: Array[LazyTile], f: (Int, Int) => Int, g: (Double, Double) => Double) extends BinaryBranch {
+  case class DualCombine(children: List[LazyTile], f: (Int, Int) => Int, g: (Double, Double) => Double) extends BinaryBranch {
     def get(col: Int, row: Int) = f(fst.get(col, row), snd.get(col, row))
     def getDouble(col: Int, row: Int) = g(fst.getDouble(col, row), snd.getDouble(col, row))
   }
 
-  case class TileCombineInt(children: Array[LazyTile], scalar: Int, f: (Int, Int) => Int) extends UnaryBranch {
+  case class TileCombineInt(children: List[LazyTile], scalar: Int, f: (Int, Int) => Int) extends UnaryBranch {
     def get(col: Int, row: Int) = f(fst.get(col, row), scalar)
     def getDouble(col: Int, row: Int) = i2d(get(col, row))
   }
 
-  case class TileCombineDouble(children: Array[LazyTile], scalar: Double, f: (Double, Double) => Double) extends UnaryBranch {
+  case class TileCombineDouble(children: List[LazyTile], scalar: Double, f: (Double, Double) => Double) extends UnaryBranch {
     def get(col: Int, row: Int) = d2i(getDouble(col, row))
     def getDouble(col: Int, row: Int) = f(fst.getDouble(col, row), scalar)
   }

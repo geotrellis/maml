@@ -37,7 +37,7 @@ case class IntResult(res: Int) extends Result {
     if (classOf[Int] isAssignableFrom cls)
       Valid(res.toInt.asInstanceOf[T])
     else if (classOf[Double] isAssignableFrom cls)
-      Valid(res.asInstanceOf[T])
+      Valid(res.toDouble.asInstanceOf[T])
     else
       Invalid(NEL.of(EvalTypeError(cls.getName, List("int", "double"))))
   }
@@ -60,8 +60,10 @@ case class TileResult(res: LazyTile) extends Result {
     val cls = ct.runtimeClass
     if (classOf[Tile] isAssignableFrom cls)
       Valid(res.evaluate.asInstanceOf[T])
+    else if (classOf[LazyTile] isAssignableFrom cls)
+      Valid(res.asInstanceOf[T])
     else
-      Invalid(NEL.of(EvalTypeError(cls.getName, List("tile"))))
+      Invalid(NEL.of(EvalTypeError(cls.getName, List("Tile"))))
   }
   def kind: MamlKind = MamlKind.Tile
 }

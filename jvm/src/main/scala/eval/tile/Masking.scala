@@ -9,7 +9,7 @@ import geotrellis.vector.{ Extent, MultiPolygon, Point }
 import spire.syntax.cfor._
 
 
-case class MaskingNode(children: Array[LazyTile], extent: Extent, mask: MultiPolygon) extends LazyTile.UnaryBranch {
+case class MaskingNode(children: List[LazyTile], extent: Extent, mask: MultiPolygon) extends LazyTile.UnaryBranch {
   lazy val cellMask: Tile = {
     val masky = ArrayTile.empty(BitCellType, this.cols, this.rows)
 

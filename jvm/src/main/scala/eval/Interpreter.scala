@@ -12,19 +12,37 @@ import scala.reflect.ClassTag
 
 case class TmsInterpreter(directives: Seq[Directive]) {
   val fallbackDirective: Directive =
-    { case exp => Invalid(NEL.of(UnhandledCase(exp, exp.kind))) }
+    { case (exp, res) => Invalid(NEL.of(UnhandledCase(exp, exp.kind))) }
 
-  def withDirective(d: Directive) = TmsInterpreter(d +: directives)
+  def instructions(expression: Expression, children: Seq[Result]) =
+    directives.reduceLeft(_ orElse _).orElse(fallbackDirective)((expression, children))
 
-  lazy val instructions = directives.reduceLeft(_ orElse _).orElse(fallbackDirective)
-
-  def apply(exp: Expression): Interpreted[Result] = instructions(exp)
+  def apply(exp: Expression): Interpreted[Result] = {
+    val children = exp.children.map(apply).sequence
+    children.andThen({ childRes => instructions(exp, childRes) })
+  }
 }
 
 object Interpreter {
+  import maml.eval.directive.SourceDirectives._
+
   def tms(directives: Directive*) = TmsInterpreter(directives)
 
+  def test = tms(intLiteralDirective, dblLiteralDirective, boolLiteralDirective)
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
 //trait Interpreter {
 //  type SrcTransform = Source => Result
 //  type OpTransform = List[Result] => Result
