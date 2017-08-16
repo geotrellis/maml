@@ -10,15 +10,22 @@ trait Source extends Expression {
   override val sources: List[Source] = List(this)
 }
 
-case class ScalarSource(scalar: Double) extends Source {
-  val kind = MamlKind.Scalar
+case class IntSource(int: Int) extends Source {
+  val kind = MamlKind.Int
+}
+
+case class DoubleSource(double: Double) extends Source {
+  val kind = MamlKind.Double
 }
 
 case object TileSource extends Source {
   val kind = MamlKind.Tile
 }
 
-case object VectorSource extends Source {
-  val kind = MamlKind.Vector
+case object GeomSource extends Source {
+  val kind = MamlKind.Geom
 }
 
+case object BoolSource extends Source {
+  val kind = MamlKind.Bool
+}

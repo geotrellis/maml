@@ -22,7 +22,8 @@ trait ExpressionTreeCodec
   implicit def mamlDecoder = Decoder.instance[Expression] { ma =>
     ma._type match {
       case Some("TileSource") => ma.as[TileSource.type]
-      case Some("ScalarSource") => ma.as[ScalarSource]
+      case Some("IntSource") => ma.as[IntSource]
+      case Some("DoubleSource") => ma.as[DoubleSource]
       case Some("Addition") => ma.as[Addition]
       case Some("Subtraction") => ma.as[Subtraction]
       case Some("Multiplication") => ma.as[Multiplication]
@@ -45,7 +46,8 @@ trait ExpressionTreeCodec
   implicit def mamlEncoder: Encoder[Expression] = new Encoder[Expression] {
     final def apply(ast: Expression): Json = ast match {
       case node@TileSource => node.asJson
-      case node: ScalarSource => node.asJson
+      case node: IntSource => node.asJson
+      case node: DoubleSource => node.asJson
       case node: Addition => node.asJson
       case node: Subtraction => node.asJson
       case node: Multiplication => node.asJson

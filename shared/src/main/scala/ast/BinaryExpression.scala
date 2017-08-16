@@ -16,9 +16,9 @@ trait BinaryExpression extends Expression {
 case class Masking(children: List[Expression]) extends Operation with BinaryExpression {
   val kindDerivation = { (k1: MamlKind, k2: MamlKind) =>
     (k1, k2) match {
-      case (MamlKind.Tile, MamlKind.Vector) => MamlKind.Tile
-      case (MamlKind.Vector, MamlKind.Tile) => MamlKind.Tile
-      case (x1, x2) => throw new InvalidParameterException(s"Expected tile and vector kinds. Found $x1 and $x2")
+      case (MamlKind.Tile, MamlKind.Geom) => MamlKind.Tile
+      case (MamlKind.Geom, MamlKind.Tile) => MamlKind.Tile
+      case (x1, x2) => throw new InvalidParameterException(s"Expected tile and geometry kinds. Found $x1 and $x2")
     }
   }
 

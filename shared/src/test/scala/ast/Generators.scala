@@ -40,8 +40,10 @@ object Generators {
   lazy val genTileSourceAST = Gen.lzy(Gen.oneOf(Seq(TileSource)))
 
   lazy val genScalarSourceAST = for {
-    const <- arbitrary[Int]
-  } yield ScalarSource(const)
+    int <- arbitrary[Int]
+    dbl <- arbitrary[Double]
+    src <- Gen.lzy(Gen.oneOf(IntSource(int), DoubleSource(dbl)))
+  } yield src
 
   def genBinaryOpAST(depth: Int) = for {
     constructor <- Gen.lzy(Gen.oneOf(

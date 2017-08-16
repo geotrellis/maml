@@ -91,27 +91,24 @@ trait MamlUtilityCodecs {
 
   implicit val mamlKindDecoder: Decoder[MamlKind] = Decoder[String].emap({
     case "tile" => Right(MamlKind.Tile)
-    case "scalar" => Right(MamlKind.Scalar)
+    case "int" => Right(MamlKind.Int)
+    case "double" => Right(MamlKind.Double)
+    case "geom" => Right(MamlKind.Geom)
     case "bool" => Right(MamlKind.Bool)
-    case "vector" => Right(MamlKind.Vector)
     case unrecognized => Left(s"Unrecognized MamlKind: $unrecognized")
   })
   implicit val mamlKindEncoder: Encoder[MamlKind] =
     Encoder.encodeString.contramap[MamlKind]({ mk =>
       mk match {
         case MamlKind.Tile => "tile"
-        case MamlKind.Scalar => "scalar"
+        case MamlKind.Int => "int"
+        case MamlKind.Double => "double"
+        case MamlKind.Geom => "geom"
         case MamlKind.Bool => "bool"
-        case MamlKind.Vector => "vector"
         case unrecognized =>
           throw new InvalidParameterException(s"Unrecognized mamlKind: $unrecognized")
       }
     })
-
-  implicit val mamlKindTileEncoder: Encoder[MamlKind.Tile.type] =
-    Encoder.encodeString.contramap[MamlKind.Tile.type]({ _ => "tile" })
-  implicit val mamlKindScalarEncoder: Encoder[MamlKind.Scalar.type] =
-    Encoder.encodeString.contramap[MamlKind.Scalar.type]({ _ => "scalar" })
 
 
   implicit val squareNeighborhoodDecoder: Decoder[Square] =

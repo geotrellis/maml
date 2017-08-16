@@ -1,7 +1,6 @@
 package maml.eval.tile
 
 import maml.eval._
-import maml.eval.scalar._
 import maml.error._
 
 import geotrellis.raster._
@@ -21,14 +20,7 @@ import com.typesafe.scalalogging.LazyLogging
 import scala.reflect.ClassTag
 
 
-sealed trait LazyTile extends LazyRep with LazyLogging {
-  def as[A](implicit ct: ClassTag[A]): Interpreted[A] = {
-    val cls = ct.runtimeClass
-    if (classOf[Tile] isAssignableFrom cls)
-      Valid(this.evaluateDouble.asInstanceOf[A])
-    else
-      Invalid(NEL.of(EvalTypeError(cls.getName, List("Tile"))))
-  }
+sealed trait LazyTile extends LazyLogging {
   def children: Array[LazyTile]
   def cols: Int
   def rows: Int
@@ -77,18 +69,15 @@ object LazyTile {
     }
   }
 
-  trait BranchWithArity extends Branch {
-    val arity: Int
-    require(children.length == arity, s"Incorrect arity: $arity argument expected, ${children.length} found")
-  }
-
-  trait UnaryBranch extends BranchWithArity {
+  trait UnaryBranch extends Branch {
     val arity = 1
+    require(children.length == arity, s"Incorrect arity: $arity argument(s) expected, ${children.length} found")
     def fst = children.head
   }
 
-  trait BinaryBranch extends BranchWithArity {
+  trait BinaryBranch extends Branch {
     val arity = 2
+    require(children.length == arity, s"Incorrect arity: $arity argument(s) expected, ${children.length} found")
     def fst = children(0)
     def snd = children(1)
   }
@@ -138,8 +127,14 @@ object LazyTile {
     def getDouble(col: Int, row: Int) = g(fst.getDouble(col, row), snd.getDouble(col, row))
   }
 
-  case class ScalarTileDualCombine(children: Array[LazyTile], scalar: ScalarRep, f: (Int, Int) => Int, g: (Double, Double) => Double) extends UnaryBranch {
-    def get(col: Int, row: Int) = f(fst.get(col, row), scalar.evaluate)
-    def getDouble(col: Int, row: Int) = g(fst.getDouble(col, row), scalar.evaluateDouble)
+  case class TileCombineInt(children: Array[LazyTile], scalar: Int, f: (Int, Int) => Int) extends UnaryBranch {
+    def get(col: Int, row: Int) = f(fst.get(col, row), scalar)
+    def getDouble(col: Int, row: Int) = i2d(get(col, row))
+  }
+
+  case class TileCombineDouble(children: Array[LazyTile], scalar: Double, f: (Double, Double) => Double) extends UnaryBranch {
+    def get(col: Int, row: Int) = d2i(getDouble(col, row))
+    def getDouble(col: Int, row: Int) = f(fst.getDouble(col, row), scalar)
   }
 }
+
