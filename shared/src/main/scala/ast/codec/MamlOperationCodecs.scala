@@ -61,4 +61,19 @@ trait MamlOperationCodecs extends MamlUtilityCodecs {
 
   implicit lazy val decodeFocalStdDev: Decoder[FocalStdDev] = deriveDecoder
   implicit lazy val encodeFocalStdDev: Encoder[FocalStdDev] = deriveEncoder
+
+  implicit lazy val decodeGreater: Decoder[Greater] = deriveDecoder
+  implicit lazy val encodeGreater: Encoder[Greater] = deriveEncoder
+
+  implicit lazy val decodeGreaterOrEqual: Decoder[GreaterOrEqual] = deriveDecoder
+  implicit lazy val encodeGreaterOrEqual: Encoder[GreaterOrEqual] = deriveEncoder
+
+  implicit lazy val decodeEqual: Decoder[Equal] = deriveDecoder
+  implicit lazy val encodeEqual: Encoder[Equal] = deriveEncoder
+
+  implicit lazy val decodeLessOrEqual: Decoder[LessOrEqual] = deriveDecoder
+  implicit lazy val encodeLessOrEqual: Encoder[LessOrEqual] = deriveEncoder
+
+  implicit lazy val decodeLess: Decoder[Less] = deriveDecoder
+  implicit lazy val encodeLess: Encoder[Less] = deriveEncoder
 }

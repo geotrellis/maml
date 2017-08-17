@@ -70,13 +70,15 @@ trait MamlUtilityCodecs {
     Encoder.forProduct1("counts")(hist => (hist.counts))
 
   // This won't actually work - NESW neighborhoods will *always* succeed in decoding to Square
-  implicit val neighborhoodDecoder: Decoder[Neighborhood] = List[Decoder[Neighborhood]](
-    Decoder[Square].widen,
-    Decoder[Circle].widen,
-    Decoder[Nesw].widen,
-    Decoder[Wedge].widen,
-    Decoder[Annulus].widen
-  ).reduce(_ or _)
+  implicit val neighborhoodDecoder: Decoder[Neighborhood] = Decoder.instance[Neighborhood] { n =>
+    n._type match {
+      case Some("square") => n.as[Square]
+      case Some("circle") => n.as[Circle]
+      case Some("nesw") => n.as[Nesw]
+      case Some("wedge") => n.as[Wedge]
+      case Some("annulus") => n.as[Annulus]
+    }
+  }
   implicit val neighborhoodEncoder: Encoder[Neighborhood] = new Encoder[Neighborhood] {
     final def apply(n: Neighborhood): Json = n match {
       case square: Square => square.asJson
@@ -114,27 +116,27 @@ trait MamlUtilityCodecs {
   implicit val squareNeighborhoodDecoder: Decoder[Square] =
     Decoder.forProduct1("extent")(Square.apply)
   implicit val squareNeighborhoodEncoder: Encoder[Square] =
-    Encoder.forProduct2("extent", "kind")(op => (op.extent, "square"))
+    Encoder.forProduct2("extent", "type")(op => (op.extent, "square"))
 
   implicit val circleNeighborhoodDecoder: Decoder[Circle] =
     Decoder.forProduct1("radius")(Circle.apply)
   implicit val circleNeighborhoodEncoder: Encoder[Circle] =
-    Encoder.forProduct2("radius", "kind")(op => (op.radius, "circle"))
+    Encoder.forProduct2("radius", "type")(op => (op.radius, "circle"))
 
   implicit val neswNeighborhoodDecoder: Decoder[Nesw] =
     Decoder.forProduct1("extent")(Nesw.apply)
   implicit val neswNeighborhoodEncoder: Encoder[Nesw] =
-    Encoder.forProduct2("extent", "kind")(op => (op.extent, "nesw"))
+    Encoder.forProduct2("extent", "type")(op => (op.extent, "nesw"))
 
   implicit val wedgeNeighborhoodDecoder: Decoder[Wedge] =
     Decoder.forProduct3("radius", "startAngle", "endAngle")(Wedge.apply)
   implicit val wedgeNeighborhoodEncoder: Encoder[Wedge] =
-    Encoder.forProduct4("radius", "startAngle", "endAngle", "kind")(op => (op.radius, op.startAngle, op.endAngle, "wedge"))
+    Encoder.forProduct4("radius", "startAngle", "endAngle", "type")(op => (op.radius, op.startAngle, op.endAngle, "wedge"))
 
   implicit val annulusNeighborhoodDecoder: Decoder[Annulus] =
     Decoder.forProduct2("innerRadius", "outerRadius")(Annulus.apply)
   implicit val annulusNeighborhoodEncoder: Encoder[Annulus] =
-    Encoder.forProduct3("innerRadius", "outerRadius", "kind")(op => (op.innerRadius, op.outerRadius, "annulus"))
+    Encoder.forProduct3("innerRadius", "outerRadius", "type")(op => (op.innerRadius, op.outerRadius, "annulus"))
 }
 
 object MamlUtilityCodecs extends MamlUtilityCodecs

@@ -26,6 +26,9 @@ trait ExpressionTreeCodec
       case Some("DoubleSource") => ma.as[DoubleSource]
       case Some("BoolSource") => ma.as[BoolSource]
       case Some("GeomSource") => ma.as[GeomSource]
+      case Some("IntLiteral") => ma.as[IntLiteral]
+      case Some("DoubleLiteral") => ma.as[DoubleLiteral]
+      case Some("BoolLiteral") => ma.as[BoolLiteral]
       case Some("Addition") => ma.as[Addition]
       case Some("Subtraction") => ma.as[Subtraction]
       case Some("Multiplication") => ma.as[Multiplication]
@@ -41,7 +44,7 @@ trait ExpressionTreeCodec
       case Some("FocalMode") => ma.as[FocalMode]
       case Some("FocalSum") => ma.as[FocalSum]
       case Some("FocalStdDev") => ma.as[FocalStdDev]
-      case None => Left(DecodingFailure(s"Unrecovnized leaf node: $ma", ma.history))
+      case None => Left(DecodingFailure(s"Unrecognized node: $ma", ma.history))
     }
   }
 
@@ -52,6 +55,9 @@ trait ExpressionTreeCodec
       case node: DoubleSource => node.asJson
       case node: BoolSource => node.asJson
       case node: GeomSource => node.asJson
+      case node: IntLiteral => node.asJson
+      case node: DoubleLiteral => node.asJson
+      case node: BoolLiteral => node.asJson
       case node: Addition => node.asJson
       case node: Subtraction => node.asJson
       case node: Multiplication => node.asJson

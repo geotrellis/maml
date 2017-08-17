@@ -11,56 +11,41 @@ import scala.util.Random
 import java.util.UUID
 
 
-//object Generators {
+object Generators {
 
-//  implicit lazy val arbUUID: Arbitrary[UUID] = Arbitrary(UUID.randomUUID)
+  lazy val genTileSourceAST = for {
+    str <- arbitrary[String]
+    cons <- Gen.lzy(TileSource.apply _)
+  } yield cons(str)
 
-//  implicit lazy val arbHistogram: Arbitrary[Histogram] = Arbitrary {
-//    Histogram(Map(1.0 -> 100, 2.0 -> 300))
-//  }
+  lazy val genScalarSourceAST = for {
+    int <- arbitrary[Int]
+    dbl <- arbitrary[Double]
+    str <- arbitrary[String]
+    src <- Gen.lzy(Gen.oneOf(IntSource(str), DoubleSource(str), IntLiteral(int), DoubleLiteral(dbl)))
+  } yield src
 
-//  lazy val genClassMapOptions: Gen[ClassMap.Options] = for {
-//    bounds <- Gen.lzy(Gen.oneOf(LessThanOrEqualTo, LessThan, Exact, GreaterThan, GreaterThanOrEqualTo))
-//    ndVal <- arbitrary[Int]
-//    fallback <- arbitrary[Int]
-//  } yield ClassMap.Options(bounds, ndVal, fallback)
+  def genBinaryOpAST(depth: Int) = for {
+    constructor <- Gen.lzy(Gen.oneOf(
+                     Addition.apply _,
+                     Subtraction.apply _,
+                     Multiplication.apply _,
+                     Division.apply _,
+                     Max.apply _,
+                     Min.apply _,
+                     Less.apply _,
+                     LessOrEqual.apply _,
+                     Equal.apply _,
+                     GreaterOrEqual.apply _,
+                     Greater.apply _
+                   ))
+    args <- containerOfN[List, Expression](2, genExpression(depth))
+  } yield constructor(args)
 
-//  lazy val genClassMap: Gen[ClassMap] = for {
-//    dubs <- Gen.containerOfN[List, Double](30, arbitrary[Double])
-//    ints <- Gen.containerOfN[List, Int](30, arbitrary[Int])
-//  } yield ClassMap(dubs.zip(ints).toMap)
-
-//  /*
-//  lazy val genMultiPolygon: Gen[MultiPolygon] = for {
-//    xs <- Gen.containerOfN[List, Double](10, arbitrary[Double])
-//    ys <- Gen.containerOfN[List, Double](10, arbitrary[Double])
-//  } yield MultiPolygon(Polygon(xs.zip(ys) :+ (xs.head, ys.head)))
-//   */
-
-//  lazy val genTileSourceAST = Gen.lzy(Gen.oneOf(Seq(TileSource)))
-
-//  lazy val genScalarSourceAST = for {
-//    int <- arbitrary[Int]
-//    dbl <- arbitrary[Double]
-//    src <- Gen.lzy(Gen.oneOf(IntSource(int), DoubleSource(dbl)))
-//  } yield src
-
-//  def genBinaryOpAST(depth: Int) = for {
-//    constructor <- Gen.lzy(Gen.oneOf(
-//                     Addition.apply _,
-//                     Subtraction.apply _,
-//                     Multiplication.apply _,
-//                     Division.apply _,
-//                     Max.apply _,
-//                     Min.apply _
-//                   ))
-//    args <- containerOfN[List, Expression](2, genExpression(depth))
-//  } yield constructor(args)
-
-//  def genClassificationAST(depth: Int) = for {
-//    args <- containerOfN[List, Expression](1, genExpression(depth))
-//    cmap <- genClassMap
-//  } yield Classification(args, cmap)
+  //def genClassificationAST(depth: Int) = for {
+  //  args <- containerOfN[List, Expression](1, genExpression(depth))
+  //  cmap <- genClassMap
+  //} yield Classification(args, cmap)
 
 //  def genMaskingAST(depth: Int) = for {
 //    args <- containerOfN[List, Expression](1, genExpression(depth))
@@ -99,12 +84,12 @@ import java.util.UUID
 //    (2 -> genFocalOpAST(depth))
 //  )
 
-//  def genLeafAST = Gen.oneOf(genScalarSourceAST, genTileSourceAST)
+  def genLeafAST = Gen.oneOf(genScalarSourceAST, genTileSourceAST)
 
   /* We are forced to manually control flow in this generator to prevent stack overflows
    *  See: http://stackoverflow.com/questions/19829293/scalacheck-arbitrary-implicits-and-recursive-generators
    */
-//  def genExpression(depth: Int = 1): Gen[Expression] =
-//    if (depth >= 100) genLeafAST
-//    else Gen.frequency((1 -> genOpAST(depth + 1)), (1 -> genLeafAST))
-//}
+  def genExpression(depth: Int = 1): Gen[Expression] =
+    if (depth >= 100) genLeafAST
+    else Gen.frequency((1 -> genBinaryOpAST(depth + 1)), (1 -> genLeafAST))
+}

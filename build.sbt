@@ -1,6 +1,6 @@
 name := "MAML"
 
-scalaVersion in ThisBuild := "2.11.8"
+scalaVersion in ThisBuild := "2.11.11"
 
 lazy val root = project.in(file(".")).
   aggregate(mamlJS, mamlJVM).
@@ -15,6 +15,20 @@ lazy val maml = crossProject.in(file(".")).
     version := "0.1-SNAPSHOT",
     resolvers += Resolver.sonatypeRepo("releases"),
     addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full),
+    scalacOptions := Seq(
+      "-deprecation",
+      "-unchecked",
+      "-feature",
+      "-language:implicitConversions",
+      "-language:reflectiveCalls",
+      "-language:higherKinds",
+      "-language:postfixOps",
+      "-language:existentials",
+      "-language:experimental.macros",
+      "-feature",
+      "-Ypartial-unification",
+      "-Ypatmat-exhaust-depth", "100"
+    ),
     libraryDependencies ++= Seq(
       "org.scalacheck" %% "scalacheck"              % "1.13.4" % "test",
       "org.scalatest"  %% "scalatest"               % "3.0.1"  % "test",

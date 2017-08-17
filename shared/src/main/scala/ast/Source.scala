@@ -1,7 +1,6 @@
 package maml.ast
 
 import io.circe.generic.JsonCodec
-import geotrellis.raster.Tile
 
 import java.util.UUID
 
@@ -21,10 +20,6 @@ case class DoubleLiteral(value: Double) extends Source {
 
 case class BoolLiteral(value: Boolean) extends Source {
   val kind = MamlKind.Bool
-}
-
-case class TileLiteral(id: Tile) extends Source {
-  val kind = MamlKind.Tile
 }
 
 trait Variable extends Source {

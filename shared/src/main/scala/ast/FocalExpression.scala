@@ -13,15 +13,15 @@ case class FocalMax(children: List[Expression], neighborhood: Neighborhood) exte
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
+case class FocalMin(children: List[Expression], neighborhood: Neighborhood) extends Operation with FocalExpression {
+  def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
+}
+
 case class FocalMean(children: List[Expression], neighborhood: Neighborhood) extends Operation with FocalExpression {
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
 case class FocalMedian(children: List[Expression], neighborhood: Neighborhood) extends Operation with FocalExpression {
-  def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
-}
-
-case class FocalMin(children: List[Expression], neighborhood: Neighborhood) extends Operation with FocalExpression {
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 

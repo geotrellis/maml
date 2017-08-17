@@ -5,8 +5,7 @@ import maml.error._
 
 import geotrellis.raster._
 import geotrellis.raster.mapalgebra.local._
-import geotrellis.raster.mapalgebra.focal
-import geotrellis.raster.mapalgebra.focal.Neighborhood
+import geotrellis.raster.mapalgebra.focal.{ Neighborhood, TargetCell }
 import geotrellis.raster.render._
 import geotrellis.vector.{ Extent, MultiPolygon, Point }
 import cats._
@@ -135,6 +134,21 @@ object LazyTile {
   case class TileCombineDouble(children: List[LazyTile], scalar: Double, f: (Double, Double) => Double) extends UnaryBranch {
     def get(col: Int, row: Int) = d2i(getDouble(col, row))
     def getDouble(col: Int, row: Int) = f(fst.getDouble(col, row), scalar)
+  }
+
+  case class Focal(
+    children: List[LazyTile],
+    neighborhood: Neighborhood,
+    gridbounds: Option[GridBounds],
+    focalFn: (Tile, Neighborhood, Option[GridBounds], TargetCell) => Tile
+  ) extends UnaryBranch {
+    override lazy val cols: Int = gridbounds.map(_.width).getOrElse(fst.cols)
+    override lazy val rows: Int = gridbounds.map(_.height).getOrElse(fst.rows)
+    lazy val intTile = focalFn(fst.evaluate, neighborhood, gridbounds, TargetCell.All)
+    lazy val dblTile = focalFn(fst.evaluateDouble, neighborhood, gridbounds, TargetCell.All)
+
+    def get(col: Int, row: Int) = intTile.get(col, row)
+    def getDouble(col: Int, row: Int) = dblTile.get(col, row)
   }
 }
 

@@ -12,6 +12,22 @@ import Validated._
 
 
 object OpDirectives {
+  val all = List(
+    additionDirectiveDouble,
+    additionDirectiveInt,
+    additionDirectiveTile,
+    subtractionDirective,
+    multiplicationDirectiveDouble,
+    multiplicationDirectiveInt,
+    multiplicationDirectiveTile,
+    divisionDirective,
+    lessThanDirective,
+    lessThanOrEqualToDirective,
+    equalToDirective,
+    greaterThanOrEqualToDirective,
+    greaterThanDirective
+  )
+
   val additionDirectiveDouble = Directive { case (a@Addition(_), childResults) if (a.kind == MamlKind.Double) =>
     childResults
       .map({ _.as[Double] })
@@ -30,11 +46,11 @@ object OpDirectives {
     val grouped = childResults
       .groupBy(_.kind)
     val dblRes: Interpreted[List[Double]] =
-      grouped(MamlKind.Double)
+      grouped.getOrElse(MamlKind.Double, List.empty)
         .map({ _.as[Double] })
         .toList.sequence
     val intRes: Interpreted[List[Int]] =
-      grouped(MamlKind.Int)
+      grouped.getOrElse(MamlKind.Int, List.empty)
         .map({ _.as[Int] })
         .toList.sequence
     val tileRes: Interpreted[List[LazyTile]] =
@@ -99,11 +115,11 @@ object OpDirectives {
     val grouped = childResults
       .groupBy(_.kind)
     val dblRes: Interpreted[List[Double]] =
-      grouped(MamlKind.Double)
+      grouped.getOrElse(MamlKind.Double, List.empty)
         .map({ _.as[Double] })
         .toList.sequence
     val intRes: Interpreted[List[Int]] =
-      grouped(MamlKind.Int)
+      grouped.getOrElse(MamlKind.Int, List.empty)
         .map({ _.as[Int] })
         .toList.sequence
     val tileRes: Interpreted[List[LazyTile]] =
@@ -169,11 +185,11 @@ object OpDirectives {
     val grouped = childResults
       .groupBy(_.kind)
     val dblRes: Interpreted[List[Double]] =
-      grouped(MamlKind.Double)
+      grouped.getOrElse(MamlKind.Double, List.empty)
         .map({ _.as[Double] })
         .toList.sequence
     val intRes: Interpreted[List[Int]] =
-      grouped(MamlKind.Int)
+      grouped.getOrElse(MamlKind.Int, List.empty)
         .map({ _.as[Int] })
         .toList.sequence
     val tileRes: Interpreted[List[LazyTile]] =
