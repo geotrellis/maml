@@ -66,7 +66,7 @@ object OpDirectives {
     Valid(results)
   }
 
-  val divisionDirective = Directive { case (a@Subtraction(_), childResults) =>
+  val divisionDirective = Directive { case (a@Division(_), childResults) =>
     val results = childResults.reduce({ (res1: Result, res2: Result) =>
       (res1, res2) match {
         case (TileResult(lt1), TileResult(lt2)) => TileResult(LazyTile.DualCombine(List(lt1, lt2), {_ / _}, {_ / _}))
@@ -242,7 +242,7 @@ object OpDirectives {
     Valid(results)
   }
 
-  val greaterDirective = Directive { case (a@Greater(_), childResults) =>
+  val greaterThanDirective = Directive { case (a@Greater(_), childResults) =>
     import geotrellis.raster.mapalgebra.local.Greater.compare
     val results = childResults.reduce({ (res1: Result, res2: Result) =>
       (res1, res2) match {
@@ -260,7 +260,7 @@ object OpDirectives {
     Valid(results)
   }
 
-  val greaterOrEqualDirective = Directive { case (a@GreaterOrEqual(_), childResults) =>
+  val greaterThanOrEqualToDirective = Directive { case (a@GreaterOrEqual(_), childResults) =>
     import geotrellis.raster.mapalgebra.local.GreaterOrEqual.compare
     val results = childResults.reduce({ (res1: Result, res2: Result) =>
       (res1, res2) match {

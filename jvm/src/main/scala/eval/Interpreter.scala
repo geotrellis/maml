@@ -10,11 +10,17 @@ import cats.data.{NonEmptyList => NEL, _}
 
 import scala.reflect.ClassTag
 
-case class TmsInterpreter(directives: Seq[Directive]) {
+trait Interpreter {
+  def fallbackDirective: Directive
+  def instructions(expression: Expression, children: Seq[Result]): Interpreted[Result]
+  def apply(exp: Expression): Interpreted[Result]
+}
+
+case class NaiveInterpreter(directives: Seq[Directive]) {
   val fallbackDirective: Directive =
     { case (exp, res) => Invalid(NEL.of(UnhandledCase(exp, exp.kind))) }
 
-  def instructions(expression: Expression, children: Seq[Result]) =
+  def instructions(expression: Expression, children: Seq[Result]): Interpreted[Result] =
     directives.reduceLeft(_ orElse _).orElse(fallbackDirective)((expression, children))
 
   def apply(exp: Expression): Interpreted[Result] = {
@@ -24,11 +30,7 @@ case class TmsInterpreter(directives: Seq[Directive]) {
 }
 
 object Interpreter {
-  import maml.eval.directive.SourceDirectives._
-
-  def tms(directives: Directive*) = TmsInterpreter(directives)
-
-  def test = tms(intLiteralDirective, dblLiteralDirective, boolLiteralDirective)
+  def naive(directives: Directive*) = NaiveInterpreter(directives)
 }
 
 
