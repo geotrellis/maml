@@ -14,23 +14,6 @@ import Validated._
 
 
 object FocalDirectives {
-  implicit def gtNeighborhoods(n: Neighborhood): focal.Neighborhood = n match {
-    case Square(e) => focal.Square(e)
-    case Circle(r) => focal.Circle(r)
-    case Nesw(e) => focal.Nesw(e)
-    case Wedge(r, startAngle, endAngle) => focal.Wedge(r, startAngle, endAngle)
-    case Annulus(innerR, outterR) => focal.Annulus(innerR, outterR)
-  }
-
-  val all = List(
-    focalMaxDirective,
-    focalMinDirective,
-    focalMedianDirective,
-    focalModeDirective,
-    focalMeanDirective,
-    focalStandardDeviationDirective
-  )
-
   val focalMaxDirective = Directive { case (fm@FocalMax(_, neighborhood), childResults) =>
     childResults
       .map({ _.as[LazyTile] })

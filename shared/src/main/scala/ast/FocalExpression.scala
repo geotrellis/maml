@@ -6,6 +6,7 @@ import maml.ast.utility._
 
 
 trait FocalExpression extends UnaryExpression {
+  def neighborhood: Neighborhood
   def kindDerivation: Map[MamlKind, MamlKind] = Map(MamlKind.Tile -> MamlKind.Tile)
 }
 

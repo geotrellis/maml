@@ -12,22 +12,6 @@ import Validated._
 
 
 object OpDirectives {
-  val all = List(
-    additionDirectiveDouble,
-    additionDirectiveInt,
-    additionDirectiveTile,
-    subtractionDirective,
-    multiplicationDirectiveDouble,
-    multiplicationDirectiveInt,
-    multiplicationDirectiveTile,
-    divisionDirective,
-    lessThanDirective,
-    lessThanOrEqualToDirective,
-    equalToDirective,
-    greaterThanOrEqualToDirective,
-    greaterThanDirective
-  )
-
   val additionDirectiveDouble = Directive { case (a@Addition(_), childResults) if (a.kind == MamlKind.Double) =>
     childResults
       .map({ _.as[Double] })
@@ -35,11 +19,11 @@ object OpDirectives {
       .andThen({ results => Valid(DoubleResult(results.reduce(_ + _))) })
   }
 
-  val additionDirectiveInt = Directive { case (a@Addition(_), childResults) if (a.kind == MamlKind.Double) =>
+  val additionDirectiveInt = Directive { case (a@Addition(_), childResults) if (a.kind == MamlKind.Int) =>
     childResults
-      .map({ _.as[Double] })
+      .map({ _.as[Int] })
       .toList.sequence
-      .andThen({ results => Valid(DoubleResult(results.reduce(_ + _))) })
+      .andThen({ results => Valid(IntResult(results.reduce(_ + _))) })
   }
 
   val additionDirectiveTile = Directive { case (a@Addition(_), childResults) if (a.kind == MamlKind.Tile) =>
