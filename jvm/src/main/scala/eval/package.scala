@@ -29,11 +29,5 @@ package object eval {
     case Annulus(innerR, outterR) => focal.Annulus(innerR, outterR)
   }
 
-  implicit class TypeRefinement(self: Interpreted[Result]) {
-    def as[T](implicit ct: ClassTag[T]): Interpreted[T] = self match {
-      case Valid(r) => r.as[T](ct)
-      case i@Invalid(_) => i
-    }
-  }
 }
 

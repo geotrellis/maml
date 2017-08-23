@@ -16,6 +16,13 @@ import org.scalatest._
 
 class EvaluationSpec extends FunSpec with Matchers {
 
+  implicit class TypeRefinement(self: Interpreted[Result]) {
+    def as[T](implicit ct: ClassTag[T]): Interpreted[T] = self match {
+      case Valid(r) => r.as[T](ct)
+      case i@Invalid(_) => i
+    }
+  }
+
   val interpreter = Interpreter.naive(
     intLiteralDirective,
     dblLiteralDirective,

@@ -14,7 +14,10 @@ import scala.reflect.ClassTag
 trait Interpreter {
   def fallbackDirective: Directive
   def instructions(expression: Expression, children: List[Result]): Interpreted[Result]
-  def apply(exp: Expression): Interpreted[Result]
+  def apply(exp: Expression): Interpreted[Result] = {
+    val children: Interpreted[List[Result]] = exp.children.map(apply).sequence
+    children.andThen({ childRes => instructions(exp, childRes) })
+  }
 }
 
 object Interpreter {

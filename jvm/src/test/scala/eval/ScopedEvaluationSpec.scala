@@ -18,6 +18,13 @@ import org.scalatest._
 
 class ScopedEvaluationSpec extends FunSpec with Matchers {
 
+  implicit class TypeRefinement(self: Interpreted[Result]) {
+    def as[T](implicit ct: ClassTag[T]): Interpreted[T] = self match {
+      case Valid(r) => r.as[T](ct)
+      case i@Invalid(_) => i
+    }
+  }
+
   val interpreter = Interpreter.buffering(
     ScopedDirective[BufferingInterpreter.Scope] { case (t@TileSource(id), _, scope) =>
       Valid(TileResult(LazyTile(IntArrayTile(1 to 4 toArray, 2, 2)).withBuffer(scope.buffer)))

@@ -72,14 +72,13 @@ trait Service {
               } catch {
                 case _: ValueNotFoundError => None
               }
-              tileOpt.flatMap { tile =>
-                MamlService.interpreter(FocalMax(List(TileLiteral(tile)), Square(2)))
-                  .as[Tile]
-                  .toOption
-                  .map { t =>
-                    pngAsHttpResponse(t.renderPng(MamlService.cMap))
-                }
-              }
+            tileOpt.flatMap { tile =>
+              MamlService.interpreter(FocalMax(List(TileLiteral(tile)), Square(2)))
+                .andThen({ _.as[Tile] })
+                .map({ t =>
+                  pngAsHttpResponse(t.renderPng(MamlService.cMap))
+                }).toOption
+            }
           }
         }
       }
