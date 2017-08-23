@@ -5,6 +5,7 @@ import maml.ast._
 import maml.ast.utility._
 
 
+// TODO maybe don't use lists for these unary things
 trait FocalExpression extends UnaryExpression {
   def neighborhood: Neighborhood
   def kindDerivation: Map[MamlKind, MamlKind] = Map(MamlKind.Tile -> MamlKind.Tile)

@@ -15,5 +15,7 @@ object SourceDirectives {
   val boolLiteralDirective = Directive { case (BoolLiteral(bool), _) => Valid(BoolResult(bool)) }
   val tileLiteralDirective = Directive { case (TileLiteral(tile), _) => Valid(TileResult(LazyTile(tile))) }
 
-  val bufferingTileLiteralDirective = ScopedDirective[BufferingInterpreter.Scope] { case (TileLiteral(tile), _, scope) => Valid(TileResult(LazyTile(tile))) }
+  val bufferingTileLiteralDirective = ScopedDirective[BufferingInterpreter.Scope] { case (TileLiteral(tile), _, scope) =>
+    Valid(TileResult(LazyTile(tile)))
+  }
 }

@@ -17,17 +17,10 @@ case class BufferingInterpreter(
   options: BufferingInterpreter.Options = BufferingInterpreter.Options(256)
 ) extends ScopedInterpreter[BufferingInterpreter.Scope] {
   def scopeTo(exp: Expression, previous: Option[BufferingInterpreter.Scope]): BufferingInterpreter.Scope = {
-    val scope = previous.getOrElse(BufferingInterpreter.Scope(options.tileSize, 0, options.tileSize))
+    val scope = previous.getOrElse(BufferingInterpreter.Scope(0, options.tileSize))
     exp match {
-      case f: FocalExpression =>
-        scope.copy(
-          extent = scope.extent + scope.buffer,
-          buffer = scope.buffer + f.neighborhood.extent
-        )
-      case _ => scope.copy(
-        extent = scope.extent + scope.buffer,
-        buffer = 0
-        )
+      case f: FocalExpression => scope.copy(buffer = scope.buffer + f.neighborhood.extent)
+      case _ => scope
     }
   }
 
@@ -44,16 +37,14 @@ case class BufferingInterpreter(
       apply(childTree, Some(childScope))
     }).sequence
 
-    children.andThen({ childRes =>
-      instructions(exp, childRes, scope)
-    })
+    children.andThen({ childRes => instructions(exp, childRes, scope) })
   }
 }
 
 
 object BufferingInterpreter {
   case class Options(tileSize: Int)
-  case class Scope(extent: Int, buffer: Int, tileSize: Int)
+  case class Scope(buffer: Int, tileSize: Int)
 
   def gridbounds(expectedTileSize: Int, buffer: Int, extent: Int): GridBounds =
     GridBounds(extent, extent, expectedTileSize - 1 + buffer * 2 + extent, expectedTileSize - 1 + buffer * 2 + extent)

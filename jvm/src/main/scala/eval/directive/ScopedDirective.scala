@@ -1,6 +1,7 @@
-package maml.eval
+package maml.eval.directive
 
 import maml.ast._
+import maml.eval._
 
 import cats._
 import cats.data._
@@ -10,10 +11,6 @@ import cats.implicits._
 import scala.reflect.ClassTag
 
 
-object Directive {
-  def apply(ruleFn: PartialFunction[(Expression, Seq[Result]), Interpreted[Result]]): Directive = ruleFn
-}
-
 object ScopedDirective {
   /** Lift a simple directive into a scoped context */
   def pure[Exp <: Expression : ClassTag](ruleFn: Directive): ScopedDirective[Any] =
@@ -22,3 +19,4 @@ object ScopedDirective {
   def apply[Scope](ruleFn: PartialFunction[(Expression, Seq[Result], Scope), Interpreted[Result]]): ScopedDirective[Scope] =
     ruleFn
 }
+

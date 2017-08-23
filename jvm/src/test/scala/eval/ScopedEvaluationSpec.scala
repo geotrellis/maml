@@ -5,11 +5,9 @@ import maml.ast.jvm.TileLiteral
 import maml.ast.utility.Square
 import maml.dsl.jvm._
 import maml.error._
+import maml.eval._
 import maml.eval.tile._
-import maml.eval.directive.SourceDirectives
-import maml.eval.directive.OpDirectives
-import maml.eval.directive.FocalDirectives
-import SourceDirectives._
+import maml.eval.directive._
 
 import geotrellis.raster._
 import cats._
@@ -21,12 +19,29 @@ import org.scalatest._
 class ScopedEvaluationSpec extends FunSpec with Matchers {
 
   val interpreter = Interpreter.buffering(
+    ScopedDirective[BufferingInterpreter.Scope] { case (t@TileSource(id), _, scope) =>
+      Valid(TileResult(LazyTile(IntArrayTile(1 to 4 toArray, 2, 2)).withBuffer(scope.buffer)))
+    },
     ScopedDirective.pure[IntLiteral](SourceDirectives.intLiteralDirective),
     ScopedDirective.pure[BoolLiteral](SourceDirectives.boolLiteralDirective),
     ScopedDirective.pure[DoubleLiteral](SourceDirectives.dblLiteralDirective),
     ScopedDirective.pure[TileLiteral](SourceDirectives.tileLiteralDirective),
     ScopedDirective.pure[Addition](OpDirectives.additionDirectiveInt orElse OpDirectives.additionDirectiveDouble orElse OpDirectives.additionDirectiveTile),
-    ScopedDirective.pure[FocalMax](FocalDirectives.focalMaxDirective)
+    ScopedDirective.pure[Subtraction](OpDirectives.subtractionDirective),
+    ScopedDirective.pure[Multiplication](OpDirectives.multiplicationDirectiveInt orElse OpDirectives.multiplicationDirectiveDouble orElse OpDirectives.multiplicationDirectiveTile),
+    ScopedDirective.pure[Max](OpDirectives.maxDirectiveInt orElse OpDirectives.maxDirectiveDouble orElse OpDirectives.maxDirectiveTile),
+    ScopedDirective.pure[Min](OpDirectives.minDirectiveInt orElse OpDirectives.minDirectiveDouble orElse OpDirectives.minDirectiveTile),
+    ScopedDirective.pure[Division](OpDirectives.divisionDirective),
+    ScopedDirective.pure[Less](OpDirectives.lessThanDirective),
+    ScopedDirective.pure[LessOrEqual](OpDirectives.lessThanOrEqualToDirective),
+    ScopedDirective.pure[Equal](OpDirectives.equalToDirective),
+    ScopedDirective.pure[GreaterOrEqual](OpDirectives.greaterThanOrEqualToDirective),
+    ScopedDirective.pure[Greater](OpDirectives.greaterThanDirective),
+    ScopedDirective.pure[FocalMax](FocalDirectives.focalMaxDirective),
+    ScopedDirective.pure[FocalMin](FocalDirectives.focalMinDirective),
+    ScopedDirective.pure[FocalMean](FocalDirectives.focalMeanDirective),
+    ScopedDirective.pure[FocalMedian](FocalDirectives.focalMedianDirective),
+    ScopedDirective.pure[FocalMode](FocalDirectives.focalModeDirective)
   )
 
   it("Should interpret and evaluate focal operation") {
