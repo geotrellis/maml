@@ -4,47 +4,39 @@ import maml.ast._
 
 import io.circe._
 import io.circe.syntax._
+import io.circe.generic.extras.semiauto._
+import io.circe.generic.extras.Configuration
 
 import java.security.InvalidParameterException
 
 
-trait MamlSourceCodecs {
-  implicit def mamlDecoder: Decoder[MamlTree]
-  implicit def mamlEncoder: Encoder[MamlTree]
+trait MamlSourceCodecs extends MamlUtilityCodecs {
+  implicit def conf: Configuration
+  implicit def mamlDecoder: Decoder[Expression]
+  implicit def mamlEncoder: Encoder[Expression]
 
-  /** TODO: Add codec paths besides `raster source` and `operation` when supported */
-  implicit val mamlSourceDecoder = Decoder.instance[Source] { ma =>
-    ma._type match {
-      case Some("tile") =>
-        ma.as[TileSource]
-      case Some("scalar") =>
-        ma.as[ScalarSource]
-      case Some(unrecognized) =>
-        Left(DecodingFailure(s"Unrecognized Source node with type: $ma", ma.history))
-      case None =>
-        Left(DecodingFailure(s"Unrecognized Source node: $ma", ma.history))
-    }
-  }
+  implicit lazy val decodeTileSource: Decoder[TileSource] = deriveDecoder
+  implicit lazy val encodeTileSource: Encoder[TileSource] = deriveEncoder
 
-  implicit val mamlSourceEncoder: Encoder[Source] = new Encoder[Source] {
-    final def apply(ast: Source): Json = ast match {
-      case src: TileSource =>
-        src.asJson
-      case const: ScalarSource =>
-        const.asJson
-      case _ =>
-        throw new InvalidParameterException(s"Unrecognized AST: $ast")
-    }
-  }
+  implicit lazy val decodeIntSrc: Decoder[IntSource] = deriveDecoder
+  implicit lazy val encodeIntSrc: Encoder[IntSource] = deriveEncoder
 
-  implicit lazy val decodeSource: Decoder[TileSource] =
-    Decoder.forProduct2("id", "metadata")(TileSource.apply)
-  implicit lazy val encodeSource: Encoder[TileSource] =
-    Encoder.forProduct3("type", "id", "metadata")(op => (op.`type`, op.id, op.metadata))
+  implicit lazy val decodeDoubleSrc: Decoder[DoubleSource] = deriveDecoder
+  implicit lazy val encodeDoubleSrc: Encoder[DoubleSource] = deriveEncoder
 
-  implicit lazy val decodeConstant: Decoder[ScalarSource] =
-    Decoder.forProduct3("id", "scalar", "metadata")(ScalarSource.apply)
-  implicit lazy val encodeConstant: Encoder[ScalarSource] =
-    Encoder.forProduct4("type", "id", "scalar", "metadata")(op => (op.`type`, op.id, op.scalar, op.metadata))
+  implicit lazy val decodeBoolSrc: Decoder[BoolSource] = deriveDecoder
+  implicit lazy val encodeBoolSrc: Encoder[BoolSource] = deriveEncoder
+
+  implicit lazy val decodeGeomSrc: Decoder[GeomSource] = deriveDecoder
+  implicit lazy val encodeGeomSrc: Encoder[GeomSource] = deriveEncoder
+
+  implicit lazy val decodeIntLiteral: Decoder[IntLiteral] = deriveDecoder
+  implicit lazy val encodeIntLiteral: Encoder[IntLiteral] = deriveEncoder
+
+  implicit lazy val decodeDoubleLiteral: Decoder[DoubleLiteral] = deriveDecoder
+  implicit lazy val encodeDoubleLiteral: Encoder[DoubleLiteral] = deriveEncoder
+
+  implicit lazy val decodeBoolLiteral: Decoder[BoolLiteral] = deriveDecoder
+  implicit lazy val encodeBoolLiteral: Encoder[BoolLiteral] = deriveEncoder
 }
 

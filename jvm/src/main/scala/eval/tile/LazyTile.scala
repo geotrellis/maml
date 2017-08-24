@@ -1,17 +1,26 @@
-package maml.tile
+package maml.eval.tile
 
-import com.typesafe.scalalogging.LazyLogging
+import maml.eval._
+import maml.error._
+
 import geotrellis.raster._
 import geotrellis.raster.mapalgebra.local._
-import geotrellis.raster.mapalgebra.focal
-import geotrellis.raster.mapalgebra.focal.Neighborhood
+import geotrellis.raster.mapalgebra.focal.{ Neighborhood, TargetCell }
 import geotrellis.raster.render._
 import geotrellis.vector.{ Extent, MultiPolygon, Point }
+import cats._
+import cats.data._
+import cats.data.Validated._
+import cats.data.{NonEmptyList => NEL, _}
+import cats.implicits._
 import spire.syntax.cfor._
+import com.typesafe.scalalogging.LazyLogging
+
+import scala.reflect.ClassTag
 
 
 sealed trait LazyTile extends LazyLogging {
-  def children: Array[LazyTile]
+  def children: List[LazyTile]
   def cols: Int
   def rows: Int
   def get(col: Int, row: Int): Int
@@ -59,29 +68,26 @@ object LazyTile {
     }
   }
 
-  trait BranchWithArity extends Branch {
-    val arity: Int
-    require(children.length == arity, s"Incorrect arity: $arity argument expected, ${children.length} found")
-  }
-
-  trait UnaryBranch extends BranchWithArity {
+  trait UnaryBranch extends Branch {
     val arity = 1
+    require(children.length == arity, s"Incorrect arity: $arity argument(s) expected, ${children.length} found")
     def fst = children.head
   }
 
-  trait BinaryBranch extends BranchWithArity {
+  trait BinaryBranch extends Branch {
     val arity = 2
-    def fst = children.head
-    def snd = children.head
+    require(children.length == arity, s"Incorrect arity: $arity argument(s) expected, ${children.length} found")
+    def fst = children(0)
+    def snd = children(1)
   }
 
   trait Terminal extends LazyTile {
-    def children: Array[LazyTile]
+    def children: List[LazyTile]
   }
 
   /** This object represents tile data sources */
   case class Bound(tile: Tile) extends Terminal {
-    def children: Array[LazyTile] = Array.empty
+    def children: List[LazyTile] = List.empty
     def cols: Int = tile.cols
     def rows: Int = tile.rows
     def get(col: Int, row: Int): Int = tile.get(col,row)
@@ -89,34 +95,60 @@ object LazyTile {
   }
 
   /* --- Mapping --- */
-  case class MapInt(children: Array[LazyTile], f: Int => Int) extends UnaryBranch {
+  case class MapInt(children: List[LazyTile], f: Int => Int) extends UnaryBranch {
     def get(col: Int, row: Int) = f(fst.get(col, row))
     def getDouble(col: Int, row: Int) = i2d(fst.get(col, row))
   }
 
-  case class MapDouble(children: Array[LazyTile], f: Double => Double) extends UnaryBranch {
+  case class MapDouble(children: List[LazyTile], f: Double => Double) extends UnaryBranch {
     def get(col: Int, row: Int) = d2i(f(fst.getDouble(col, row)))
     def getDouble(col: Int, row: Int) = f(fst.getDouble(col, row))
   }
 
-  case class DualMap(children: Array[LazyTile], f: Int => Int, g: Double => Double) extends UnaryBranch {
+  case class DualMap(children: List[LazyTile], f: Int => Int, g: Double => Double) extends UnaryBranch {
     def get(col: Int, row: Int) = f(fst.get(col, row))
     def getDouble(col: Int, row: Int) = g(fst.getDouble(col, row))
   }
 
   /* --- Combining --- */
-  case class CombineInt(children: Array[LazyTile], f: (Int, Int) => Int) extends BinaryBranch {
+  case class CombineInt(children: List[LazyTile], f: (Int, Int) => Int) extends BinaryBranch {
     def get(col: Int, row: Int) = f(fst.get(col, row), snd.get(col, row))
     def getDouble(col: Int, row: Int) = i2d(f(fst.get(col, row), snd.get(col, row)))
   }
 
-  case class CombineDouble(children: Array[LazyTile], f: (Double, Double) => Double) extends BinaryBranch {
+  case class CombineDouble(children: List[LazyTile], f: (Double, Double) => Double) extends BinaryBranch {
     def get(col: Int, row: Int) = d2i(f(fst.getDouble(col, row), snd.getDouble(col, row)))
     def getDouble(col: Int, row: Int) = f(fst.getDouble(col, row), snd.getDouble(col, row))
   }
 
-  case class DualCombine(children: Array[LazyTile], f: (Int, Int) => Int, g: (Double, Double) => Double) extends BinaryBranch {
+  case class DualCombine(children: List[LazyTile], f: (Int, Int) => Int, g: (Double, Double) => Double) extends BinaryBranch {
     def get(col: Int, row: Int) = f(fst.get(col, row), snd.get(col, row))
     def getDouble(col: Int, row: Int) = g(fst.getDouble(col, row), snd.getDouble(col, row))
   }
+
+  case class TileCombineInt(children: List[LazyTile], scalar: Int, f: (Int, Int) => Int) extends UnaryBranch {
+    def get(col: Int, row: Int) = f(fst.get(col, row), scalar)
+    def getDouble(col: Int, row: Int) = i2d(get(col, row))
+  }
+
+  case class TileCombineDouble(children: List[LazyTile], scalar: Double, f: (Double, Double) => Double) extends UnaryBranch {
+    def get(col: Int, row: Int) = d2i(getDouble(col, row))
+    def getDouble(col: Int, row: Int) = f(fst.getDouble(col, row), scalar)
+  }
+
+  case class Focal(
+    children: List[LazyTile],
+    neighborhood: Neighborhood,
+    gridbounds: Option[GridBounds],
+    focalFn: (Tile, Neighborhood, Option[GridBounds], TargetCell) => Tile
+  ) extends UnaryBranch {
+    override lazy val cols: Int = gridbounds.map(_.width).getOrElse(fst.cols)
+    override lazy val rows: Int = gridbounds.map(_.height).getOrElse(fst.rows)
+    lazy val intTile = focalFn(fst.evaluate, neighborhood, gridbounds, TargetCell.All)
+    lazy val dblTile = focalFn(fst.evaluateDouble, neighborhood, gridbounds, TargetCell.All)
+
+    def get(col: Int, row: Int) = intTile.get(col, row)
+    def getDouble(col: Int, row: Int) = dblTile.get(col, row)
+  }
 }
+
