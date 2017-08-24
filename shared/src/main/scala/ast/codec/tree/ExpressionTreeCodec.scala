@@ -79,4 +79,4 @@ trait ExpressionTreeCodec
   }
 }
 
-object ExpressionTreeCodec extends ExpressionTreeCodec
+object ExpressionTreeCodec extends ExpressionTreeCodec with MamlOperationCodecs with MamlSourceCodecs

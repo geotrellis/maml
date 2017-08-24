@@ -6,19 +6,24 @@ import maml.error._
 import maml.eval.tile._
 import maml.eval.directive.SourceDirectives._
 import maml.eval.directive.OpDirectives._
+import maml.ast.codec.tree.ExpressionTreeCodec
 
+import io.circe._
+import io.circe.syntax._
 import geotrellis.raster._
 import cats._
 import cats.data.{NonEmptyList => NEL, _}
 import Validated._
 import org.scalatest._
 
+import scala.reflect._
 
-class EvaluationSpec extends FunSpec with Matchers {
+
+class EvaluationSpec extends FunSpec with Matchers with ExpressionTreeCodec {
 
   implicit class TypeRefinement(self: Interpreted[Result]) {
-    def as[T](implicit ct: ClassTag[T]): Interpreted[T] = self match {
-      case Valid(r) => r.as[T](ct)
+    def as[T: ClassTag]: Interpreted[T] = self match {
+      case Valid(r) => r.as[T]
       case i@Invalid(_) => i
     }
   }
@@ -79,6 +84,7 @@ class EvaluationSpec extends FunSpec with Matchers {
   }
 
   it("Should interpret and evaluate comparisions with scalars") {
+    println((DoubleLiteral(20) < DoubleLiteral(20)).asJson.noSpaces)
     interpreter(DoubleLiteral(20) < DoubleLiteral(20)).as[Boolean] should be (Valid(false))
     interpreter(DoubleLiteral(19) < DoubleLiteral(20)).as[Boolean] should be (Valid(true))
     interpreter(DoubleLiteral(29) < DoubleLiteral(20)).as[Boolean] should be (Valid(false))

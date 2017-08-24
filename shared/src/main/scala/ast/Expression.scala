@@ -10,10 +10,6 @@ trait Expression extends Product with Serializable {
   def children: List[Expression]
   def sources: List[Source]
   def kind: MamlKind
-
-  def subExpression(expressionPath: ExpressionPath): Option[Expression] =
-    expressionPath.indices.foldLeft(Option(this))({
-      case (ast: Option[Expression], i: Int) => ast.flatMap({ _.children.lift(i) })
-    })
+  def withChildren(newChildren: List[Expression]): Expression
 }
 

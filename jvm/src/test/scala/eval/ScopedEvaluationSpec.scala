@@ -15,20 +15,18 @@ import cats.data.{NonEmptyList => NEL, _}
 import Validated._
 import org.scalatest._
 
+import scala.reflect._
 
 class ScopedEvaluationSpec extends FunSpec with Matchers {
 
   implicit class TypeRefinement(self: Interpreted[Result]) {
     def as[T](implicit ct: ClassTag[T]): Interpreted[T] = self match {
-      case Valid(r) => r.as[T](ct)
+      case Valid(r) => r.as[T]
       case i@Invalid(_) => i
     }
   }
 
   val interpreter = Interpreter.buffering(
-    ScopedDirective[BufferingInterpreter.Scope] { case (t@TileSource(id), _, scope) =>
-      Valid(TileResult(LazyTile(IntArrayTile(1 to 4 toArray, 2, 2)).withBuffer(scope.buffer)))
-    },
     ScopedDirective.pure[IntLiteral](SourceDirectives.intLiteralDirective),
     ScopedDirective.pure[BoolLiteral](SourceDirectives.boolLiteralDirective),
     ScopedDirective.pure[DoubleLiteral](SourceDirectives.dblLiteralDirective),

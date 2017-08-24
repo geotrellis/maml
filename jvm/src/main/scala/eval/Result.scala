@@ -78,3 +78,4 @@ case class BoolResult(res: Boolean) extends Result {
   }
   def kind: MamlKind = MamlKind.Bool
 }
+
