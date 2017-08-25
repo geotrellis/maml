@@ -54,7 +54,6 @@ lazy val maml = crossProject.in(file(".")).
       "com.typesafe.akka"           %% "akka-http-spray-json" % "10.0.9",
       "com.typesafe.akka"           %% "akka-http-testkit"    % "10.0.9",
       "de.heikoseeberger"           %% "akka-http-circe"      % "1.17.0"
-
     )
   )
   .jsSettings()
