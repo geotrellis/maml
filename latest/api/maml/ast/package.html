@@ -1,0 +1,954 @@
+<!DOCTYPE html >
+<html>
+        <head>
+          <title>ast - maml.ast</title>
+          <meta name="description" content="ast - maml.ast" />
+          <meta name="keywords" content="ast maml.ast" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../lib/template.js"></script>
+      <script type="text/javascript" src="../../lib/tools.tooltip.js"></script>
+      
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../index.html';
+            var hash = 'maml.ast.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
+    
+        </head>
+        <body class="value">
+      <div id="definition">
+        <img alt="Package" src="../../lib/package_big.png" />
+        <p id="owner"><a href="../package.html" class="extype" name="maml">maml</a></p>
+        <h1>ast</h1><span class="permalink">
+      <a href="../../index.html#maml.ast.package" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ast</span>
+      </span>
+      </h4>
+      
+          <div id="comment" class="fullcommenttop"></div>
+        
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        
+        
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div id="types" class="types members">
+              <h3>Type Members</h3>
+              <ol><li name="maml.ast.Addition" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="AdditionextendsOperationwithFoldableExpressionwithProductwithSerializable"></a>
+      <a id="Addition:Addition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Addition.html"><span class="name">Addition</span></a><span class="params">(<span name="children">children: <span class="extype" name="scala.List">List</span>[<a href="Expression.html" class="extype" name="maml.ast.Expression">Expression</a>]</span>)</span><span class="result"> extends <a href="Operation.html" class="extype" name="maml.ast.Operation">Operation</a> with <a href="FoldableExpression.html" class="extype" name="maml.ast.FoldableExpression">FoldableExpression</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.ast.package@AdditionextendsOperationwithFoldableExpressionwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="maml.ast.And" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="AndextendsOperationwithBinaryExpressionwithProductwithSerializable"></a>
+      <a id="And:And"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="And.html"><span class="name">And</span></a><span class="params">(<span name="children">children: <span class="extype" name="scala.List">List</span>[<a href="Expression.html" class="extype" name="maml.ast.Expression">Expression</a>]</span>)</span><span class="result"> extends <a href="Operation.html" class="extype" name="maml.ast.Operation">Operation</a> with <a href="BinaryExpression.html" class="extype" name="maml.ast.BinaryExpression">BinaryExpression</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.ast.package@AndextendsOperationwithBinaryExpressionwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="maml.ast.BinaryExpression" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="BinaryExpressionextendsExpression"></a>
+      <a id="BinaryExpression:BinaryExpression"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="BinaryExpression.html"><span class="name">BinaryExpression</span></a><span class="result"> extends <a href="Expression.html" class="extype" name="maml.ast.Expression">Expression</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.ast.package@BinaryExpressionextendsExpression" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Operations which should only have one argument.</p>
+    </li><li name="maml.ast.BoolLiteral" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="BoolLiteralextendsSourcewithProductwithSerializable"></a>
+      <a id="BoolLiteral:BoolLiteral"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="BoolLiteral.html"><span class="name">BoolLiteral</span></a><span class="params">(<span name="value">value: <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="result"> extends <a href="Source.html" class="extype" name="maml.ast.Source">Source</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.ast.package@BoolLiteralextendsSourcewithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="maml.ast.BoolSource" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="BoolSourceextendsUnboundSourcewithProductwithSerializable"></a>
+      <a id="BoolSource:BoolSource"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="BoolSource.html"><span class="name">BoolSource</span></a><span class="params">(<span name="id">id: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <a href="UnboundSource.html" class="extype" name="maml.ast.UnboundSource">UnboundSource</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.ast.package@BoolSourceextendsUnboundSourcewithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="maml.ast.Branch" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="BranchextendsOperationwithProductwithSerializable"></a>
+      <a id="Branch:Branch"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Branch.html"><span class="name">Branch</span></a><span class="params">(<span name="children">children: <span class="extype" name="scala.List">List</span>[<a href="Expression.html" class="extype" name="maml.ast.Expression">Expression</a>]</span>)</span><span class="result"> extends <a href="Operation.html" class="extype" name="maml.ast.Operation">Operation</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.ast.package@BranchextendsOperationwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="maml.ast.Classification" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ClassificationextendsOperationwithUnaryExpressionwithProductwithSerializable"></a>
+      <a id="Classification:Classification"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Classification.html"><span class="name">Classification</span></a><span class="params">(<span name="children">children: <span class="extype" name="scala.List">List</span>[<a href="Expression.html" class="extype" name="maml.ast.Expression">Expression</a>]</span>, <span name="classMap">classMap: <a href="utility/ClassMap.html" class="extype" name="maml.ast.utility.ClassMap">ClassMap</a></span>)</span><span class="result"> extends <a href="Operation.html" class="extype" name="maml.ast.Operation">Operation</a> with <a href="UnaryExpression.html" class="extype" name="maml.ast.UnaryExpression">UnaryExpression</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.ast.package@ClassificationextendsOperationwithUnaryExpressionwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="maml.ast.Division" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="DivisionextendsOperationwithFoldableExpressionwithProductwithSerializable"></a>
+      <a id="Division:Division"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Division.html"><span class="name">Division</span></a><span class="params">(<span name="children">children: <span class="extype" name="scala.List">List</span>[<a href="Expression.html" class="extype" name="maml.ast.Expression">Expression</a>]</span>)</span><span class="result"> extends <a href="Operation.html" class="extype" name="maml.ast.Operation">Operation</a> with <a href="FoldableExpression.html" class="extype" name="maml.ast.FoldableExpression">FoldableExpression</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.ast.package@DivisionextendsOperationwithFoldableExpressionwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="maml.ast.DoubleLiteral" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="DoubleLiteralextendsSourcewithProductwithSerializable"></a>
+      <a id="DoubleLiteral:DoubleLiteral"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="DoubleLiteral.html"><span class="name">DoubleLiteral</span></a><span class="params">(<span name="value">value: <span class="extype" name="scala.Double">Double</span></span>)</span><span class="result"> extends <a href="Source.html" class="extype" name="maml.ast.Source">Source</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.ast.package@DoubleLiteralextendsSourcewithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="maml.ast.DoubleSource" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="DoubleSourceextendsUnboundSourcewithProductwithSerializable"></a>
+      <a id="DoubleSource:DoubleSource"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="DoubleSource.html"><span class="name">DoubleSource</span></a><span class="params">(<span name="id">id: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <a href="UnboundSource.html" class="extype" name="maml.ast.UnboundSource">UnboundSource</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.ast.package@DoubleSourceextendsUnboundSourcewithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="maml.ast.Equal" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="EqualextendsOperationwithBinaryExpressionwithProductwithSerializable"></a>
+      <a id="Equal:Equal"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Equal.html"><span class="name">Equal</span></a><span class="params">(<span name="children">children: <span class="extype" name="scala.List">List</span>[<a href="Expression.html" class="extype" name="maml.ast.Expression">Expression</a>]</span>)</span><span class="result"> extends <a href="Operation.html" class="extype" name="maml.ast.Operation">Operation</a> with <a href="BinaryExpression.html" class="extype" name="maml.ast.BinaryExpression">BinaryExpression</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.ast.package@EqualextendsOperationwithBinaryExpressionwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="maml.ast.Expression" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="ExpressionextendsProductwithSerializable"></a>
+      <a id="Expression:Expression"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="Expression.html"><span class="name">Expression</span></a><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.ast.package@ExpressionextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">The ur-type for a recursive representation of MapAlgebra operations</p>
+    </li><li name="maml.ast.ExpressionPath" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ExpressionPathextendsProductwithSerializable"></a>
+      <a id="ExpressionPath:ExpressionPath"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="ExpressionPath.html"><span class="name">ExpressionPath</span></a><span class="params">(<span name="indices">indices: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Int">Int</span>]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.ast.package@ExpressionPathextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="maml.ast.FocalExpression" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="FocalExpressionextendsUnaryExpression"></a>
+      <a id="FocalExpression:FocalExpression"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="FocalExpression.html"><span class="name">FocalExpression</span></a><span class="result"> extends <a href="UnaryExpression.html" class="extype" name="maml.ast.UnaryExpression">UnaryExpression</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.ast.package@FocalExpressionextendsUnaryExpression" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="maml.ast.FocalMax" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="FocalMaxextendsOperationwithFocalExpressionwithProductwithSerializable"></a>
+      <a id="FocalMax:FocalMax"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="FocalMax.html"><span class="name">FocalMax</span></a><span class="params">(<span name="children">children: <span class="extype" name="scala.List">List</span>[<a href="Expression.html" class="extype" name="maml.ast.Expression">Expression</a>]</span>, <span name="neighborhood">neighborhood: <a href="utility/Neighborhood.html" class="extype" name="maml.ast.utility.Neighborhood">Neighborhood</a></span>)</span><span class="result"> extends <a href="Operation.html" class="extype" name="maml.ast.Operation">Operation</a> with <a href="FocalExpression.html" class="extype" name="maml.ast.FocalExpression">FocalExpression</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.ast.package@FocalMaxextendsOperationwithFocalExpressionwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="maml.ast.FocalMean" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="FocalMeanextendsOperationwithFocalExpressionwithProductwithSerializable"></a>
+      <a id="FocalMean:FocalMean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="FocalMean.html"><span class="name">FocalMean</span></a><span class="params">(<span name="children">children: <span class="extype" name="scala.List">List</span>[<a href="Expression.html" class="extype" name="maml.ast.Expression">Expression</a>]</span>, <span name="neighborhood">neighborhood: <a href="utility/Neighborhood.html" class="extype" name="maml.ast.utility.Neighborhood">Neighborhood</a></span>)</span><span class="result"> extends <a href="Operation.html" class="extype" name="maml.ast.Operation">Operation</a> with <a href="FocalExpression.html" class="extype" name="maml.ast.FocalExpression">FocalExpression</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.ast.package@FocalMeanextendsOperationwithFocalExpressionwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="maml.ast.FocalMedian" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="FocalMedianextendsOperationwithFocalExpressionwithProductwithSerializable"></a>
+      <a id="FocalMedian:FocalMedian"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="FocalMedian.html"><span class="name">FocalMedian</span></a><span class="params">(<span name="children">children: <span class="extype" name="scala.List">List</span>[<a href="Expression.html" class="extype" name="maml.ast.Expression">Expression</a>]</span>, <span name="neighborhood">neighborhood: <a href="utility/Neighborhood.html" class="extype" name="maml.ast.utility.Neighborhood">Neighborhood</a></span>)</span><span class="result"> extends <a href="Operation.html" class="extype" name="maml.ast.Operation">Operation</a> with <a href="FocalExpression.html" class="extype" name="maml.ast.FocalExpression">FocalExpression</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.ast.package@FocalMedianextendsOperationwithFocalExpressionwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="maml.ast.FocalMin" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="FocalMinextendsOperationwithFocalExpressionwithProductwithSerializable"></a>
+      <a id="FocalMin:FocalMin"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="FocalMin.html"><span class="name">FocalMin</span></a><span class="params">(<span name="children">children: <span class="extype" name="scala.List">List</span>[<a href="Expression.html" class="extype" name="maml.ast.Expression">Expression</a>]</span>, <span name="neighborhood">neighborhood: <a href="utility/Neighborhood.html" class="extype" name="maml.ast.utility.Neighborhood">Neighborhood</a></span>)</span><span class="result"> extends <a href="Operation.html" class="extype" name="maml.ast.Operation">Operation</a> with <a href="FocalExpression.html" class="extype" name="maml.ast.FocalExpression">FocalExpression</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.ast.package@FocalMinextendsOperationwithFocalExpressionwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="maml.ast.FocalMode" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="FocalModeextendsOperationwithFocalExpressionwithProductwithSerializable"></a>
+      <a id="FocalMode:FocalMode"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="FocalMode.html"><span class="name">FocalMode</span></a><span class="params">(<span name="children">children: <span class="extype" name="scala.List">List</span>[<a href="Expression.html" class="extype" name="maml.ast.Expression">Expression</a>]</span>, <span name="neighborhood">neighborhood: <a href="utility/Neighborhood.html" class="extype" name="maml.ast.utility.Neighborhood">Neighborhood</a></span>)</span><span class="result"> extends <a href="Operation.html" class="extype" name="maml.ast.Operation">Operation</a> with <a href="FocalExpression.html" class="extype" name="maml.ast.FocalExpression">FocalExpression</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.ast.package@FocalModeextendsOperationwithFocalExpressionwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="maml.ast.FocalStdDev" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="FocalStdDevextendsOperationwithFocalExpressionwithProductwithSerializable"></a>
+      <a id="FocalStdDev:FocalStdDev"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="FocalStdDev.html"><span class="name">FocalStdDev</span></a><span class="params">(<span name="children">children: <span class="extype" name="scala.List">List</span>[<a href="Expression.html" class="extype" name="maml.ast.Expression">Expression</a>]</span>, <span name="neighborhood">neighborhood: <a href="utility/Neighborhood.html" class="extype" name="maml.ast.utility.Neighborhood">Neighborhood</a></span>)</span><span class="result"> extends <a href="Operation.html" class="extype" name="maml.ast.Operation">Operation</a> with <a href="FocalExpression.html" class="extype" name="maml.ast.FocalExpression">FocalExpression</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.ast.package@FocalStdDevextendsOperationwithFocalExpressionwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="maml.ast.FocalSum" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="FocalSumextendsOperationwithFocalExpressionwithProductwithSerializable"></a>
+      <a id="FocalSum:FocalSum"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="FocalSum.html"><span class="name">FocalSum</span></a><span class="params">(<span name="children">children: <span class="extype" name="scala.List">List</span>[<a href="Expression.html" class="extype" name="maml.ast.Expression">Expression</a>]</span>, <span name="neighborhood">neighborhood: <a href="utility/Neighborhood.html" class="extype" name="maml.ast.utility.Neighborhood">Neighborhood</a></span>)</span><span class="result"> extends <a href="Operation.html" class="extype" name="maml.ast.Operation">Operation</a> with <a href="FocalExpression.html" class="extype" name="maml.ast.FocalExpression">FocalExpression</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.ast.package@FocalSumextendsOperationwithFocalExpressionwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="maml.ast.FoldableExpression" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="FoldableExpressionextendsExpression"></a>
+      <a id="FoldableExpression:FoldableExpression"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="FoldableExpression.html"><span class="name">FoldableExpression</span></a><span class="result"> extends <a href="Expression.html" class="extype" name="maml.ast.Expression">Expression</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.ast.package@FoldableExpressionextendsExpression" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="maml.ast.GeomSource" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="GeomSourceextendsUnboundSourcewithProductwithSerializable"></a>
+      <a id="GeomSource:GeomSource"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="GeomSource.html"><span class="name">GeomSource</span></a><span class="params">(<span name="id">id: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <a href="UnboundSource.html" class="extype" name="maml.ast.UnboundSource">UnboundSource</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.ast.package@GeomSourceextendsUnboundSourcewithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="maml.ast.Greater" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="GreaterextendsOperationwithBinaryExpressionwithProductwithSerializable"></a>
+      <a id="Greater:Greater"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Greater.html"><span class="name">Greater</span></a><span class="params">(<span name="children">children: <span class="extype" name="scala.List">List</span>[<a href="Expression.html" class="extype" name="maml.ast.Expression">Expression</a>]</span>)</span><span class="result"> extends <a href="Operation.html" class="extype" name="maml.ast.Operation">Operation</a> with <a href="BinaryExpression.html" class="extype" name="maml.ast.BinaryExpression">BinaryExpression</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.ast.package@GreaterextendsOperationwithBinaryExpressionwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="maml.ast.GreaterOrEqual" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="GreaterOrEqualextendsOperationwithBinaryExpressionwithProductwithSerializable"></a>
+      <a id="GreaterOrEqual:GreaterOrEqual"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="GreaterOrEqual.html"><span class="name">GreaterOrEqual</span></a><span class="params">(<span name="children">children: <span class="extype" name="scala.List">List</span>[<a href="Expression.html" class="extype" name="maml.ast.Expression">Expression</a>]</span>)</span><span class="result"> extends <a href="Operation.html" class="extype" name="maml.ast.Operation">Operation</a> with <a href="BinaryExpression.html" class="extype" name="maml.ast.BinaryExpression">BinaryExpression</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.ast.package@GreaterOrEqualextendsOperationwithBinaryExpressionwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="maml.ast.IntLiteral" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="IntLiteralextendsSourcewithProductwithSerializable"></a>
+      <a id="IntLiteral:IntLiteral"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="IntLiteral.html"><span class="name">IntLiteral</span></a><span class="params">(<span name="value">value: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result"> extends <a href="Source.html" class="extype" name="maml.ast.Source">Source</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.ast.package@IntLiteralextendsSourcewithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="maml.ast.IntSource" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="IntSourceextendsUnboundSourcewithProductwithSerializable"></a>
+      <a id="IntSource:IntSource"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="IntSource.html"><span class="name">IntSource</span></a><span class="params">(<span name="id">id: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <a href="UnboundSource.html" class="extype" name="maml.ast.UnboundSource">UnboundSource</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.ast.package@IntSourceextendsUnboundSourcewithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="maml.ast.Less" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="LessextendsOperationwithBinaryExpressionwithProductwithSerializable"></a>
+      <a id="Less:Less"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Less.html"><span class="name">Less</span></a><span class="params">(<span name="children">children: <span class="extype" name="scala.List">List</span>[<a href="Expression.html" class="extype" name="maml.ast.Expression">Expression</a>]</span>)</span><span class="result"> extends <a href="Operation.html" class="extype" name="maml.ast.Operation">Operation</a> with <a href="BinaryExpression.html" class="extype" name="maml.ast.BinaryExpression">BinaryExpression</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.ast.package@LessextendsOperationwithBinaryExpressionwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="maml.ast.LessOrEqual" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="LessOrEqualextendsOperationwithBinaryExpressionwithProductwithSerializable"></a>
+      <a id="LessOrEqual:LessOrEqual"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="LessOrEqual.html"><span class="name">LessOrEqual</span></a><span class="params">(<span name="children">children: <span class="extype" name="scala.List">List</span>[<a href="Expression.html" class="extype" name="maml.ast.Expression">Expression</a>]</span>)</span><span class="result"> extends <a href="Operation.html" class="extype" name="maml.ast.Operation">Operation</a> with <a href="BinaryExpression.html" class="extype" name="maml.ast.BinaryExpression">BinaryExpression</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.ast.package@LessOrEqualextendsOperationwithBinaryExpressionwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="maml.ast.MamlKind" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="MamlKindextendsAnyRef"></a>
+      <a id="MamlKind:MamlKind"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="MamlKind.html"><span class="name">MamlKind</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.ast.package@MamlKindextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="maml.ast.Masking" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="MaskingextendsOperationwithBinaryExpressionwithProductwithSerializable"></a>
+      <a id="Masking:Masking"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Masking.html"><span class="name">Masking</span></a><span class="params">(<span name="children">children: <span class="extype" name="scala.List">List</span>[<a href="Expression.html" class="extype" name="maml.ast.Expression">Expression</a>]</span>)</span><span class="result"> extends <a href="Operation.html" class="extype" name="maml.ast.Operation">Operation</a> with <a href="BinaryExpression.html" class="extype" name="maml.ast.BinaryExpression">BinaryExpression</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.ast.package@MaskingextendsOperationwithBinaryExpressionwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="maml.ast.Max" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="MaxextendsOperationwithFoldableExpressionwithProductwithSerializable"></a>
+      <a id="Max:Max"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Max.html"><span class="name">Max</span></a><span class="params">(<span name="children">children: <span class="extype" name="scala.List">List</span>[<a href="Expression.html" class="extype" name="maml.ast.Expression">Expression</a>]</span>)</span><span class="result"> extends <a href="Operation.html" class="extype" name="maml.ast.Operation">Operation</a> with <a href="FoldableExpression.html" class="extype" name="maml.ast.FoldableExpression">FoldableExpression</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.ast.package@MaxextendsOperationwithFoldableExpressionwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="maml.ast.Min" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="MinextendsOperationwithFoldableExpressionwithProductwithSerializable"></a>
+      <a id="Min:Min"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Min.html"><span class="name">Min</span></a><span class="params">(<span name="children">children: <span class="extype" name="scala.List">List</span>[<a href="Expression.html" class="extype" name="maml.ast.Expression">Expression</a>]</span>)</span><span class="result"> extends <a href="Operation.html" class="extype" name="maml.ast.Operation">Operation</a> with <a href="FoldableExpression.html" class="extype" name="maml.ast.FoldableExpression">FoldableExpression</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.ast.package@MinextendsOperationwithFoldableExpressionwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="maml.ast.Multiplication" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="MultiplicationextendsOperationwithFoldableExpressionwithProductwithSerializable"></a>
+      <a id="Multiplication:Multiplication"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Multiplication.html"><span class="name">Multiplication</span></a><span class="params">(<span name="children">children: <span class="extype" name="scala.List">List</span>[<a href="Expression.html" class="extype" name="maml.ast.Expression">Expression</a>]</span>)</span><span class="result"> extends <a href="Operation.html" class="extype" name="maml.ast.Operation">Operation</a> with <a href="FoldableExpression.html" class="extype" name="maml.ast.FoldableExpression">FoldableExpression</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.ast.package@MultiplicationextendsOperationwithFoldableExpressionwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="maml.ast.Operation" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="OperationextendsExpression"></a>
+      <a id="Operation:Operation"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="Operation.html"><span class="name">Operation</span></a><span class="result"> extends <a href="Expression.html" class="extype" name="maml.ast.Expression">Expression</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.ast.package@OperationextendsExpression" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="maml.ast.Or" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="OrextendsOperationwithBinaryExpressionwithProductwithSerializable"></a>
+      <a id="Or:Or"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Or.html"><span class="name">Or</span></a><span class="params">(<span name="children">children: <span class="extype" name="scala.List">List</span>[<a href="Expression.html" class="extype" name="maml.ast.Expression">Expression</a>]</span>)</span><span class="result"> extends <a href="Operation.html" class="extype" name="maml.ast.Operation">Operation</a> with <a href="BinaryExpression.html" class="extype" name="maml.ast.BinaryExpression">BinaryExpression</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.ast.package@OrextendsOperationwithBinaryExpressionwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="maml.ast.Source" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="SourceextendsExpression"></a>
+      <a id="Source:Source"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="Source.html"><span class="name">Source</span></a><span class="result"> extends <a href="Expression.html" class="extype" name="maml.ast.Expression">Expression</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.ast.package@SourceextendsExpression" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="maml.ast.Subtraction" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SubtractionextendsOperationwithFoldableExpressionwithProductwithSerializable"></a>
+      <a id="Subtraction:Subtraction"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Subtraction.html"><span class="name">Subtraction</span></a><span class="params">(<span name="children">children: <span class="extype" name="scala.List">List</span>[<a href="Expression.html" class="extype" name="maml.ast.Expression">Expression</a>]</span>)</span><span class="result"> extends <a href="Operation.html" class="extype" name="maml.ast.Operation">Operation</a> with <a href="FoldableExpression.html" class="extype" name="maml.ast.FoldableExpression">FoldableExpression</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.ast.package@SubtractionextendsOperationwithFoldableExpressionwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="maml.ast.TileSource" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="TileSourceextendsUnboundSourcewithProductwithSerializable"></a>
+      <a id="TileSource:TileSource"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="TileSource.html"><span class="name">TileSource</span></a><span class="params">(<span name="id">id: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <a href="UnboundSource.html" class="extype" name="maml.ast.UnboundSource">UnboundSource</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.ast.package@TileSourceextendsUnboundSourcewithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="maml.ast.UnaryExpression" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="UnaryExpressionextendsExpression"></a>
+      <a id="UnaryExpression:UnaryExpression"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="UnaryExpression.html"><span class="name">UnaryExpression</span></a><span class="result"> extends <a href="Expression.html" class="extype" name="maml.ast.Expression">Expression</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.ast.package@UnaryExpressionextendsExpression" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Operations which should only have one argument.</p>
+    </li><li name="maml.ast.UnboundSource" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="UnboundSourceextendsSource"></a>
+      <a id="UnboundSource:UnboundSource"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="UnboundSource.html"><span class="name">UnboundSource</span></a><span class="result"> extends <a href="Source.html" class="extype" name="maml.ast.Source">Source</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.ast.package@UnboundSourceextendsSource" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="maml.ast.ValueReaderTileSource" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ValueReaderTileSourceextendsSourcewithProductwithSerializable"></a>
+      <a id="ValueReaderTileSource:ValueReaderTileSource"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="ValueReaderTileSource.html"><span class="name">ValueReaderTileSource</span></a><span class="params">(<span name="bucket">bucket: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="root">root: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="layerId">layerId: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <a href="Source.html" class="extype" name="maml.ast.Source">Source</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.ast.package@ValueReaderTileSourceextendsSourcewithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="maml.ast.Xor" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="XorextendsOperationwithBinaryExpressionwithProductwithSerializable"></a>
+      <a id="Xor:Xor"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Xor.html"><span class="name">Xor</span></a><span class="params">(<span name="children">children: <span class="extype" name="scala.List">List</span>[<a href="Expression.html" class="extype" name="maml.ast.Expression">Expression</a>]</span>)</span><span class="result"> extends <a href="Operation.html" class="extype" name="maml.ast.Operation">Operation</a> with <a href="BinaryExpression.html" class="extype" name="maml.ast.BinaryExpression">BinaryExpression</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.ast.package@XorextendsOperationwithBinaryExpressionwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li></ol>
+            </div>
+
+        
+
+        <div id="values" class="values members">
+              <h3>Value Members</h3>
+              <ol><li name="maml.ast.BinaryExpression" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="BinaryExpression"></a>
+      <a id="BinaryExpression:BinaryExpression"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="BinaryExpression$.html"><span class="name">BinaryExpression</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.ast.package@BinaryExpression" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="maml.ast.FoldableExpression" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="FoldableExpression"></a>
+      <a id="FoldableExpression:FoldableExpression"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="FoldableExpression$.html"><span class="name">FoldableExpression</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.ast.package@FoldableExpression" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="maml.ast.MamlKind" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="MamlKind"></a>
+      <a id="MamlKind:MamlKind"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="MamlKind$.html"><span class="name">MamlKind</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.ast.package@MamlKind" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="maml.ast.ValueReaderTileSource" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ValueReaderTileSource"></a>
+      <a id="ValueReaderTileSource:ValueReaderTileSource"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="ValueReaderTileSource$.html"><span class="name">ValueReaderTileSource</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.ast.package@ValueReaderTileSource" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="maml.ast.codec" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="codec"></a>
+      <a id="codec:codec"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="codec/package.html"><span class="name">codec</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.ast.package@codec" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="maml.ast.jvm" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="jvm"></a>
+      <a id="jvm:jvm"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="jvm/package.html"><span class="name">jvm</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.ast.package@jvm" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="maml.ast.utility" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="utility"></a>
+      <a id="utility:utility"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="utility/package.html"><span class="name">utility</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.ast.package@utility" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li></ol>
+            </div>
+
+        
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>

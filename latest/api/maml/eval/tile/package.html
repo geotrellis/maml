@@ -1,0 +1,206 @@
+<!DOCTYPE html >
+<html>
+        <head>
+          <title>tile - maml.eval.tile</title>
+          <meta name="description" content="tile - maml.eval.tile" />
+          <meta name="keywords" content="tile maml.eval.tile" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+      
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../index.html';
+            var hash = 'maml.eval.tile.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
+    
+        </head>
+        <body class="value">
+      <div id="definition">
+        <img alt="Package" src="../../../lib/package_big.png" />
+        <p id="owner"><a href="../../package.html" class="extype" name="maml">maml</a>.<a href="../package.html" class="extype" name="maml.eval">eval</a></p>
+        <h1>tile</h1><span class="permalink">
+      <a href="../../../index.html#maml.eval.tile.package" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <span class="name">tile</span>
+      </span>
+      </h4>
+      
+          <div id="comment" class="fullcommenttop"></div>
+        
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        
+        
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div id="types" class="types members">
+              <h3>Type Members</h3>
+              <ol><li name="maml.eval.tile.Classify" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ClassifyextendsLazyTile.UnaryBranchwithProductwithSerializable"></a>
+      <a id="Classify:Classify"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Classify.html"><span class="name">Classify</span></a><span class="params">(<span name="children">children: <span class="extype" name="scala.List">List</span>[<a href="LazyTile.html" class="extype" name="maml.eval.tile.LazyTile">LazyTile</a>]</span>, <span name="f">f: (<span class="extype" name="scala.Double">Double</span>) ⇒ <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result"> extends <a href="LazyTile$$UnaryBranch.html" class="extype" name="maml.eval.tile.LazyTile.UnaryBranch">UnaryBranch</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#maml.eval.tile.package@ClassifyextendsLazyTile.UnaryBranchwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="maml.eval.tile.LazyTile" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="LazyTileextendsLazyLogging"></a>
+      <a id="LazyTile:LazyTile"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">sealed </span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="LazyTile.html"><span class="name">LazyTile</span></a><span class="result"> extends <span class="extype" name="com.typesafe.scalalogging.LazyLogging">LazyLogging</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#maml.eval.tile.package@LazyTileextendsLazyLogging" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="maml.eval.tile.MaskingNode" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="MaskingNodeextendsLazyTile.UnaryBranchwithProductwithSerializable"></a>
+      <a id="MaskingNode:MaskingNode"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="MaskingNode.html"><span class="name">MaskingNode</span></a><span class="params">(<span name="children">children: <span class="extype" name="scala.List">List</span>[<a href="LazyTile.html" class="extype" name="maml.eval.tile.LazyTile">LazyTile</a>]</span>, <span name="extent">extent: <span class="extype" name="geotrellis.vector.Extent">Extent</span></span>, <span name="mask">mask: <span class="extype" name="geotrellis.vector.MultiPolygon">MultiPolygon</span></span>)</span><span class="result"> extends <a href="LazyTile$$UnaryBranch.html" class="extype" name="maml.eval.tile.LazyTile.UnaryBranch">UnaryBranch</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#maml.eval.tile.package@MaskingNodeextendsLazyTile.UnaryBranchwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="maml.eval.tile.NeighboringTiles" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="NeighboringTilesextendsProductwithSerializable"></a>
+      <a id="NeighboringTiles:NeighboringTiles"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="NeighboringTiles.html"><span class="name">NeighboringTiles</span></a><span class="params">(<span name="tl">tl: <span class="extype" name="geotrellis.raster.Tile">Tile</span></span>, <span name="tm">tm: <span class="extype" name="geotrellis.raster.Tile">Tile</span></span>, <span name="tr">tr: <span class="extype" name="geotrellis.raster.Tile">Tile</span></span>, <span name="ml">ml: <span class="extype" name="geotrellis.raster.Tile">Tile</span></span>, <span name="mr">mr: <span class="extype" name="geotrellis.raster.Tile">Tile</span></span>, <span name="bl">bl: <span class="extype" name="geotrellis.raster.Tile">Tile</span></span>, <span name="bm">bm: <span class="extype" name="geotrellis.raster.Tile">Tile</span></span>, <span name="br">br: <span class="extype" name="geotrellis.raster.Tile">Tile</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#maml.eval.tile.package@NeighboringTilesextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="maml.eval.tile.TileWithNeighbors" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="TileWithNeighborsextendsProductwithSerializable"></a>
+      <a id="TileWithNeighbors:TileWithNeighbors"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="TileWithNeighbors.html"><span class="name">TileWithNeighbors</span></a><span class="params">(<span name="centerTile">centerTile: <span class="extype" name="geotrellis.raster.Tile">Tile</span></span>, <span name="buffers">buffers: <span class="extype" name="scala.Option">Option</span>[<a href="NeighboringTiles.html" class="extype" name="maml.eval.tile.NeighboringTiles">NeighboringTiles</a>]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#maml.eval.tile.package@TileWithNeighborsextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li></ol>
+            </div>
+
+        
+
+        <div id="values" class="values members">
+              <h3>Value Members</h3>
+              <ol><li name="maml.eval.tile.LazyTile" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="LazyTile"></a>
+      <a id="LazyTile:LazyTile"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="LazyTile$.html"><span class="name">LazyTile</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#maml.eval.tile.package@LazyTile" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li></ol>
+            </div>
+
+        
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>

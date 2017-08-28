@@ -1,0 +1,453 @@
+<!DOCTYPE html >
+<html>
+        <head>
+          <title>eval - maml.eval</title>
+          <meta name="description" content="eval - maml.eval" />
+          <meta name="keywords" content="eval maml.eval" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../lib/template.js"></script>
+      <script type="text/javascript" src="../../lib/tools.tooltip.js"></script>
+      
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../index.html';
+            var hash = 'maml.eval.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
+    
+        </head>
+        <body class="value">
+      <div id="definition">
+        <img alt="Package" src="../../lib/package_big.png" />
+        <p id="owner"><a href="../package.html" class="extype" name="maml">maml</a></p>
+        <h1>eval</h1><span class="permalink">
+      <a href="../../index.html#maml.eval.package" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <span class="name">eval</span>
+      </span>
+      </h4>
+      
+          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
+          <span class="toggle">Linear Supertypes</span>
+          <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
+        </div></div>
+        
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        <div id="order">
+              <span class="filtertype">Ordering</span>
+              <ol>
+                
+                <li class="alpha in"><span>Alphabetic</span></li>
+                <li class="inherit out"><span>By Inheritance</span></li>
+              </ol>
+            </div>
+        <div id="ancestors">
+                <span class="filtertype">Inherited<br />
+                </span>
+                <ol id="linearization">
+                  <li class="in" name="maml.eval"><span>eval</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                </ol>
+              </div><div id="ancestors">
+            <span class="filtertype"></span>
+            <ol>
+              <li class="hideall out"><span>Hide All</span></li>
+              <li class="showall in"><span>Show All</span></li>
+            </ol>
+          </div>
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div id="types" class="types members">
+              <h3>Type Members</h3>
+              <ol><li name="maml.eval.BoolResult" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="BoolResultextendsResultwithProductwithSerializable"></a>
+      <a id="BoolResult:BoolResult"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="BoolResult.html"><span class="name">BoolResult</span></a><span class="params">(<span name="res">res: <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="result"> extends <a href="Result.html" class="extype" name="maml.eval.Result">Result</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.eval.package@BoolResultextendsResultwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="maml.eval.BufferingInterpreter" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="BufferingInterpreterextendsScopedInterpreter[maml.eval.BufferingInterpreter.Scope]withProductwithSerializable"></a>
+      <a id="BufferingInterpreter:BufferingInterpreter"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="BufferingInterpreter.html"><span class="name">BufferingInterpreter</span></a><span class="params">(<span name="directives">directives: <span class="extype" name="scala.List">List</span>[<a href="#ScopedDirective[Scope]=PartialFunction[(maml.ast.Expression,Seq[maml.eval.Result],Scope),maml.eval.package.Interpreted[maml.eval.Result]]" class="extmbr" name="maml.eval.ScopedDirective">ScopedDirective</a>[<a href="BufferingInterpreter$$Scope.html" class="extype" name="maml.eval.BufferingInterpreter.Scope">Scope</a>]]</span>, <span name="options">options: <a href="BufferingInterpreter$$Options.html" class="extype" name="maml.eval.BufferingInterpreter.Options">Options</a> = <span class="symbol"><span class="name"><a href="BufferingInterpreter$.html">BufferingInterpreter.Options(256)</a></span></span></span>)</span><span class="result"> extends <a href="ScopedInterpreter.html" class="extype" name="maml.eval.ScopedInterpreter">ScopedInterpreter</a>[<a href="BufferingInterpreter$$Scope.html" class="extype" name="maml.eval.BufferingInterpreter.Scope">Scope</a>] with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.eval.package@BufferingInterpreterextendsScopedInterpreter[maml.eval.BufferingInterpreter.Scope]withProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="maml.eval.Directive" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Directive=PartialFunction[(maml.ast.Expression,Seq[maml.eval.Result]),maml.eval.package.Interpreted[maml.eval.Result]]"></a>
+      <a id="Directive:Directive"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">type</span>
+      </span>
+      <span class="symbol">
+        <span class="name">Directive</span><span class="result"> = <span class="extype" name="scala.PartialFunction">PartialFunction</span>[(<a href="../ast/Expression.html" class="extype" name="maml.ast.Expression">Expression</a>, <span class="extype" name="scala.Seq">Seq</span>[<a href="Result.html" class="extype" name="maml.eval.Result">Result</a>]), <a href="#Interpreted[A]=cats.data.ValidatedNel[maml.error.InterpreterError,A]" class="extmbr" name="maml.eval.Interpreted">Interpreted</a>[<a href="Result.html" class="extype" name="maml.eval.Result">Result</a>]]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.eval.package@Directive=PartialFunction[(maml.ast.Expression,Seq[maml.eval.Result]),maml.eval.package.Interpreted[maml.eval.Result]]" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="maml.eval.DoubleResult" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="DoubleResultextendsResultwithProductwithSerializable"></a>
+      <a id="DoubleResult:DoubleResult"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="DoubleResult.html"><span class="name">DoubleResult</span></a><span class="params">(<span name="res">res: <span class="extype" name="scala.Double">Double</span></span>)</span><span class="result"> extends <a href="Result.html" class="extype" name="maml.eval.Result">Result</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.eval.package@DoubleResultextendsResultwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="maml.eval.GeomResult" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="GeomResultextendsResultwithProductwithSerializable"></a>
+      <a id="GeomResult:GeomResult"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="GeomResult.html"><span class="name">GeomResult</span></a><span class="params">(<span name="res">res: <span class="extype" name="geotrellis.vector.Geometry">Geometry</span></span>)</span><span class="result"> extends <a href="Result.html" class="extype" name="maml.eval.Result">Result</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.eval.package@GeomResultextendsResultwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="maml.eval.IntResult" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="IntResultextendsResultwithProductwithSerializable"></a>
+      <a id="IntResult:IntResult"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="IntResult.html"><span class="name">IntResult</span></a><span class="params">(<span name="res">res: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result"> extends <a href="Result.html" class="extype" name="maml.eval.Result">Result</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.eval.package@IntResultextendsResultwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="maml.eval.Interpreted" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Interpreted[A]=cats.data.ValidatedNel[maml.error.InterpreterError,A]"></a>
+      <a id="Interpreted[A]:Interpreted[A]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">type</span>
+      </span>
+      <span class="symbol">
+        <span class="name">Interpreted</span><span class="tparams">[<span name="A">A</span>]</span><span class="result"> = <span class="extype" name="cats.data.Validated">Validated</span>[<span class="extype" name="cats.data.NonEmptyList">NonEmptyList</span>[<a href="../error/InterpreterError.html" class="extype" name="maml.error.InterpreterError">InterpreterError</a>], <span class="extype" name="maml.eval.Interpreted.A">A</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.eval.package@Interpreted[A]=cats.data.ValidatedNel[maml.error.InterpreterError,A]" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="maml.eval.Interpreter" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="InterpreterextendsAnyRef"></a>
+      <a id="Interpreter:Interpreter"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="Interpreter.html"><span class="name">Interpreter</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.eval.package@InterpreterextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="maml.eval.NaiveInterpreter" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="NaiveInterpreterextendsInterpreterwithProductwithSerializable"></a>
+      <a id="NaiveInterpreter:NaiveInterpreter"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="NaiveInterpreter.html"><span class="name">NaiveInterpreter</span></a><span class="params">(<span name="directives">directives: <span class="extype" name="scala.List">List</span>[<a href="#Directive=PartialFunction[(maml.ast.Expression,Seq[maml.eval.Result]),maml.eval.package.Interpreted[maml.eval.Result]]" class="extmbr" name="maml.eval.Directive">Directive</a>]</span>)</span><span class="result"> extends <a href="Interpreter.html" class="extype" name="maml.eval.Interpreter">Interpreter</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.eval.package@NaiveInterpreterextendsInterpreterwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="maml.eval.Result" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="ResultextendsAnyRef"></a>
+      <a id="Result:Result"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">sealed </span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="Result.html"><span class="name">Result</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.eval.package@ResultextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="maml.eval.ScopedDirective" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ScopedDirective[Scope]=PartialFunction[(maml.ast.Expression,Seq[maml.eval.Result],Scope),maml.eval.package.Interpreted[maml.eval.Result]]"></a>
+      <a id="ScopedDirective[Scope]:ScopedDirective[Scope]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">type</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ScopedDirective</span><span class="tparams">[<span name="Scope">Scope</span>]</span><span class="result"> = <span class="extype" name="scala.PartialFunction">PartialFunction</span>[(<a href="../ast/Expression.html" class="extype" name="maml.ast.Expression">Expression</a>, <span class="extype" name="scala.Seq">Seq</span>[<a href="Result.html" class="extype" name="maml.eval.Result">Result</a>], <span class="extype" name="maml.eval.ScopedDirective.Scope">Scope</span>), <a href="#Interpreted[A]=cats.data.ValidatedNel[maml.error.InterpreterError,A]" class="extmbr" name="maml.eval.Interpreted">Interpreted</a>[<a href="Result.html" class="extype" name="maml.eval.Result">Result</a>]]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.eval.package@ScopedDirective[Scope]=PartialFunction[(maml.ast.Expression,Seq[maml.eval.Result],Scope),maml.eval.package.Interpreted[maml.eval.Result]]" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="maml.eval.ScopedInterpreter" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="ScopedInterpreter[Scope]extendsAnyRef"></a>
+      <a id="ScopedInterpreter[Scope]:ScopedInterpreter[Scope]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ScopedInterpreter.html"><span class="name">ScopedInterpreter</span></a><span class="tparams">[<span name="Scope">Scope</span>]</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.eval.package@ScopedInterpreter[Scope]extendsAnyRef" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="maml.eval.TileResult" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="TileResultextendsResultwithProductwithSerializable"></a>
+      <a id="TileResult:TileResult"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="TileResult.html"><span class="name">TileResult</span></a><span class="params">(<span name="res">res: <a href="tile/LazyTile.html" class="extype" name="maml.eval.tile.LazyTile">LazyTile</a></span>)</span><span class="result"> extends <a href="Result.html" class="extype" name="maml.eval.Result">Result</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.eval.package@TileResultextendsResultwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li></ol>
+            </div>
+
+        
+
+        <div id="values" class="values members">
+              <h3>Value Members</h3>
+              <ol><li name="maml.eval.BufferingInterpreter" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="BufferingInterpreter"></a>
+      <a id="BufferingInterpreter:BufferingInterpreter"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="BufferingInterpreter$.html"><span class="name">BufferingInterpreter</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.eval.package@BufferingInterpreter" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="maml.eval.Interpreter" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Interpreter"></a>
+      <a id="Interpreter:Interpreter"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Interpreter$.html"><span class="name">Interpreter</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.eval.package@Interpreter" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="maml.eval.Resolver" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Resolver"></a>
+      <a id="Resolver:Resolver"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Resolver$.html"><span class="name">Resolver</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.eval.package@Resolver" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="maml.eval.directive" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="directive"></a>
+      <a id="directive:directive"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="directive/package.html"><span class="name">directive</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.eval.package@directive" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="maml.eval#gtNeighborhoods" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="gtNeighborhoods(n:maml.ast.utility.Neighborhood):geotrellis.raster.mapalgebra.focal.Neighborhood"></a>
+      <a id="gtNeighborhoods(Neighborhood):Neighborhood"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">gtNeighborhoods</span><span class="params">(<span name="n">n: <a href="../ast/utility/Neighborhood.html" class="extype" name="maml.ast.utility.Neighborhood">Neighborhood</a></span>)</span><span class="result">: <span class="extype" name="geotrellis.raster.mapalgebra.focal.Neighborhood">Neighborhood</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.eval.package@gtNeighborhoods(n:maml.ast.utility.Neighborhood):geotrellis.raster.mapalgebra.focal.Neighborhood" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="maml.eval.tile" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="tile"></a>
+      <a id="tile:tile"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="tile/package.html"><span class="name">tile</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#maml.eval.package@tile" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li></ol>
+            </div>
+
+        
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        <div class="parent" name="scala.AnyRef">
+              <h3>Inherited from <span class="extype" name="scala.AnyRef">AnyRef</span></h3>
+            </div><div class="parent" name="scala.Any">
+              <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>
+            </div>
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>
