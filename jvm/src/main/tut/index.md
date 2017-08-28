@@ -30,5 +30,5 @@ libraryDependencies += "com.azavea" %% "maml" % "1.0.0"
 Now import the following, and you're good to go:
 
 ```tut:silent
-// import maml.ast.jvm._
+import maml.ast.jvm._
 ```
