@@ -23,6 +23,8 @@ lazy val root = project.in(file(".")).
     publishLocal := {}
   ).enablePlugins(ScalaJSPlugin)
 
+scalaVersion in ThisBuild := "2.11.11"
+
 lazy val maml = crossProject.in(file(".")).
   settings(publishSettings:_*)
   .settings(
@@ -43,7 +45,6 @@ lazy val maml = crossProject.in(file(".")).
       "-language:existentials",
       "-language:experimental.macros",
       "-feature",
-      "-Ypartial-unification",
       "-Ypatmat-exhaust-depth", "100"
     ),
     libraryDependencies ++= Seq(
@@ -79,3 +80,12 @@ lazy val maml = crossProject.in(file(".")).
 
 lazy val mamlJVM = maml.jvm
 lazy val mamlJS = maml.js
+lazy val mamlRDD = (project in file("rdd"))
+  .dependsOn(mamlJVM)
+  .settings(
+    libraryDependencies ++= Seq(
+      "org.locationtech.geotrellis" %% "geotrellis-spark-testkit" % "1.1.1"
+    ),
+    fork in Test := false,
+    parallelExecution in Test := false
+  )

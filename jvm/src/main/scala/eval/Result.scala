@@ -13,7 +13,7 @@ import Validated._
 import scala.reflect.ClassTag
 
 
-sealed trait Result {
+trait Result {
   def as[T](implicit ct: ClassTag[T]): Interpreted[T]
   def kind: MamlKind
 }

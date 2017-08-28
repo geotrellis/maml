@@ -40,4 +40,3 @@ object BufferingInterpreter {
   def gridbounds(expectedTileSize: Int, buffer: Int, extent: Int): GridBounds =
     GridBounds(extent, extent, expectedTileSize - 1 + buffer * 2 + extent, expectedTileSize - 1 + buffer * 2 + extent)
 }
-
