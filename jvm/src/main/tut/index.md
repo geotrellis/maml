@@ -9,6 +9,7 @@ technologies:
  - third: ["Scala", "Functional Programming on the JVM"]
 ---
 
+**Note: Neither MAML nor this site have been officially released. Please be wary of shifting content.**
 
 # Map Algebra Model Lab
 
