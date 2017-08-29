@@ -1,0 +1,18 @@
+{
+  "package": {
+    "name": "MAML",
+    "repo": "maven",
+    "subject": "azavea",
+    "desc": "Map Algebra Modeling Language",
+    "website_url": "https://geotrellis.github.io/maml/",
+    "vcs_url": "https://github.com/geotrellis/maml",
+    "issue_tracker_url": "https://github.com/geotrellis/maml/issues",
+    "licenses": ["APACHE-2.0"]
+  },
+
+  "version": {
+    "name": "0.1"
+  },
+
+  "publish": true
+}

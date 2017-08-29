@@ -1,0 +1,30 @@
+sudo: false
+
+language: scala
+
+env:
+  global:
+    secure: OpQSYJK7h13CouUsr8F+ON/nbRGwBxEKj1JGjsP+NfIevEwGP+nr8DxcYkbjs8WH3VH2D0WtXgHmwydhGTjgPZyEHD4nXvUQWak53eOvQXakh/ZUFw+MHFeaE53EozkU2Gyh0InDLMtkyrbcSYxMWcK1DM8xaCoDj+zVpbtG/+Clbs1giz9ibZGXsiQD06RY6nUqwpcrYdZKzEGVqXeTMyinnuxd6aefmqxer4kQTWVRlV3BiAAW/8G5SFPW5Z8s+zeTBTIFdjuMx0duidw2Q0XXG8tIS8P1YYE4lnjoVIWbxTCsb4z/HAzAOSifrzYryp8O8U0W5pKDRrqfO9g1buEjJtqBO8fAjw84kuXw56Oy9rjYKxeG3t8+bhAMqhSV806d2hTHZu59ZMrdv6z4XnydLo6Mpu9RsNeGMVcXPFgrWIbVLonhapl5AFvINI0v/LxlSvDVhPYpjzVGhxN8RSHU7byTt16cNVZYoVJn6YU8UhQAUTyukiHCJvhBUxkgCBMQVPLfajS99JMoc2QXsJzfKPxsNRrii4M/VJQR2Ue3uzmQc+hv2cJ6zavhs9bTxekyQrVe49HfLNkJXH+vEzxiRkj3btBeYwytFLJ6Sl/oDA6MhfHFP9BOkYd2U3P9SwuT9/+LajH4GPcbxyOpJ1OFG7hT1JRDRd78WPrk+kw=
+
+jdk:
+- openjdk8
+- oraclejdk8
+
+scala:
+- 2.11.8
+
+cache:
+  directories:
+  - "$HOME/.ivy2"
+  - "$HOME/.sbt"
+
+script:
+- ".travis/build-and-test.sh"
+
+deploy:
+  provider: bintray
+  user: azavea
+  file: ".travis/bintray.json"
+  on:
+    repo: geotrellis/maml
+    branch: master, travis
