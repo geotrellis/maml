@@ -1,7 +1,5 @@
 name := "MAML"
 
-scalaVersion in ThisBuild := "2.11.11"
-
 
 lazy val root = project.in(file(".")).
   aggregate(mamlJS, mamlJVM).
@@ -14,6 +12,8 @@ lazy val maml = crossProject.in(file(".")).
   settings(
     name := "MAML",
     version := "0.1-SNAPSHOT",
+    scalaVersion := "2.11.11",
+    crossScalaVersions := Seq("2.11.11", "2.12.1"),
     resolvers += Resolver.sonatypeRepo("releases"),
     addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full),
     scalacOptions := Seq(
