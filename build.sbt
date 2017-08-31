@@ -1,16 +1,33 @@
+val mamlVersion = "0.1-SNAPSHOT"
+
+lazy val publishSettings =
+  if (!mamlVersion.endsWith("-SNAPSHOT"))
+    Seq(
+      bintrayOrganization := Some("azavea"),
+      bintrayRepository := "MAML",
+      bintrayVcsUrl := Some("https://github.com/geotrellis/maml.git"),
+      publishMavenStyle := true,
+      publishArtifact in Test := false,
+      pomIncludeRepository := { _ => false },
+      homepage := Some(url("https://geotrellis.github.io/maml"))
+    )
+  else
+    Seq(publish := {})
+
 name := "MAML"
+licenses ++= Seq(("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0.txt")))
 
 lazy val root = project.in(file(".")).
   aggregate(mamlJS, mamlJVM).
   settings(
-    publish := {},
     publishLocal := {}
   ).enablePlugins(ScalaJSPlugin)
 
 lazy val maml = crossProject.in(file(".")).
-  settings(
+  settings(publishSettings:_*)
+  .settings(
     name := "MAML",
-    version := "0.1-SNAPSHOT",
+    version := mamlVersion,
     scalaVersion := "2.11.11",
     crossScalaVersions := Seq("2.11.11", "2.12.1"),
     resolvers += Resolver.sonatypeRepo("releases"),
@@ -40,7 +57,9 @@ lazy val maml = crossProject.in(file(".")).
       "io.circe"      %%% "circe-optics"            % "0.8.0"
     )
   )
+  .jvmSettings(publishSettings: _*)
   .jvmSettings(
+    licenses ++= Seq(("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0.txt"))),
     resolvers += Resolver.bintrayRepo("hseeberger", "maven"),
     libraryDependencies ++= Seq(
       "org.locationtech.geotrellis" %% "geotrellis-raster"    % "1.1.1",
@@ -56,7 +75,7 @@ lazy val maml = crossProject.in(file(".")).
       "de.heikoseeberger"           %% "akka-http-circe"      % "1.17.0"
     )
   )
-  .jsSettings()
+  .jsSettings(publish := {})
 
 lazy val mamlJVM = maml.jvm
 lazy val mamlJS = maml.js

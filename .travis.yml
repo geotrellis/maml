@@ -1,30 +1,24 @@
 sudo: false
-
 language: scala
-
 env:
   global:
-    secure: OpQSYJK7h13CouUsr8F+ON/nbRGwBxEKj1JGjsP+NfIevEwGP+nr8DxcYkbjs8WH3VH2D0WtXgHmwydhGTjgPZyEHD4nXvUQWak53eOvQXakh/ZUFw+MHFeaE53EozkU2Gyh0InDLMtkyrbcSYxMWcK1DM8xaCoDj+zVpbtG/+Clbs1giz9ibZGXsiQD06RY6nUqwpcrYdZKzEGVqXeTMyinnuxd6aefmqxer4kQTWVRlV3BiAAW/8G5SFPW5Z8s+zeTBTIFdjuMx0duidw2Q0XXG8tIS8P1YYE4lnjoVIWbxTCsb4z/HAzAOSifrzYryp8O8U0W5pKDRrqfO9g1buEjJtqBO8fAjw84kuXw56Oy9rjYKxeG3t8+bhAMqhSV806d2hTHZu59ZMrdv6z4XnydLo6Mpu9RsNeGMVcXPFgrWIbVLonhapl5AFvINI0v/LxlSvDVhPYpjzVGhxN8RSHU7byTt16cNVZYoVJn6YU8UhQAUTyukiHCJvhBUxkgCBMQVPLfajS99JMoc2QXsJzfKPxsNRrii4M/VJQR2Ue3uzmQc+hv2cJ6zavhs9bTxekyQrVe49HfLNkJXH+vEzxiRkj3btBeYwytFLJ6Sl/oDA6MhfHFP9BOkYd2U3P9SwuT9/+LajH4GPcbxyOpJ1OFG7hT1JRDRd78WPrk+kw=
-
+  - secure: OpQSYJK7h13CouUsr8F+ON/nbRGwBxEKj1JGjsP+NfIevEwGP+nr8DxcYkbjs8WH3VH2D0WtXgHmwydhGTjgPZyEHD4nXvUQWak53eOvQXakh/ZUFw+MHFeaE53EozkU2Gyh0InDLMtkyrbcSYxMWcK1DM8xaCoDj+zVpbtG/+Clbs1giz9ibZGXsiQD06RY6nUqwpcrYdZKzEGVqXeTMyinnuxd6aefmqxer4kQTWVRlV3BiAAW/8G5SFPW5Z8s+zeTBTIFdjuMx0duidw2Q0XXG8tIS8P1YYE4lnjoVIWbxTCsb4z/HAzAOSifrzYryp8O8U0W5pKDRrqfO9g1buEjJtqBO8fAjw84kuXw56Oy9rjYKxeG3t8+bhAMqhSV806d2hTHZu59ZMrdv6z4XnydLo6Mpu9RsNeGMVcXPFgrWIbVLonhapl5AFvINI0v/LxlSvDVhPYpjzVGhxN8RSHU7byTt16cNVZYoVJn6YU8UhQAUTyukiHCJvhBUxkgCBMQVPLfajS99JMoc2QXsJzfKPxsNRrii4M/VJQR2Ue3uzmQc+hv2cJ6zavhs9bTxekyQrVe49HfLNkJXH+vEzxiRkj3btBeYwytFLJ6Sl/oDA6MhfHFP9BOkYd2U3P9SwuT9/+LajH4GPcbxyOpJ1OFG7hT1JRDRd78WPrk+kw=
+  - secure: dRtWp3RNa8WC95PYguek5EXC9X74cGLiCdMuobbmLG6jKpUfWf8g7/XVadZoEWsprHzKMThTnthb2q//x/f6RQjBNSxVWy5AKEa2G0LZFbEakIoZXEUB3v1NMoJm2jxCundYw0m+ngUdzDNkndWW5hXpR5UrStdyE2pevmMlkVHxC9eGQbnG6vxsiOGPFfJUKc/XaADhghSk0fx9A5AXF28/HUN6uGnwwFy/lHlDzHDMG4f5XOS2oQWyXD4VRwWkZy1T3Vy/d9LUQA9KhPxJrV0nbd9g8iS9DC86AO7Od+A75YC9MQMMwcp8vit6iBuIlHAqXXxq7sMjViRxBXfaBiAhlH9HbhgOC80rb+qkSJWFL/cnMdW9OFejgo9TvNlWneFf1D5AmukULy76hb3ZrYvr+NbeG2CMRo1jiFjiBuktpzlmte0Wbpd6atEdpPgAkeHqunS3XBz4U+hVEnZiGbKmZycxTTQgWjGw5a2hWhGZa2Y2LiWsQlEDrHNU++R/vxrwNO5q41Ox8Z6qq3F++QlQyUCQSEWleMRVOMhdS4Gpl+yxWGxS40yYJCj7RLQjRl7n+zWLB+LHrWDn5ZHbA6LT8e3YcSt3NtObEr+b/iT2WT11iMX/vRO/n0fu/Bhr1kbTEQCiMJ/88dpg8FwHQyxxW6t4fbexL6nL8a0Vru4=
 jdk:
 - openjdk8
 - oraclejdk8
-
 scala:
 - 2.11.8
-
 cache:
   directories:
   - "$HOME/.ivy2"
   - "$HOME/.sbt"
-
 script:
 - ".travis/build-and-test.sh"
-
 deploy:
-  provider: bintray
-  user: azavea
-  file: ".travis/bintray.json"
+  provider: script
+  script: ".travis/deploy.sh"
   on:
     repo: geotrellis/maml
-    branch: master, travis
+after_deploy:
+- rm -f "${HOME}/.bintray/.credentials"
