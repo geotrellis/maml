@@ -3,6 +3,7 @@ name := "MAML"
 lazy val root = project.in(file(".")).
   aggregate(mamlJS, mamlJVM).
   settings(
+    scalaVersion := "2.11.11",
     publish := {},
     publishLocal := {}
   ).enablePlugins(ScalaJSPlugin)
@@ -12,7 +13,7 @@ lazy val maml = crossProject.in(file(".")).
     name := "MAML",
     version := "0.1-SNAPSHOT",
     scalaVersion := "2.11.11",
-    crossScalaVersions := Seq("2.11.11", "2.12.1"),
+    crossScalaVersions := Seq("2.11.11", "2.12.3"),
     resolvers += Resolver.sonatypeRepo("releases"),
     addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full),
     scalacOptions := Seq(
@@ -46,7 +47,7 @@ lazy val maml = crossProject.in(file(".")).
       "org.locationtech.geotrellis" %% "geotrellis-raster"    % "1.1.1",
       "org.locationtech.geotrellis" %% "geotrellis-spark"     % "1.1.1",
       "org.locationtech.geotrellis" %% "geotrellis-s3"        % "1.1.1",
-      "org.apache.spark"            %% "spark-core"           % "2.0.0",
+      "org.apache.spark"            %% "spark-core"           % "2.2.0",
       "com.typesafe.akka"           %% "akka-actor"           % "2.5.3",
       "com.typesafe.akka"           %% "akka-stream"          % "2.5.3",
       "com.typesafe.akka"           %% "akka-testkit"         % "2.5.3",
