@@ -8,7 +8,7 @@ import io.circe.generic.extras.Configuration
 import java.security.InvalidParameterException
 
 
-case class ValueReaderTileSource(bucket: String, root: String, layerId: String) extends Source {
+case class ValueReaderTileSource[T](bucket: String, root: String, layerId: String, extra: T) extends Source[T] {
   val kind = MamlKind.Tile
   def id = s"ValueReaderTileSrc-$bucket-$root-$layerId"
 }
@@ -18,7 +18,6 @@ object ValueReaderTileSource {
   implicit def conf: Configuration =
     Configuration.default.withDefaults.withDiscriminator("type")
 
-  implicit lazy val decodeValueReaderTileSource: Decoder[ValueReaderTileSource] = deriveDecoder
-  implicit lazy val encodeValueReaderTileSource: Encoder[ValueReaderTileSource] = deriveEncoder
+  implicit def decodeValueReaderTileSource[T: Decoder]: Decoder[ValueReaderTileSource[T]] = deriveDecoder
+  implicit def encodeValueReaderTileSource[T: Encoder]: Encoder[ValueReaderTileSource[T]] = deriveEncoder
 }
-

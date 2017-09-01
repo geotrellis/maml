@@ -7,7 +7,7 @@ import java.security.InvalidParameterException
 
 
 /** Operations which should only have one argument. */
-trait BinaryExpression extends Expression {
+trait BinaryExpression[T] extends Expression[T] {
   require(children.length == 2, s"Incorrect number of arguments to a binary expression. Expected 2, found ${children.length}")
   val kindDerivation: (MamlKind, MamlKind) => MamlKind
   lazy val kind = this.children.map({ _.kind }).reduce({ kindDerivation(_, _) })
@@ -26,7 +26,7 @@ object BinaryExpression {
   }
 }
 
-case class Masking(children: List[Expression]) extends Operation with BinaryExpression {
+case class Masking[T](children: List[Expression[T]], extra: T) extends Operation[T] with BinaryExpression[T] {
   val kindDerivation = { (k1: MamlKind, k2: MamlKind) =>
     (k1, k2) match {
       case (MamlKind.Tile, MamlKind.Geom) => MamlKind.Tile
@@ -35,46 +35,45 @@ case class Masking(children: List[Expression]) extends Operation with BinaryExpr
     }
   }
 
-  def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
+  def withChildren(newChildren: List[Expression[T]]): Expression[T] = copy(children = newChildren)
 }
 
-case class Less(children: List[Expression]) extends Operation with BinaryExpression {
+case class Less[T](children: List[Expression[T]], extra: T) extends Operation[T] with BinaryExpression[T] {
   val kindDerivation = BinaryExpression.scalarCompareDerivation _
-  def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
+  def withChildren(newChildren: List[Expression[T]]): Expression[T] = copy(children = newChildren)
 }
 
-case class LessOrEqual(children: List[Expression]) extends Operation with BinaryExpression {
+case class LessOrEqual[T](children: List[Expression[T]], extra: T) extends Operation[T] with BinaryExpression[T] {
   val kindDerivation = BinaryExpression.scalarCompareDerivation _
-  def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
+  def withChildren(newChildren: List[Expression[T]]): Expression[T] = copy(children = newChildren)
 }
 
-case class Equal(children: List[Expression]) extends Operation with BinaryExpression {
+case class Equal[T](children: List[Expression[T]], extra: T) extends Operation[T] with BinaryExpression[T] {
   val kindDerivation = BinaryExpression.scalarCompareDerivation _
-  def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
+  def withChildren(newChildren: List[Expression[T]]): Expression[T] = copy(children = newChildren)
 }
 
-case class GreaterOrEqual(children: List[Expression]) extends Operation with BinaryExpression {
+case class GreaterOrEqual[T](children: List[Expression[T]], extra: T) extends Operation[T] with BinaryExpression[T] {
   val kindDerivation = BinaryExpression.scalarCompareDerivation _
-  def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
+  def withChildren(newChildren: List[Expression[T]]): Expression[T] = copy(children = newChildren)
 }
 
-case class Greater(children: List[Expression]) extends Operation with BinaryExpression {
+case class Greater[T](children: List[Expression[T]], extra: T) extends Operation[T] with BinaryExpression[T] {
   val kindDerivation = BinaryExpression.scalarCompareDerivation _
-  def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
+  def withChildren(newChildren: List[Expression[T]]): Expression[T] = copy(children = newChildren)
 }
 
-case class Or(children: List[Expression]) extends Operation with BinaryExpression {
+case class Or[T](children: List[Expression[T]], extra: T) extends Operation[T] with BinaryExpression[T] {
   val kindDerivation = BinaryExpression.scalarCompareDerivation _
-  def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
+  def withChildren(newChildren: List[Expression[T]]): Expression[T] = copy(children = newChildren)
 }
 
-case class Xor(children: List[Expression]) extends Operation with BinaryExpression {
+case class Xor[T](children: List[Expression[T]], extra: T) extends Operation[T] with BinaryExpression[T] {
   val kindDerivation = BinaryExpression.scalarCompareDerivation _
-  def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
+  def withChildren(newChildren: List[Expression[T]]): Expression[T] = copy(children = newChildren)
 }
 
-case class And(children: List[Expression]) extends Operation with BinaryExpression {
+case class And[T](children: List[Expression[T]], extra: T) extends Operation[T] with BinaryExpression[T] {
   val kindDerivation = BinaryExpression.scalarCompareDerivation _
-  def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
+  def withChildren(newChildren: List[Expression[T]]): Expression[T] = copy(children = newChildren)
 }
-
