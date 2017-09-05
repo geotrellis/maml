@@ -2,20 +2,20 @@ package maml.ast
 
 import maml.ast.utility._
 import maml.error._
-
 import cats.data._
 import Validated._
-
+import io.circe._
+import io.circe.generic.extras.semiauto._
 import java.security.InvalidParameterException
 
-trait FoldableExpression extends Expression {
+trait FoldableExpression[T] extends Expression[T] {
   require(children.length > 1, s"Incorrect number of arguments to a foldable expression. Expected >1, found ${children.length}")
   val kindDerivation: (MamlKind, MamlKind) => MamlKind
   lazy val kind = this.children.map({ _.kind }).reduce({ kindDerivation(_, _) })
 }
 
 object FoldableExpression {
-  def tileOrScalarDerivation(exp: FoldableExpression)(k1: MamlKind, k2: MamlKind): MamlKind = (k1, k2) match {
+  def tileOrScalarDerivation[T](exp: FoldableExpression[T])(k1: MamlKind, k2: MamlKind): MamlKind = (k1, k2) match {
     case (MamlKind.Tile, MamlKind.Tile) => MamlKind.Tile
     case (MamlKind.Int, MamlKind.Int) => MamlKind.Int
     case (MamlKind.Tile, MamlKind.Int) => MamlKind.Tile
@@ -29,33 +29,37 @@ object FoldableExpression {
   }
 }
 
-case class Addition(children: List[Expression]) extends Operation with FoldableExpression {
+case class Addition[T](children: List[Expression[T]], extra: T) extends Operation[T] with FoldableExpression[T] {
   val kindDerivation = FoldableExpression.tileOrScalarDerivation(this)(_, _)
-  def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
+  def withChildren(newChildren: List[Expression[T]]): Expression[T] = copy(children = newChildren)
 }
 
-case class Subtraction(children: List[Expression]) extends Operation with FoldableExpression {
+// object Addition {
+//   implicit def dec[T: Decoder]: Decoder[Addition[T]] = deriveDecoder
+//   implicit def enc[T: Encoder]: Encoder[Addition[T]] = deriveEncoder
+// }
+
+case class Subtraction[T](children: List[Expression[T]], extra: T) extends Operation[T] with FoldableExpression[T] {
   val kindDerivation = FoldableExpression.tileOrScalarDerivation(this)(_, _)
-  def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
+  def withChildren(newChildren: List[Expression[T]]): Expression[T] = copy(children = newChildren)
 }
 
-case class Multiplication(children: List[Expression]) extends Operation with FoldableExpression {
+case class Multiplication[T](children: List[Expression[T]], extra: T) extends Operation[T] with FoldableExpression[T] {
   val kindDerivation = FoldableExpression.tileOrScalarDerivation(this)(_, _)
-  def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
+  def withChildren(newChildren: List[Expression[T]]): Expression[T] = copy(children = newChildren)
 }
 
-case class Division(children: List[Expression]) extends Operation with FoldableExpression {
+case class Division[T](children: List[Expression[T]], extra: T) extends Operation[T] with FoldableExpression[T] {
   val kindDerivation = FoldableExpression.tileOrScalarDerivation(this)(_, _)
-  def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
+  def withChildren(newChildren: List[Expression[T]]): Expression[T] = copy(children = newChildren)
 }
 
-case class Max(children: List[Expression]) extends Operation with FoldableExpression {
+case class Max[T](children: List[Expression[T]], extra: T) extends Operation[T] with FoldableExpression[T] {
   val kindDerivation = FoldableExpression.tileOrScalarDerivation(this)(_, _)
-  def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
+  def withChildren(newChildren: List[Expression[T]]): Expression[T] = copy(children = newChildren)
 }
 
-case class Min(children: List[Expression]) extends Operation with FoldableExpression {
+case class Min[T](children: List[Expression[T]], extra: T) extends Operation[T] with FoldableExpression[T] {
   val kindDerivation = FoldableExpression.tileOrScalarDerivation(this)(_, _)
-  def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
+  def withChildren(newChildren: List[Expression[T]]): Expression[T] = copy(children = newChildren)
 }
-

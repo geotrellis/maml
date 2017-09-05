@@ -1,10 +1,9 @@
 package maml.ast
 
 
-trait Operation extends Expression {
-  lazy val sources: List[Source] =
+trait Operation[T] extends Expression[T] {
+  lazy val sources: List[Source[T]] =
     children
       .flatMap(_.sources)
       .distinct
 }
-

@@ -2,6 +2,8 @@ package maml.ast
 
 import maml.ast.utility._
 
+import cats._
+import cats.implicits._
 import org.scalacheck._
 import org.scalacheck.Gen._
 import org.scalacheck.Arbitrary.arbitrary
@@ -13,34 +15,39 @@ import java.util.UUID
 
 object Generators {
 
-  lazy val genTileSourceAST = for {
+  lazy val genTileSourceAST: Gen[TileSource[Unit]] = for {
     str <- arbitrary[String]
-    cons <- Gen.lzy(TileSource.apply _)
-  } yield cons(str)
+  } yield TileSource(str, Monoid.empty[Unit])
 
-  lazy val genScalarSourceAST = for {
+  lazy val genScalarSourceAST: Gen[Source[Unit]] = for {
     int <- arbitrary[Int]
     dbl <- arbitrary[Double]
     str <- arbitrary[String]
-    src <- Gen.lzy(Gen.oneOf(IntSource(str), DoubleSource(str), IntLiteral(int), DoubleLiteral(dbl)))
+    src <- Gen.lzy(
+      Gen.oneOf(
+        IntSource(str, Monoid.empty[Unit]),
+        DoubleSource(str, Monoid.empty[Unit]),
+        IntLiteral(int, Monoid.empty[Unit]),
+        DoubleLiteral(dbl, Monoid.empty[Unit])))
   } yield src
 
-  def genBinaryOpAST(depth: Int) = for {
-    constructor <- Gen.lzy(Gen.oneOf(
-                     Addition.apply _,
-                     Subtraction.apply _,
-                     Multiplication.apply _,
-                     Division.apply _,
-                     Max.apply _,
-                     Min.apply _,
-                     Less.apply _,
-                     LessOrEqual.apply _,
-                     Equal.apply _,
-                     GreaterOrEqual.apply _,
-                     Greater.apply _
-                   ))
-    args <- containerOfN[List, Expression](2, genExpression(depth))
-  } yield constructor(args)
+  def genBinaryOpAST(depth: Int): Gen[Expression[Unit]] = for {
+    constructor <- Gen.lzy(
+      Gen.oneOf(
+        { (args: List[Expression[Unit]], extra: Unit) => Addition.apply(args, extra) },
+        { (args: List[Expression[Unit]], extra: Unit) => Subtraction.apply(args, extra) },
+        { (args: List[Expression[Unit]], extra: Unit) => Multiplication.apply(args, extra) },
+        { (args: List[Expression[Unit]], extra: Unit) => Division.apply(args, extra) },
+        { (args: List[Expression[Unit]], extra: Unit) => Max.apply(args, extra) },
+        { (args: List[Expression[Unit]], extra: Unit) => Min.apply(args, extra) },
+        { (args: List[Expression[Unit]], extra: Unit) => Less.apply(args, extra) },
+        { (args: List[Expression[Unit]], extra: Unit) => LessOrEqual.apply(args, extra) },
+        { (args: List[Expression[Unit]], extra: Unit) => Equal.apply(args, extra) },
+        { (args: List[Expression[Unit]], extra: Unit) => GreaterOrEqual.apply(args, extra) },
+        { (args: List[Expression[Unit]], extra: Unit) => Greater.apply(args, extra) }
+      ))
+    args <- containerOfN[List, Expression[Unit]](2, genExpression(depth))
+  } yield constructor(args, Monoid.empty[Unit])
 
   //def genClassificationAST(depth: Int) = for {
   //  args <- containerOfN[List, Expression](1, genExpression(depth))
@@ -89,7 +96,7 @@ object Generators {
   /* We are forced to manually control flow in this generator to prevent stack overflows
    *  See: http://stackoverflow.com/questions/19829293/scalacheck-arbitrary-implicits-and-recursive-generators
    */
-  def genExpression(depth: Int = 1): Gen[Expression] =
+  def genExpression(depth: Int = 1): Gen[Expression[Unit]] =
     if (depth >= 100) genLeafAST
     else Gen.frequency((1 -> genBinaryOpAST(depth + 1)), (1 -> genLeafAST))
 }

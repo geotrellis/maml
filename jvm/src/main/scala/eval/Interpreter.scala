@@ -11,18 +11,17 @@ import cats.data.{NonEmptyList => NEL, _}
 import scala.reflect.ClassTag
 
 
-trait Interpreter {
-  def fallbackDirective: Directive
-  def instructions(expression: Expression, children: List[Result]): Interpreted[Result]
-  def apply(exp: Expression): Interpreted[Result] = {
+trait Interpreter[T] {
+  def fallbackDirective: Directive[T]
+  def instructions(expression: Expression[T], children: List[Result]): Interpreted[Result]
+  def apply(exp: Expression[T]): Interpreted[Result] = {
     val children: Interpreted[List[Result]] = exp.children.map(apply).sequence
     children.andThen({ childRes => instructions(exp, childRes) })
   }
 }
 
 object Interpreter {
-  def naive(directives: Directive*) = NaiveInterpreter(directives.toList)
+  def naive[T](directives: Directive[T]*) = NaiveInterpreter(directives.toList)
 
-  def buffering(directives: ScopedDirective[BufferingInterpreter.Scope]*) = BufferingInterpreter(directives.toList)
+  def buffering[T](directives: ScopedDirective[BufferingInterpreter.Scope, T]*) = BufferingInterpreter(directives.toList)
 }
-

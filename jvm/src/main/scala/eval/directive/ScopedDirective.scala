@@ -12,11 +12,11 @@ import scala.reflect.ClassTag
 
 
 object ScopedDirective {
+  // TODO Should this be `Any` or a type variable?
   /** Lift a simple directive into a scoped context */
-  def pure[Exp <: Expression : ClassTag](ruleFn: Directive): ScopedDirective[Any] =
+  def pure[Exp <: Expression[T] : ClassTag, T](ruleFn: Directive[T]): ScopedDirective[Any, T] =
     { case (exp: Exp, results: Seq[Result], _: Any) => ruleFn(exp, results) }
 
-  def apply[Scope](ruleFn: PartialFunction[(Expression, Seq[Result], Scope), Interpreted[Result]]): ScopedDirective[Scope] =
+  def apply[Scope, T](ruleFn: PartialFunction[(Expression[T], Seq[Result], Scope), Interpreted[Result]]): ScopedDirective[Scope, T] =
     ruleFn
 }
-

@@ -18,8 +18,8 @@ import scala.reflect.ClassTag
 
 package object eval {
   type Interpreted[A] = ValidatedNel[InterpreterError, A]
-  type Directive = PartialFunction[(Expression, Seq[Result]), Interpreted[Result]]
-  type ScopedDirective[Scope] = PartialFunction[(Expression, Seq[Result], Scope), Interpreted[Result]]
+  type Directive[T] = PartialFunction[(Expression[T], Seq[Result]), Interpreted[Result]]
+  type ScopedDirective[Scope, T] = PartialFunction[(Expression[T], Seq[Result], Scope), Interpreted[Result]]
 
   implicit def gtNeighborhoods(n: Neighborhood): focal.Neighborhood = n match {
     case Square(e) => focal.Square(e)
@@ -30,4 +30,3 @@ package object eval {
   }
 
 }
-
