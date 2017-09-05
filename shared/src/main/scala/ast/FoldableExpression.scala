@@ -2,10 +2,10 @@ package maml.ast
 
 import maml.ast.utility._
 import maml.error._
-
 import cats.data._
 import Validated._
-
+import io.circe._
+import io.circe.generic.extras.semiauto._
 import java.security.InvalidParameterException
 
 trait FoldableExpression[T] extends Expression[T] {
@@ -33,6 +33,11 @@ case class Addition[T](children: List[Expression[T]], extra: T) extends Operatio
   val kindDerivation = FoldableExpression.tileOrScalarDerivation(this)(_, _)
   def withChildren(newChildren: List[Expression[T]]): Expression[T] = copy(children = newChildren)
 }
+
+// object Addition {
+//   implicit def dec[T: Decoder]: Decoder[Addition[T]] = deriveDecoder
+//   implicit def enc[T: Encoder]: Encoder[Addition[T]] = deriveEncoder
+// }
 
 case class Subtraction[T](children: List[Expression[T]], extra: T) extends Operation[T] with FoldableExpression[T] {
   val kindDerivation = FoldableExpression.tileOrScalarDerivation(this)(_, _)

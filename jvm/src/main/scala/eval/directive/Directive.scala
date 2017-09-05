@@ -12,6 +12,5 @@ import scala.reflect.ClassTag
 
 
 object Directive {
-  def apply(ruleFn: PartialFunction[(Expression, Seq[Result]), Interpreted[Result]]): Directive = ruleFn
+  def apply[T](ruleFn: PartialFunction[(Expression[T], Seq[Result]), Interpreted[Result]]): Directive[T] = ruleFn
 }
-

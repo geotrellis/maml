@@ -10,14 +10,15 @@ import Validated._
 
 
 object SourceDirectives {
-  val intLiteralDirective = Directive { case (IntLiteral(int), _) => Valid(IntResult(int)) }
+  def intLiteralDirective[T] = Directive[T] { case (IntLiteral(int, _), _) => Valid(IntResult(int)) }
 
-  val dblLiteralDirective = Directive { case (DoubleLiteral(dbl), _) => Valid(DoubleResult(dbl)) }
+  def dblLiteralDirective[T] = Directive[T] { case (DoubleLiteral(dbl, _), _) => Valid(DoubleResult(dbl)) }
 
-  val boolLiteralDirective = Directive { case (BoolLiteral(bool), _) => Valid(BoolResult(bool)) }
+  def boolLiteralDirective[T] = Directive[T] { case (BoolLiteral(bool, _), _) => Valid(BoolResult(bool)) }
 
-  val tileLiteralDirective = Directive { case (TileLiteral(tile), _) => Valid(TileResult(LazyTile(tile))) }
-  val bufferingTileLiteralDirective = ScopedDirective[BufferingInterpreter.Scope] { case (TileLiteral(tile), _, scope) =>
+  def tileLiteralDirective[T] = Directive[T] { case (TileLiteral(tile, _), _) => Valid(TileResult(LazyTile(tile))) }
+
+  def bufferingTileLiteralDirective[T] = ScopedDirective[BufferingInterpreter.Scope, T] { case (TileLiteral(tile, _), _, scope) =>
     Valid(TileResult(LazyTile(tile)))
   }
 

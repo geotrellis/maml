@@ -69,11 +69,12 @@ trait Service extends InterpreterExceptionHandling {
   val cMap = ColorRamps.Viridis
 
   val interpreter = Interpreter.buffering(
-    ScopedDirective.pure[TileLiteral](SourceDirectives.tileLiteralDirective),
-    ScopedDirective.pure[IntLiteral](SourceDirectives.intLiteralDirective),
-    ScopedDirective.pure[FocalMax](FocalDirectives.focalMaxDirective),
-    ScopedDirective.pure[Addition](OpDirectives.additionDirectiveTile orElse OpDirectives.additionDirectiveInt orElse OpDirectives.additionDirectiveDouble),
-    ScopedDirective.pure[Equal](OpDirectives.equalToDirective)
+    ScopedDirective.pure[TileLiteral[Unit], Unit](SourceDirectives.tileLiteralDirective),
+    ScopedDirective.pure[IntLiteral[Unit], Unit](SourceDirectives.intLiteralDirective),
+    ScopedDirective.pure[FocalMax[Unit], Unit](FocalDirectives.focalMaxDirective),
+    // TODO fix it
+    // ScopedDirective.pure[Addition[Unit], Unit](OpDirectives.additionDirectiveTile orElse OpDirectives.additionDirectiveInt orElse OpDirectives.additionDirectiveDouble),
+    ScopedDirective.pure[Equal[Unit], Unit](OpDirectives.equalToDirective)
   )
 
   implicit def encodeNEL[A: Encoder]: Encoder[NonEmptyList[A]] = Encoder.encodeList[A].contramap[NonEmptyList[A]](_.toList)
@@ -82,8 +83,21 @@ trait Service extends InterpreterExceptionHandling {
     pathPrefix(IntNumber / IntNumber / IntNumber) { (z, x, y) =>
       handleExceptions(interpreterExceptionHandler) {
         complete {
-          val ast = Equal(List(Addition(List(ValueReaderTileSource("geopyspark-test", "srtm", "srtm-test"), IntLiteral(1))), ValueReaderTileSource("geopyspark-test", "srtm", "srtm-test")))
-          val futureAst: Future[Interpreted[Expression]] = Resolver.tmsLiteral(ast)(executor)(z, x, y)
+          val ast: Expression[Unit] = Equal(
+            List(
+              Addition(
+                List(
+                  ValueReaderTileSource("geopyspark-test", "srtm", "srtm-test", Unit),
+                  IntLiteral(1, Unit)
+                ),
+                Unit
+              ),
+              ValueReaderTileSource("geopyspark-test", "srtm", "srtm-test", Unit)
+            ), Unit)
+
+          val futureAst: Future[Interpreted[Expression[Unit]]] =
+            Resolver.tmsLiteral(ast)(executor)(z, x, y)
+
           futureAst.map({ resolvedAst =>
             resolvedAst
               .andThen({ interpreter(_) })

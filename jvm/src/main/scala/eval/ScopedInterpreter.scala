@@ -10,12 +10,12 @@ import cats.data.{NonEmptyList => NEL, _}
 import geotrellis.raster.GridBounds
 
 
-trait ScopedInterpreter[Scope] {
-  def scopeFor(exp: Expression, previous: Option[Scope]): Scope
-  def fallbackDirective: ScopedDirective[Scope]
-  def instructions(expression: Expression, children: Seq[Result], scope: Scope): Interpreted[Result]
+trait ScopedInterpreter[Scope, T] {
+  def scopeFor(exp: Expression[T], previous: Option[Scope]): Scope
+  def fallbackDirective: ScopedDirective[Scope, T]
+  def instructions(expression: Expression[T], children: Seq[Result], scope: Scope): Interpreted[Result]
 
-  def apply(exp: Expression, maybeScope: Option[Scope] = None): Interpreted[Result] = {
+  def apply(exp: Expression[T], maybeScope: Option[Scope] = None): Interpreted[Result] = {
     val currentScope = scopeFor(exp, maybeScope)
     val children: Interpreted[List[Result]] = exp.children.map({ childTree =>
       val childScope = scopeFor(childTree, Some(currentScope))
@@ -25,4 +25,3 @@ trait ScopedInterpreter[Scope] {
     children.andThen({ childResult => instructions(exp, childResult, currentScope) })
   }
 }
-

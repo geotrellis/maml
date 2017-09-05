@@ -1,6 +1,7 @@
 package maml.ast
 
-import io.circe.generic.JsonCodec
+import io.circe._
+import io.circe.generic.extras.semiauto._
 
 
 case class ExpressionPath(indices: Seq[Int])
@@ -14,4 +15,9 @@ trait Expression[T] extends Product with Serializable {
 
   /** Extra information that can be stuffed into any node of an Expression tree. */
   val extra: T
+}
+
+object Expression {
+  // implicit def expDecoder[T: Decoder]: Decoder[Expression[T]] = deriveDecoder
+  // implicit def expEncoder[T: Encoder]: Encoder[Expression[T]] = deriveEncoder
 }

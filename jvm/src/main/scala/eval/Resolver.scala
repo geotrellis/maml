@@ -18,14 +18,14 @@ import scala.util.{Try, Success, Failure}
 
 
 object Resolver {
-  def tmsLiteral(exp: Expression)(implicit ec: ExecutionContext): (Int, Int, Int) => Future[Interpreted[Expression]] = (z: Int, x: Int, y: Int) => {
+  def tmsLiteral[T](exp: Expression[T])(implicit ec: ExecutionContext): (Int, Int, Int) => Future[Interpreted[Expression[T]]] = (z: Int, x: Int, y: Int) => {
     exp match {
-      case ValueReaderTileSource(bucket, root, layerId) => Future {
+      case ValueReaderTileSource(bucket, root, layerId, extra) => Future {
         val reader = S3ValueReader(bucket, root).reader[SpatialKey, Tile](LayerId(layerId, z))
         Try {
           reader.read(x, y)
         } match {
-          case Success(tile) => Valid(TileLiteral(tile))
+          case Success(tile) => Valid(TileLiteral(tile, extra))
           case Failure(e: ValueNotFoundError) => Invalid(NEL.of(S3TileResolutionError(exp, Some((z, x, y)))))
           case Failure(e) =>  Invalid(NEL.of(UnknownTileResolutionError(exp, Some((z, x, y)))))
         }

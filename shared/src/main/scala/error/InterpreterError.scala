@@ -15,7 +15,7 @@ trait InterpreterError {
 }
 
 /** An unbound parameter encountered during evaluation  */
-case class UnhandledCase(exp: Expression, kind: MamlKind) extends InterpreterError {
+case class UnhandledCase[T](exp: Expression[T], kind: MamlKind) extends InterpreterError {
   def repr = s"A branch of Interpreter logic has yet to be implemented for the expression $exp and the kind $kind"
 }
 
@@ -26,11 +26,11 @@ case class ASTDecodeError(json: Json, msg: DecodingFailure) extends InterpreterE
 /* --- Type Errors --- */
 sealed trait TypeError extends InterpreterError {}
 
-case class UnaryTypeError(nodeType: UnaryExpression, found: MamlKind) extends TypeError {
+case class UnaryTypeError[T](nodeType: UnaryExpression[T], found: MamlKind) extends TypeError {
   def repr = s"TypeError: invalid argument type $found for $nodeType"
 }
 
-case class FoldableTypeError(nodeType: FoldableExpression, found: (MamlKind, MamlKind)) extends TypeError {
+case class FoldableTypeError[T](nodeType: FoldableExpression[T], found: (MamlKind, MamlKind)) extends TypeError {
   def repr = s"TypeError: unable to determine type of $nodeType for arguments: $found"
 }
 
@@ -38,4 +38,3 @@ object InterpreterError {
   implicit val encodeInterpreterError: Encoder[InterpreterError] =
     Encoder.encodeString.contramap[InterpreterError](_.repr)
 }
-
