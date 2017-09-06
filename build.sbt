@@ -84,7 +84,8 @@ lazy val mamlRDD = (project in file("rdd"))
   .dependsOn(mamlJVM)
   .settings(
     libraryDependencies ++= Seq(
-      "org.locationtech.geotrellis" %% "geotrellis-spark-testkit" % "1.1.1"
+      "org.locationtech.geotrellis" %% "geotrellis-spark-testkit" % "1.1.1",
+      "org.locationtech.geotrellis" %% "geotrellis-raster-testkit" % "1.1.1"
     ),
     fork in Test := false,
     parallelExecution in Test := false
