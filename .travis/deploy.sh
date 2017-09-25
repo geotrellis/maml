@@ -5,7 +5,7 @@ set -x
 
 mkdir -p "${HOME}/.bintray"
 
-cat <<EOF > "${HOME}/bintray/.credentials"
+cat <<EOF > "${HOME}/.bintray/.credentials"
 realm = Bintray API Realm
 host = api.bintray.com
 user = $BINTRAY_USER
