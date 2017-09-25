@@ -1,8 +1,8 @@
-package maml.ast.kind
+package com.azavea.maml.ast.kind
 
-import maml.ast._
-import maml.error._
-import maml.ast.utility._
+import com.azavea.maml.ast._
+import com.azavea.maml.error._
+import com.azavea.maml.ast.utility._
 
 import org.scalatest._
 import io.circe._

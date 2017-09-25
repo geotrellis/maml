@@ -1,11 +1,11 @@
-package maml.eval
+package com.azavea.maml.eval
 
-import maml.ast._
-import maml.dsl.jvm._
-import maml.error._
-import maml.eval.tile._
-import maml.eval.directive.SourceDirectives._
-import maml.eval.directive.OpDirectives._
+import com.azavea.maml.ast._
+import com.azavea.maml.dsl.jvm._
+import com.azavea.maml.error._
+import com.azavea.maml.eval.tile._
+import com.azavea.maml.eval.directive.SourceDirectives._
+import com.azavea.maml.eval.directive.OpDirectives._
 
 import geotrellis.raster._
 import cats._
