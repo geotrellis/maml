@@ -1,6 +1,6 @@
-package maml.spark.ast
+package com.azavea.maml.spark.ast
 
-import maml.ast._
+import com.azavea.maml.ast._
 
 import geotrellis.spark._
 

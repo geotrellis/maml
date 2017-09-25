@@ -1,10 +1,10 @@
-package maml.spark.eval
+package com.azavea.maml.spark.eval
 
-import maml.ast._
-import maml.error._
-import maml.eval._
-import maml.eval.tile._
-import maml.spark.ast._
+import com.azavea.maml.ast._
+import com.azavea.maml.error._
+import com.azavea.maml.eval._
+import com.azavea.maml.eval.tile._
+import com.azavea.maml.spark.ast._
 
 import geotrellis.raster._
 import geotrellis.spark._
