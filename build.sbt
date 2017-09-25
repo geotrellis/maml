@@ -41,7 +41,7 @@ lazy val publishSettings =
 
 val commonSettings = Seq(
   licenses ++= Seq(("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0.txt"))),
-  version := "0.0.1-SNAPSHOT",
+  version := "0.0.1",
   scalaVersion := "2.11.11",
   crossScalaVersions := Seq("2.11.11", "2.12.1"),
   resolvers += Resolver.sonatypeRepo("releases"),
