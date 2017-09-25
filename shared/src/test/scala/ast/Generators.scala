@@ -1,6 +1,6 @@
-package maml.ast
+package com.azavea.maml.ast
 
-import maml.ast.utility._
+import com.azavea.maml.ast.utility._
 
 import org.scalacheck._
 import org.scalacheck.Gen._

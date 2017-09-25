@@ -1,15 +1,15 @@
-package maml.spark
+package com.azavea.maml.spark
 
-import maml.ast._
-import maml.eval._
-import maml.eval.directive._
-import maml.eval.directive.SourceDirectives._
-import maml.dsl.jvm._
+import com.azavea.maml.ast._
+import com.azavea.maml.eval._
+import com.azavea.maml.eval.directive._
+import com.azavea.maml.eval.directive.SourceDirectives._
+import com.azavea.maml.dsl.jvm._
 
-import maml.spark.eval._
-import maml.spark.eval.directive._
-import maml.spark.eval.SpatialRDDResult._
-import maml.spark.ast._
+import com.azavea.maml.spark.eval._
+import com.azavea.maml.spark.eval.directive._
+import com.azavea.maml.spark.eval.SpatialRDDResult._
+import com.azavea.maml.spark.ast._
 
 import geotrellis.raster._
 import geotrellis.spark._

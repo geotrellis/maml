@@ -1,6 +1,6 @@
-package maml.ast.codec.tree
+package com.azavea.maml.ast.codec.tree
 
-import maml.ast._
+import com.azavea.maml.ast._
 import ExpressionTreeCodec._
 
 import io.circe._
