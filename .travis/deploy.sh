@@ -9,9 +9,9 @@ cat <<EOF > "${HOME}/.bintray/.credentials"
 realm = Bintray API Realm
 host = api.bintray.com
 user = $BINTRAY_USER
-password = $BINTRAY_API_KEY
+password = $BINTRAY_PASS
 EOF
 
-./sbt "++$TRAVIS_SCALA_VERSION" "project mamlJVM" publish
-./sbt "++$TRAVIS_SCALA_VERSION" "project mamlJS" publish
-./sbt "++$TRAVIS_SCALA_VERSION" "project mamlSpark" publish
+./sbt "++$TRAVIS_SCALA_VERSION" -Dbintray.user=$BINTRAY_USER -Dbintray.pass=$BINTRAY_PASS "project mamlJVM" publish
+./sbt "++$TRAVIS_SCALA_VERSION" -Dbintray.user=$BINTRAY_USER -Dbintray.pass=$BINTRAY_PASS "project mamlJS" publish
+./sbt "++$TRAVIS_SCALA_VERSION" -Dbintray.user=$BINTRAY_USER -Dbintray.pass=$BINTRAY_PASS "project mamlSpark" publish
