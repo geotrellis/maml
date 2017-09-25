@@ -2,19 +2,19 @@ sudo: false
 language: scala
 env:
   global:
-    - secure: "Jrq8lfaks2llaegZM3ySxr7ZZgXh55pshDRs6bAYi+DSc5Eunnm9FwsXN6JI3nKzCOxbwmNz4Sszmp34eerf1IaiTFW2BxGw9V//yV0PO/TU3S4s1TjD4uPZGb9hajEp9F7OvCiaBceHVxt9l/AIPiHaLVd3dtEqJC6zDEZCZI3AxqrX3VJvJ8Q9tnqlCIVIwrmqa/nv4FnUOcsxbnrR6KPpmXScMJYTjIZ2QTwR2y9J9ADnKe9OEfSAJ65xQmNxN0fPzj1RebxbtNoNMWPoHAySzCZWAeiFI7WM14gp+GLoUsXr6RxNp3knQ5r5mFfNglekBKHrfdQpjTvK6FvgROoMjhykFV76Ba5qOyMb2il3Q09QRACCoCTjcuncTOjdGz2aSdY0QY106ktBnIgumPybtjorC8fjmp+wSBALMpsc3w7rDUQEf3S1SQpbZ8j6NjqKsavf+V5tYcA5SPXXpBqXGCCyI/KRJZrNZN+OCBntuLVGMkuW8911WBzA4i/Twb/U7SJL6CRpogrX1aC0kB2GFzVWuUq1tzVV/RSJcVe6qG51mGjguI0bEN1vOStvfmbqcRO7+/p81C8qe1r58NIKWwRKaK8qE8pweDjjq4co8WTr4xY5mCeGTisGY5SVlV3pWQVeJDboIXjo2788QlexxIqk51K+A+17vTdpYXw="
-    - secure: "eIN/qoF8ZC/PZpZu0B/PYq+qno0Q++sKGcya6PQJwpgtEgNVQ5Vzans38x0zemRl5ymuMWIzihipgbqKrkrHtfFvcZQIBsq3QfM04Rc21aRcCY3arJg8N6uHUXOq9/Q+c4ZZuVfjiiUgBlwkoQ5cUV9enYS+cN/sqHSP/2IxDeea2iJqos7ltyp0HjPZ6SecEdgPF38BxMoe6hmlz+PAMenL5UReLGF+/JEatvSRKPlJ+Xv+hHnor4Ymw+aSPzv2NzpapUA0Pt6Af1OPlu/w/zvXwMk7PpeiRn2lo5u4Oejf3X2O+mcUSjTSmYbVREcguoCfCknhO0I6CtpX8Zun4RBnB4cf2JRoWrK5bkcMYgKwWgbY0WcOCaZ+Jho8H/yb6AU78ylV4KafqqTCS2SAwsB2eMHNllaOwtRdd416LhAPLY3NZVQf+TAe4xYmjdsQZ1vVFZ9N5Hv7pz2bIhLpZzfkXsRrwktsERSkGbfzIbWvyM8RJ33C7xhMpEPHTs0iWDFRqKNaRdTSpMg5R6E1l4bDQmgjvVoDUZ1gj1Cbk4sUgY0ln9t3dp0b02HS2FpOiCf5D0FwXwdDKO5TgysOid+LYrsOBOu1SG6UaQet6s0OAi8uTG+bfyWt2M52w6lFOH6nDByVXMSokdxO+gHRKXrEdwT4aVggr0QWTk1bW/I="
+  - secure: UOpiFIXrwDpaiHVZysy76zaZLiKJpdvK+0oGAeVN07nxjY4wKVTzZbIEywIG+QnIFFa98V5bhlh0u+1Jmi+8L7KnZiB0zbt0vWhkl/Dbcm5rWlRfpHyEVzY3cUY50XtWrIP362plvx07npbA3VBBGwkiy1CW6ZIj9KJQ3NlvOMw2RkEDZ/8TEJI8EWf7pd3S+9Jat/asLDOuzDgk0s+YuRQktv7oRtNbGpIWMy0c36oPdlfOrXpzk9ZfouJ3SJm4TU+gze4P1XIJFQOaMvQf5bIqjq3q3QIqrG2FVZOM7mVzBuVHJQ5OYH3cm1f66SwtI8SQQnDkp8DtTHc8k8tBEoM7UJo7APxjV135LGL+o5czLhGEkxgK8IdzLoDT+pzJzeZCK4+Wa+yx5ZfuzIHLuQR00KdRBnVJYK8UDeahgB36t2/dT5T5omXFcgW0FlPEPlNDlaTxLMJt7qMFap0mCabaOwR0KYn/r4MygddhZgXIv/53uVI/o8b+5XekAc0iauOXlZ5cXholNepgZS4Ik0wVXowz2fXRfPUU4BhMB/J06to+JnrfNfsIbAxmiNydoaK9pRenx64K84lMd54h70+sD4W2E/N6W/OFxoAnxTem4v1l93EMF4UxedOhxgpFNYaJySu1V5qbTCxyY/+Jj8v+vXwmaEvtdqHWafkUNMQ=
+  - secure: zdWZ7egDwfdAEVicKhDT67rD6LFKIQkenzHm77phsXAZx9GcSg2KDWkqWbjLxFCqWsuVLOOlyFPd0zJd7lhr9SS6Rc2Oc+UKTFWkMUcKL7xfiWaAq/JibNLBHAfXC7QHNVD53Tu11WzHuYYTGmFqRgMQyWXwmRxHyCFYFUIu+4hT9MbhsdLGfnxMuJg1e/43HEEkoDfLWZyKk9W78n26+yczxnrZiGLACbgjI80G4oGylgnI3+HuSFKStqaClUUa1BMZujccegup6O8wSHmpQN/EAl/DuCpSDddw8WHTvxAoffoy4CmaeK4Hj/LU6NkSIgTjcptXPhd8qX51OpVOZ+ysbsPcN40HGJZrsWLi2+rNipyuYjAz0HSYA/lLbG42WwUVBmcgMP8UvPXzN7+sOne6w8BYQwq7sXO2abVZq3OLrazxlzehBPybnA4I3Twtq4R7nUbrnQPVkNDDINuft3WDXTWxlx8eqL9LdXlHBnR/efdliA9kKbopGpzIGh7riDaT6D/hJ1OW+pLZw7xhnKTuBitelk2cTXh8QZ1eLW6dZ7reFbGFC3WEkY54wNCuJ5z60VJi/lWzmcTB9r/qN76fohrqDv97okpI+NLrDKXiSQygD4ZUsERQ88OkMfcJ2iY410pa0ZrsD85hpYMOXutoHCv2sx1SB0EvrcvFHA0=
 jdk:
-  - openjdk8
-  - oraclejdk8
+- openjdk8
+- oraclejdk8
 scala:
-  - 2.11.8
+- 2.11.8
 cache:
   directories:
   - "$HOME/.ivy2"
   - "$HOME/.sbt"
 script:
-  - ".travis/build-and-test.sh"
+- ".travis/build-and-test.sh"
 deploy:
   provider: script
   script: ".travis/deploy.sh"
@@ -22,4 +22,4 @@ deploy:
   on:
     repo: geotrellis/maml
 after_deploy:
-  - rm -f "${HOME}/.bintray/.credentials"
+- rm -f "${HOME}/.bintray/.credentials"

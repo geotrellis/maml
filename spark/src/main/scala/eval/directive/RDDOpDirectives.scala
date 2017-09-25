@@ -1,12 +1,12 @@
-package maml.spark.eval.directive
+package com.azavea.maml.spark.eval.directive
 
-import maml.spark._
-import maml.spark.eval._
-import maml.spark.ast._
+import com.azavea.maml.spark._
+import com.azavea.maml.spark.eval._
+import com.azavea.maml.spark.ast._
 
-import maml.ast._
-import maml.eval._
-import maml.eval.directive._
+import com.azavea.maml.ast._
+import com.azavea.maml.eval._
+import com.azavea.maml.eval.directive._
 
 import geotrellis.raster._
 import geotrellis.spark._
