@@ -1,6 +1,6 @@
-package maml.error
+package com.azavea.maml.error
 
-import maml.ast._
+import com.azavea.maml.ast._
 
 import io.circe._
 import io.circe.syntax._

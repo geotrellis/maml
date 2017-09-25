@@ -1,4 +1,4 @@
-package maml.ast.utility
+package com.azavea.maml.ast.utility
 
 
 trait Neighborhood

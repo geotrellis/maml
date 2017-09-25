@@ -1,6 +1,6 @@
-package maml.dsl
+package com.azavea.maml.dsl
 
-import maml.ast.jvm._
+import com.azavea.maml.ast.jvm._
 
 import geotrellis.raster.Tile
 

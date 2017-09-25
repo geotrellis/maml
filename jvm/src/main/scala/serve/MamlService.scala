@@ -1,11 +1,11 @@
-package maml.serve
+package com.azavea.maml.serve
 
-import maml.ast._
-import maml.ast.utility._
-import maml.ast.jvm._
-import maml.error._
-import maml.eval._
-import maml.eval.directive._
+import com.azavea.maml.ast._
+import com.azavea.maml.ast.utility._
+import com.azavea.maml.ast.jvm._
+import com.azavea.maml.error._
+import com.azavea.maml.eval._
+import com.azavea.maml.eval.directive._
 
 import cats.data.NonEmptyList
 import cats.data.Validated._

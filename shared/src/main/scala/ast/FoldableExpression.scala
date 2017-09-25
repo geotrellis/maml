@@ -1,7 +1,7 @@
-package maml.ast
+package com.azavea.maml.ast
 
-import maml.ast.utility._
-import maml.error._
+import com.azavea.maml.ast.utility._
+import com.azavea.maml.error._
 
 import cats.data._
 import Validated._

@@ -1,6 +1,6 @@
-package maml.dsl
+package com.azavea.maml.dsl
 
-import maml.ast._
+import com.azavea.maml.ast._
 
 
 trait Operations {

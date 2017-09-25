@@ -1,8 +1,8 @@
-package maml.eval
+package com.azavea.maml.eval
 
-import maml.ast._
-import maml.ast.jvm.TileLiteral
-import maml.error._
+import com.azavea.maml.ast._
+import com.azavea.maml.ast.jvm.TileLiteral
+import com.azavea.maml.error._
 
 import geotrellis.raster._
 import geotrellis.raster.render._

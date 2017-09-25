@@ -1,7 +1,7 @@
-package maml.eval
+package com.azavea.maml.eval
 
-import maml.ast._
-import maml.error._
+import com.azavea.maml.ast._
+import com.azavea.maml.error._
 
 import cats._
 import cats.implicits._

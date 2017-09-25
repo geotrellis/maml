@@ -1,9 +1,9 @@
-package maml.eval
+package com.azavea.maml.eval
 
-import maml.error._
-import maml.ast._
-import maml.eval._
-import maml.eval.tile._
+import com.azavea.maml.error._
+import com.azavea.maml.ast._
+import com.azavea.maml.eval._
+import com.azavea.maml.eval.tile._
 
 import geotrellis.raster.Tile
 import geotrellis.vector.Geometry

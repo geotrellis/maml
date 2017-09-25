@@ -1,10 +1,9 @@
-package maml
+package com.azavea.maml
 
-import maml.ast._
-import maml.ast.TileSource
-import maml.ast.utility._
-import maml.error._
-import maml.eval.tile._
+import com.azavea.maml.ast._
+import com.azavea.maml.ast.utility._
+import com.azavea.maml.error._
+import com.azavea.maml.eval.tile._
 
 import geotrellis.raster._
 import geotrellis.raster.mapalgebra.focal

@@ -1,10 +1,10 @@
-package maml.rdd.eval
+package maml.spark.eval
 
 import maml.ast._
 import maml.error._
 import maml.eval._
 import maml.eval.tile._
-import maml.rdd.ast._
+import maml.spark.ast._
 
 import geotrellis.raster._
 import geotrellis.spark._

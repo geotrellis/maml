@@ -1,4 +1,4 @@
-package maml.ast
+package com.azavea.maml.ast
 
 
 trait Operation extends Expression {

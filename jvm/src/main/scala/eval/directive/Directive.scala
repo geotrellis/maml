@@ -1,7 +1,7 @@
-package maml.eval.directive
+package com.azavea.maml.eval.directive
 
-import maml.ast._
-import maml.eval._
+import com.azavea.maml.ast._
+import com.azavea.maml.eval._
 
 import cats._
 import cats.data._
