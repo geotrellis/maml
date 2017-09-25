@@ -1,7 +1,7 @@
-package maml
+package com.azavea.maml
 
-import maml.ast.utility._
-import maml.error.InterpreterError
+import com.azavea.maml.ast.utility._
+import com.azavea.maml.error.InterpreterError
 
 import io.circe._
 import io.circe.optics.JsonPath._

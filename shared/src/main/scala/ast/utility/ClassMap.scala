@@ -1,6 +1,6 @@
-package maml.ast.utility
+package com.azavea.maml.ast.utility
 
-import maml.ast.codec.MamlUtilityCodecs._
+import com.azavea.maml.ast.codec.MamlUtilityCodecs._
 
 import io.circe._
 import io.circe.syntax._

@@ -1,8 +1,8 @@
-package maml.rdd.eval.directive
+package maml.spark.eval.directive
 
 import maml.eval.directive._
-import maml.rdd.ast._
-import maml.rdd.eval._
+import maml.spark.ast._
+import maml.spark.eval._
 
 import cats.data._
 import Validated._

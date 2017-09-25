@@ -1,6 +1,6 @@
-package maml.error
+package com.azavea.maml.error
 
-import maml.ast._
+import com.azavea.maml.ast._
 
 
 case class EvalTypeError(found: String, expected: List[String]) extends InterpreterError {

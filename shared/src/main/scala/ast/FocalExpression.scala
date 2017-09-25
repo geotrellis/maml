@@ -1,8 +1,8 @@
-package maml.ast
+package com.azavea.maml.ast
 
 import MamlKind._
-import maml.ast._
-import maml.ast.utility._
+import com.azavea.maml.ast._
+import com.azavea.maml.ast.utility._
 
 
 // TODO maybe don't use lists for these unary things

@@ -1,8 +1,8 @@
-package maml.ast.codec
+package com.azavea.maml.ast.codec
 
-import maml.ast._
-import maml.ast.utility._
-import maml.ast.codec._
+import com.azavea.maml.ast._
+import com.azavea.maml.ast.utility._
+import com.azavea.maml.ast.codec._
 
 import io.circe._
 import io.circe.syntax._

@@ -1,8 +1,8 @@
-package maml.eval.directive
+package com.azavea.maml.eval.directive
 
-import maml.eval._
-import maml.eval.tile._
-import maml.ast._
+import com.azavea.maml.eval._
+import com.azavea.maml.eval.tile._
+import com.azavea.maml.ast._
 
 import geotrellis.raster.Tile
 import cats._

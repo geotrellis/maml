@@ -1,4 +1,4 @@
-package maml.eval.tile
+package com.azavea.maml.eval.tile
 
 import geotrellis.raster._
 

@@ -1,4 +1,4 @@
-package maml.rdd
+package maml.spark
 
 import maml.ast._
 import maml.eval._
@@ -6,10 +6,10 @@ import maml.eval.directive._
 import maml.eval.directive.SourceDirectives._
 import maml.dsl.jvm._
 
-import maml.rdd.eval._
-import maml.rdd.eval.directive._
-import maml.rdd.eval.SpatialRDDResult._
-import maml.rdd.ast._
+import maml.spark.eval._
+import maml.spark.eval.directive._
+import maml.spark.eval.SpatialRDDResult._
+import maml.spark.ast._
 
 import geotrellis.raster._
 import geotrellis.spark._

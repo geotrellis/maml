@@ -1,4 +1,4 @@
-package maml.rdd.ast
+package maml.spark.ast
 
 import maml.ast._
 
