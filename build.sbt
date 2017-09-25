@@ -34,9 +34,10 @@ lazy val maml = crossProject.in(file("."))
       "com.typesafe.akka"           %% "akka-http-testkit"    % "10.0.9",
       "de.heikoseeberger"           %% "akka-http-circe"      % "1.17.0"
     )
-  ).jsSettings(
+  ).jvmSettings(commonSettings:_*)
+  .jsSettings(
     name := "maml-js"
-  )
+  ).jsSettings(commonSettings:_*)
 
 lazy val mamlJVM = maml.jvm
 lazy val mamlJS = maml.js
@@ -61,7 +62,7 @@ lazy val publishSettings =
 val commonSettings = Seq(
   organization := "com.azavea",
   licenses += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0.txt")),
-  version := "0.0.1-SNAPSHOT",
+  version := "0.0.2",
   scalaVersion := "2.11.11",
   crossScalaVersions := Seq("2.11.11", "2.12.3"),
   resolvers += Resolver.sonatypeRepo("releases"),
