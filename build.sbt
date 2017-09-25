@@ -2,7 +2,7 @@
 lazy val root = project.in(file("."))
   .aggregate(mamlJS, mamlJVM, mamlSpark)
   .settings(
-    licenses ++= Seq(("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0.txt")))
+    licenses += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0.txt"))
   ).enablePlugins(ScalaJSPlugin)
 
 lazy val maml = crossProject.in(file("."))
@@ -61,9 +61,9 @@ lazy val publishSettings =
 val commonSettings = Seq(
   organization := "com.azavea",
   licenses += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0.txt")),
-  version := "0.0.1",
+  version := "0.0.1-SNAPSHOT",
   scalaVersion := "2.11.11",
-  crossScalaVersions := Seq("2.11.11", "2.12.1"),
+  crossScalaVersions := Seq("2.11.11", "2.12.3"),
   resolvers += Resolver.sonatypeRepo("releases"),
   addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full),
   scalacOptions := Seq(
