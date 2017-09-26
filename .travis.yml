@@ -21,3 +21,4 @@ deploy:
     repo: geotrellis/maml
 after_deploy:
 - rm -f "${HOME}/.bintray/.credentials"
+
