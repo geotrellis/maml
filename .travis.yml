@@ -10,7 +10,9 @@ cache:
   - "$HOME/.ivy2"
   - "$HOME/.sbt"
 script:
-- ".travis/build-and-test.sh"
+  - ".travis/build-and-test.sh"
+before_deploy:
+  - export MAML_VERSION_SUFFIX="-${TRAVIS_COMMIT:0:7}"
 deploy:
   provider: script
   script: ".travis/deploy.sh"

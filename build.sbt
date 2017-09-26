@@ -1,6 +1,9 @@
+val mamlVersion = "0.0.2" + scala.util.Properties.envOrNone("MAML_VERSION_SUFFIX").map("-" + _).getOrElse("")
+
 /** Project configurations */
 lazy val root = project.in(file("."))
   .aggregate(mamlJS, mamlJVM, mamlSpark)
+  .settings(commonSettings:_*)
   .settings(
     licenses += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0.txt"))
   ).enablePlugins(ScalaJSPlugin)
@@ -62,7 +65,7 @@ lazy val publishSettings =
 val commonSettings = Seq(
   organization := "com.azavea",
   licenses += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0.txt")),
-  version := "0.0.2",
+  version := mamlVersion,
   scalaVersion := "2.11.11",
   crossScalaVersions := Seq("2.11.11", "2.12.3"),
   resolvers += Resolver.sonatypeRepo("releases"),
