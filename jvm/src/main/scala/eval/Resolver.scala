@@ -16,8 +16,9 @@ import scala.concurrent._
 import scala.util.{Try, Success, Failure}
 
 
-object Resolver {
-  def tmsLiteral(exp: Expression)(implicit ec: ExecutionContext): (Int, Int, Int) => Future[Interpreted[Expression]] = (z: Int, x: Int, y: Int) => {
+class Resolver(ec: ExecutionContext) {
+  implicit val execution = ec
+  def tmsLiteral(exp: Expression): (Int, Int, Int) => Future[Interpreted[Expression]] = (z: Int, x: Int, y: Int) => {
     exp match {
       case ValueReaderTileSource(bucket, root, layerId) => Future {
         val reader = S3ValueReader(bucket, root).reader[SpatialKey, Tile](LayerId(layerId, z))
@@ -31,7 +32,7 @@ object Resolver {
       }
       case _ =>
         exp.children
-          .map({ child => tmsLiteral(child)(ec)(z, x, y) })
+          .map({ child => tmsLiteral(child)(z, x, y) })
           .toList.sequence
           .map({ futureValidChildren => futureValidChildren.toList.sequence })
           .map({ children =>
@@ -40,3 +41,4 @@ object Resolver {
     }
   }
 }
+

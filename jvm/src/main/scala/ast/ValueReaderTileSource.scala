@@ -10,7 +10,6 @@ import java.security.InvalidParameterException
 
 case class ValueReaderTileSource(bucket: String, root: String, layerId: String) extends Source {
   val kind = MamlKind.Tile
-  def id = s"ValueReaderTileSrc-$bucket-$root-$layerId"
 }
 
 
