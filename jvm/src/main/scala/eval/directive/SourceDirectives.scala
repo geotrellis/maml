@@ -3,7 +3,6 @@ package com.azavea.maml.eval.directive
 import com.azavea.maml.eval._
 import com.azavea.maml.eval.tile._
 import com.azavea.maml.ast._
-import com.azavea.maml.ast.jvm._
 
 import cats.data.{NonEmptyList => NEL, _}
 import Validated._
@@ -20,7 +19,4 @@ object SourceDirectives {
   val bufferingTileLiteralDirective = ScopedDirective[BufferingInterpreter.Scope] { case (TileLiteral(tile), _, scope) =>
     Valid(TileResult(LazyTile(tile)))
   }
-
-  //val valueReaderTileSourceDirective = Directive { case (ValueReaderTileSource(bucket, root), _) =>
-  //}
 }

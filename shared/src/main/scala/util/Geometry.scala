@@ -1,4 +1,4 @@
-package com.azavea.maml.ast.utility
+package com.azavea.maml.util
 
 import io.circe.generic.JsonCodec
 

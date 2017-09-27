@@ -1,7 +1,7 @@
 package com.azavea.maml.ast
 
 import MamlKind._
-import com.azavea.maml.ast.utility._
+import com.azavea.maml.util._
 
 
 /** Operations which should only have one argument. */
