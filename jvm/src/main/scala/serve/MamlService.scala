@@ -77,12 +77,13 @@ trait Service extends InterpreterExceptionHandling {
 
   implicit def encodeNEL[A: Encoder]: Encoder[NonEmptyList[A]] = Encoder.encodeList[A].contramap[NonEmptyList[A]](_.toList)
 
+  val resolver = new Resolver(executor)
   def root =
     pathPrefix(IntNumber / IntNumber / IntNumber) { (z, x, y) =>
       handleExceptions(interpreterExceptionHandler) {
         complete {
           val ast = Equal(List(Addition(List(ValueReaderTileSource("geopyspark-test", "srtm", "srtm-test"), IntLiteral(1))), ValueReaderTileSource("geopyspark-test", "srtm", "srtm-test")))
-          val futureAst: Future[Interpreted[Expression]] = Resolver.tmsLiteral(ast)(executor)(z, x, y)
+          val futureAst: Future[Interpreted[Expression]] = resolver.tmsLiteral(ast)(z, x, y)
           futureAst.map({ resolvedAst =>
             resolvedAst
               .andThen({ interpreter(_) })
