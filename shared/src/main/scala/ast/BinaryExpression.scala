@@ -48,6 +48,11 @@ case class LessOrEqual(children: List[Expression]) extends Operation with Binary
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
+case class Unequal(children: List[Expression]) extends Operation with BinaryExpression {
+  val kindDerivation = BinaryExpression.scalarCompareDerivation _
+  def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
+}
+
 case class Equal(children: List[Expression]) extends Operation with BinaryExpression {
   val kindDerivation = BinaryExpression.scalarCompareDerivation _
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
@@ -74,6 +79,11 @@ case class Xor(children: List[Expression]) extends Operation with BinaryExpressi
 }
 
 case class And(children: List[Expression]) extends Operation with BinaryExpression {
+  val kindDerivation = BinaryExpression.scalarCompareDerivation _
+  def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
+}
+
+case class Atan2(children: List[Expression]) extends Operation with BinaryExpression {
   val kindDerivation = BinaryExpression.scalarCompareDerivation _
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }

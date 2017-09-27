@@ -1,31 +1,31 @@
 package com.azavea.maml.ast
 
+import io.circe.Json
 import io.circe.generic.JsonCodec
 
 import java.util.UUID
 
 
 trait Source extends Expression {
-  def id: String
-
   val children: List[Expression] = List.empty
   def withChildren(children: List[Expression]) = this
   override val sources: List[Source] = List(this)
 }
 
 case class IntLiteral(value: Int) extends Source {
-  def id = value.toString
   val kind = MamlKind.Int
 }
 
 case class DoubleLiteral(value: Double) extends Source {
-  def id = value.toString
   val kind = MamlKind.Double
 }
 
 case class BoolLiteral(value: Boolean) extends Source {
-  def id = value.toString
   val kind = MamlKind.Bool
+}
+
+case class GeoJSON(geom: Json) extends Source {
+  val kind = MamlKind.Geom
 }
 
 trait UnboundSource extends Source
