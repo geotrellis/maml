@@ -1,10 +1,10 @@
 package com.azavea.maml.spark
 
 import com.azavea.maml.ast._
+import com.azavea.maml.dsl._
 import com.azavea.maml.eval._
 import com.azavea.maml.eval.directive._
 import com.azavea.maml.eval.directive.SourceDirectives._
-import com.azavea.maml.dsl.jvm._
 
 import com.azavea.maml.spark.eval._
 import com.azavea.maml.spark.eval.directive._

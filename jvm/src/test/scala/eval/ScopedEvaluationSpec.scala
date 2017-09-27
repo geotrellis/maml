@@ -1,9 +1,9 @@
 package com.azavea.maml.eval
 
 import com.azavea.maml.ast._
-import com.azavea.maml.ast.jvm.TileLiteral
-import com.azavea.maml.ast.utility.Square
-import com.azavea.maml.dsl.jvm._
+import com.azavea.maml.ast.TileLiteral
+import com.azavea.maml.util.Square
+import com.azavea.maml.dsl._
 import com.azavea.maml.error._
 import com.azavea.maml.eval._
 import com.azavea.maml.eval.tile._
