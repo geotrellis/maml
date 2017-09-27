@@ -1,4 +1,4 @@
-val mamlVersion = "0.0.2" + scala.util.Properties.envOrNone("MAML_VERSION_SUFFIX").map("-" + _).getOrElse("")
+val mamlVersion = "0.0.2" + scala.util.Properties.envOrElse("MAML_VERSION_SUFFIX", "")
 
 /** Project configurations */
 lazy val root = project.in(file("."))
