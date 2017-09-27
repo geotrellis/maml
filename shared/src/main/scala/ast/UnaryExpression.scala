@@ -16,6 +16,7 @@ object UnaryExpression {
   val tileOnly: Map[MamlKind, MamlKind] = Map(MamlKind.Tile -> MamlKind.Tile)
   val intOnly: Map[MamlKind, MamlKind] = Map(MamlKind.Int -> MamlKind.Int)
   val dblOnly: Map[MamlKind, MamlKind] = Map(MamlKind.Double -> MamlKind.Double)
+  val boolOnly: Map[MamlKind, MamlKind] = Map(MamlKind.Bool -> MamlKind.Bool)
   val scalar = intOnly ++ dblOnly
   val tileOrScalar = tileOnly ++ intOnly ++ dblOnly
 }
@@ -118,6 +119,16 @@ case class Defined(children: List[Expression]) extends Operation with UnaryExpre
 
 case class Undefined(children: List[Expression]) extends Operation with UnaryExpression {
   val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.tileOnly
+  def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
+}
+
+case class NumericNegation(children: List[Expression]) extends Operation with UnaryExpression {
+  val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.tileOrScalar
+  def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
+}
+
+case class LogicalNegation(children: List[Expression]) extends Operation with UnaryExpression {
+  val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.tileOnly ++ UnaryExpression.boolOnly
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
