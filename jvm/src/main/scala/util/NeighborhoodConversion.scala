@@ -4,6 +4,7 @@ import geotrellis.raster.mapalgebra.focal
 
 
 object NeighborhoodConversion {
+
   def apply(mamlN: Neighborhood): focal.Neighborhood = mamlN match {
     case Square(extent) => focal.Square(extent)
     case Circle(radius) => focal.Circle(radius)
@@ -19,5 +20,6 @@ object NeighborhoodConversion {
     case focal.Wedge(radius, startAngle, endAngle) => Wedge(radius, startAngle, endAngle)
     case focal.Annulus(innerRadius, outerRadius) => Annulus(innerRadius, outerRadius)
   }
+
 }
 
