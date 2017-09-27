@@ -1,7 +1,7 @@
 package com.azavea.maml.ast
 
+import com.azavea.maml.ast._
 import MamlKind._
-import com.azavea.maml.ast.utility._
 
 import java.security.InvalidParameterException
 

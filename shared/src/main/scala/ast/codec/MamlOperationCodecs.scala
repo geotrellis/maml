@@ -1,8 +1,7 @@
 package com.azavea.maml.ast.codec
 
 import com.azavea.maml.ast._
-import com.azavea.maml.ast.utility._
-import com.azavea.maml.ast.codec._
+import com.azavea.maml.util._
 
 import io.circe._
 import io.circe.syntax._

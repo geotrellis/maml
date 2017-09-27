@@ -1,10 +1,9 @@
 package com.azavea.maml.serve
 
 import com.azavea.maml.ast._
-import com.azavea.maml.ast.utility._
-import com.azavea.maml.ast.jvm._
 import com.azavea.maml.error._
 import com.azavea.maml.eval._
+import com.azavea.maml.util._
 import com.azavea.maml.eval.directive._
 
 import cats.data.NonEmptyList

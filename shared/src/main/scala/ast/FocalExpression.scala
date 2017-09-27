@@ -2,7 +2,7 @@ package com.azavea.maml.ast
 
 import MamlKind._
 import com.azavea.maml.ast._
-import com.azavea.maml.ast.utility._
+import com.azavea.maml.util._
 
 
 // TODO maybe don't use lists for these unary things

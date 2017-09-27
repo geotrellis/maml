@@ -1,7 +1,9 @@
 package com.azavea.maml.eval
 
 import com.azavea.maml.ast._
+import com.azavea.maml.util._
 import com.azavea.maml.error._
+import com.azavea.maml.eval.directive._
 
 import cats._
 import cats.implicits._
@@ -20,7 +22,9 @@ case class BufferingInterpreter(
   def scopeFor(exp: Expression, previous: Option[BufferingInterpreter.Scope]): BufferingInterpreter.Scope = {
     val scope = previous.getOrElse(BufferingInterpreter.Scope(0, options.tileSize))
     exp match {
-      case f: FocalExpression => scope.copy(buffer = scope.buffer + f.neighborhood.extent)
+      case f: FocalExpression =>
+        val n = NeighborhoodConversion(f.neighborhood)
+        scope.copy(buffer = scope.buffer + n.extent)
       case _ => scope
     }
   }

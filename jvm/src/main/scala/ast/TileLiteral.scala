@@ -1,6 +1,4 @@
-package com.azavea.maml.ast.jvm
-
-import com.azavea.maml.ast._
+package com.azavea.maml.ast
 
 import geotrellis.raster.Tile
 

@@ -3,7 +3,7 @@ package com.azavea.maml.eval.directive
 import com.azavea.maml.eval._
 import com.azavea.maml.ast._
 import com.azavea.maml.eval.tile._
-import com.azavea.maml.ast.utility._
+import com.azavea.maml.util._
 
 import geotrellis.raster.Tile
 import geotrellis.raster.mapalgebra.focal
@@ -19,7 +19,7 @@ object FocalDirectives {
       .map({ _.as[LazyTile] })
       .toList.sequence
       .map({ lt =>
-        TileResult(LazyTile.Focal(lt, neighborhood, None, focal.Max.apply _))
+        TileResult(LazyTile.Focal(lt, NeighborhoodConversion(neighborhood), None, focal.Max.apply _))
       })
   }
 
@@ -28,7 +28,7 @@ object FocalDirectives {
       .map({ _.as[LazyTile] })
       .toList.sequence
       .map({ lt =>
-        TileResult(LazyTile.Focal(lt, neighborhood, None, focal.Min.apply _))
+        TileResult(LazyTile.Focal(lt, NeighborhoodConversion(neighborhood), None, focal.Min.apply _))
       })
   }
 
@@ -37,7 +37,7 @@ object FocalDirectives {
       .map({ _.as[LazyTile] })
       .toList.sequence
       .map({ lt =>
-        TileResult(LazyTile.Focal(lt, neighborhood, None, focal.Mean.apply _))
+        TileResult(LazyTile.Focal(lt, NeighborhoodConversion(neighborhood), None, focal.Mean.apply _))
       })
   }
 
@@ -46,7 +46,7 @@ object FocalDirectives {
       .map({ _.as[LazyTile] })
       .toList.sequence
       .map({ lt =>
-        TileResult(LazyTile.Focal(lt, neighborhood, None, focal.Median.apply _))
+        TileResult(LazyTile.Focal(lt, NeighborhoodConversion(neighborhood), None, focal.Median.apply _))
       })
   }
 
@@ -55,7 +55,7 @@ object FocalDirectives {
       .map({ _.as[LazyTile] })
       .toList.sequence
       .map({ lt =>
-        TileResult(LazyTile.Focal(lt, neighborhood, None, focal.Mode.apply _))
+        TileResult(LazyTile.Focal(lt, NeighborhoodConversion(neighborhood), None, focal.Mode.apply _))
       })
   }
 
@@ -64,7 +64,7 @@ object FocalDirectives {
       .map({ _.as[LazyTile] })
       .toList.sequence
       .map({ lt =>
-        TileResult(LazyTile.Focal(lt, neighborhood, None, focal.Sum.apply _))
+        TileResult(LazyTile.Focal(lt, NeighborhoodConversion(neighborhood), None, focal.Sum.apply _))
       })
   }
 
@@ -73,7 +73,7 @@ object FocalDirectives {
       .map({ _.as[LazyTile] })
       .toList.sequence
       .map({ lt =>
-        TileResult(LazyTile.Focal(lt, neighborhood, None, focal.StandardDeviation.apply _))
+        TileResult(LazyTile.Focal(lt, NeighborhoodConversion(neighborhood), None, focal.StandardDeviation.apply _))
       })
   }
 }

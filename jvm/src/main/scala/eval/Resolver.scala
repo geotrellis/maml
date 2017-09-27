@@ -1,7 +1,6 @@
 package com.azavea.maml.eval
 
 import com.azavea.maml.ast._
-import com.azavea.maml.ast.jvm.TileLiteral
 import com.azavea.maml.error._
 
 import geotrellis.raster._
