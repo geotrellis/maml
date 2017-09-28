@@ -14,28 +14,41 @@ trait InterpreterError {
   def repr: String
 }
 
-/** An unbound parameter encountered during evaluation  */
+
+object InterpreterError {
+  implicit val encodeInterpreterError: Encoder[InterpreterError] =
+    Encoder.encodeString.contramap[InterpreterError](_.repr)
+}
+
+/** Error to which signifies that a nodes aregument count is incorrect */
+case class IncorrectArgCount(exp: Expression, expectedArgs: Int) extends InterpreterError {
+  def repr = s"Expected $expectedArgs arguments to ${exp}; instead, found ${exp.children.size}"
+}
+
+/** Error to use when an unhandled node is encountered during evaluation  */
 case class UnhandledCase(exp: Expression, kind: MamlKind) extends InterpreterError {
-  def repr = s"A branch of Interpreter logic has yet to be implemented for the expression $exp and the kind $kind"
+  def repr = s"A branch of Interpreter logic has yet to be implemented for the expression ${exp} and the kind $kind"
 }
 
 case class ASTDecodeError(json: Json, msg: DecodingFailure) extends InterpreterError {
   def repr = s"Unable to decode the json ${json} as AST: ${msg}"
 }
 
-/* --- Type Errors --- */
-sealed trait TypeError extends InterpreterError {}
-
-case class UnaryTypeError(nodeType: UnaryExpression, found: MamlKind) extends TypeError {
-  def repr = s"TypeError: invalid argument type $found for $nodeType"
+case class EvalTypeError(found: String, expected: List[String]) extends InterpreterError {
+  def repr: String = s"Expected to evaluate tree as one of $expected; instead found $found"
 }
 
-case class FoldableTypeError(nodeType: FoldableExpression, found: (MamlKind, MamlKind)) extends TypeError {
-  def repr = s"TypeError: unable to determine type of $nodeType for arguments: $found"
+case class S3TileResolutionError(exp: Expression, coords: Option[(Int, Int, Int)]) extends InterpreterError {
+  def repr: String = coords match {
+    case Some((z, x, y)) => s"Tile not found for ${exp} at SpatialKey $z, $x, $y}"
+    case None => s"Tile not found for ${exp}"
+  }
 }
 
-object InterpreterError {
-  implicit val encodeInterpreterError: Encoder[InterpreterError] =
-    Encoder.encodeString.contramap[InterpreterError](_.repr)
+case class UnknownTileResolutionError(exp: Expression, coords: Option[(Int, Int, Int)]) extends InterpreterError {
+  def repr: String = coords match {
+    case Some((z, x, y)) => s"Unknown retrieval error for ${exp} at SpatialKey $z, $x, $y}"
+    case None => s"Unkown retrieval error for ${exp}"
+  }
 }
 
