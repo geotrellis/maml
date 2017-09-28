@@ -1,7 +1,6 @@
 package com.azavea.maml.serve
 
 import com.azavea.maml.ast._
-import com.azavea.maml.error._
 import com.azavea.maml.eval._
 import com.azavea.maml.util._
 import com.azavea.maml.eval.directive._

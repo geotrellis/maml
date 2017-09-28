@@ -1,7 +1,6 @@
 package com.azavea.maml.eval.tile
 
 import com.azavea.maml.eval._
-import com.azavea.maml.error._
 
 import geotrellis.raster._
 import geotrellis.raster.mapalgebra.local._

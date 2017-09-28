@@ -4,7 +4,6 @@ import com.azavea.maml.ast._
 import com.azavea.maml.ast.TileLiteral
 import com.azavea.maml.util.Square
 import com.azavea.maml.dsl._
-import com.azavea.maml.error._
 import com.azavea.maml.eval._
 import com.azavea.maml.eval.tile._
 import com.azavea.maml.eval.directive._

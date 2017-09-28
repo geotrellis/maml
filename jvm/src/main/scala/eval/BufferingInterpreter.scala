@@ -2,7 +2,6 @@ package com.azavea.maml.eval
 
 import com.azavea.maml.ast._
 import com.azavea.maml.util._
-import com.azavea.maml.error._
 import com.azavea.maml.eval.directive._
 
 import cats._

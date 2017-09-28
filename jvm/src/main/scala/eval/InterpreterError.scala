@@ -1,4 +1,4 @@
-package com.azavea.maml.error
+package com.azavea.maml.eval
 
 import com.azavea.maml.ast._
 

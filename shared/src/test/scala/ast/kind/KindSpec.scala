@@ -1,7 +1,6 @@
 package com.azavea.maml.ast.kind
 
 import com.azavea.maml.ast._
-import com.azavea.maml.error._
 import com.azavea.maml.util._
 
 import org.scalatest._

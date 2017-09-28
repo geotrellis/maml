@@ -1,7 +1,6 @@
 package com.azavea.maml.ast
 
 import com.azavea.maml.util._
-import com.azavea.maml.error._
 
 import cats.data._
 import Validated._
