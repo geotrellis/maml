@@ -26,26 +26,26 @@ class ScopedEvaluationSpec extends FunSpec with Matchers {
   }
 
   val interpreter = Interpreter.buffering(
-    ScopedDirective.pure[IntLiteral](SourceDirectives.intLiteralDirective),
-    ScopedDirective.pure[BoolLiteral](SourceDirectives.boolLiteralDirective),
-    ScopedDirective.pure[DoubleLiteral](SourceDirectives.dblLiteralDirective),
-    ScopedDirective.pure[TileLiteral](SourceDirectives.tileLiteralDirective),
-    ScopedDirective.pure[Addition](OpDirectives.additionDirectiveInt orElse OpDirectives.additionDirectiveDouble orElse OpDirectives.additionDirectiveTile),
-    ScopedDirective.pure[Subtraction](OpDirectives.subtractionDirective),
-    ScopedDirective.pure[Multiplication](OpDirectives.multiplicationDirectiveInt orElse OpDirectives.multiplicationDirectiveDouble orElse OpDirectives.multiplicationDirectiveTile),
-    ScopedDirective.pure[Max](OpDirectives.maxDirectiveInt orElse OpDirectives.maxDirectiveDouble orElse OpDirectives.maxDirectiveTile),
-    ScopedDirective.pure[Min](OpDirectives.minDirectiveInt orElse OpDirectives.minDirectiveDouble orElse OpDirectives.minDirectiveTile),
-    ScopedDirective.pure[Division](OpDirectives.divisionDirective),
-    ScopedDirective.pure[Less](OpDirectives.lessThanDirective),
-    ScopedDirective.pure[LessOrEqual](OpDirectives.lessThanOrEqualToDirective),
-    ScopedDirective.pure[Equal](OpDirectives.equalToDirective),
-    ScopedDirective.pure[GreaterOrEqual](OpDirectives.greaterThanOrEqualToDirective),
-    ScopedDirective.pure[Greater](OpDirectives.greaterThanDirective),
-    ScopedDirective.pure[FocalMax](FocalDirectives.focalMaxDirective),
-    ScopedDirective.pure[FocalMin](FocalDirectives.focalMinDirective),
-    ScopedDirective.pure[FocalMean](FocalDirectives.focalMeanDirective),
-    ScopedDirective.pure[FocalMedian](FocalDirectives.focalMedianDirective),
-    ScopedDirective.pure[FocalMode](FocalDirectives.focalModeDirective)
+    ScopedDirective.pure[IntLiteral](SourceDirectives.intLiteral),
+    ScopedDirective.pure[BoolLiteral](SourceDirectives.boolLiteral),
+    ScopedDirective.pure[DoubleLiteral](SourceDirectives.dblLiteral),
+    ScopedDirective.pure[TileLiteral](SourceDirectives.tileLiteral),
+    ScopedDirective.pure[Addition](OpDirectives.additionInt orElse OpDirectives.additionDouble orElse OpDirectives.additionTile),
+    ScopedDirective.pure[Subtraction](OpDirectives.subtraction),
+    ScopedDirective.pure[Multiplication](OpDirectives.multiplicationInt orElse OpDirectives.multiplicationDouble orElse OpDirectives.multiplicationTile),
+    ScopedDirective.pure[Max](OpDirectives.maxInt orElse OpDirectives.maxDouble orElse OpDirectives.maxTile),
+    ScopedDirective.pure[Min](OpDirectives.minInt orElse OpDirectives.minDouble orElse OpDirectives.minTile),
+    ScopedDirective.pure[Division](OpDirectives.division),
+    ScopedDirective.pure[Less](OpDirectives.lessThan),
+    ScopedDirective.pure[LessOrEqual](OpDirectives.lessThanOrEqualTo),
+    ScopedDirective.pure[Equal](OpDirectives.equalTo),
+    ScopedDirective.pure[GreaterOrEqual](OpDirectives.greaterThanOrEqualTo),
+    ScopedDirective.pure[Greater](OpDirectives.greaterThan),
+    ScopedDirective.pure[FocalMax](FocalDirectives.focalMax),
+    ScopedDirective.pure[FocalMin](FocalDirectives.focalMin),
+    ScopedDirective.pure[FocalMean](FocalDirectives.focalMean),
+    ScopedDirective.pure[FocalMedian](FocalDirectives.focalMedian),
+    ScopedDirective.pure[FocalMode](FocalDirectives.focalMode)
   )
 
   it("Should interpret and evaluate focal operation") {

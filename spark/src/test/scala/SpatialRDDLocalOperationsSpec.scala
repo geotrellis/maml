@@ -31,8 +31,8 @@ class SpatialRDDLocalOperationsSpec extends FunSpec
   with TestEnvironment {
 
   val interpreter = Interpreter.naive(
-    intLiteralDirective,
-    dblLiteralDirective,
+    intLiteral,
+    dblLiteral,
     RDDSourceDirectives.spatialRDDLiteralDirective,
     RDDOpDirectives.additionDirective,
     RDDOpDirectives.subtractionDirective,
