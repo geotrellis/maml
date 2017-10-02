@@ -9,6 +9,7 @@ import com.azavea.maml.eval._
 import com.azavea.maml.eval.directive._
 import com.azavea.maml.spark._
 import com.azavea.maml.spark.eval._
+import com.azavea.maml.util.{NeighborhoodConversion => NC}
 import geotrellis.raster._
 import geotrellis.raster.render._
 import geotrellis.raster.mapalgebra.{local => gt}
@@ -236,4 +237,13 @@ object RDDOpDirectives {
 
   val numNegation = Directive { case (NumericNegation(_), RDDResult(r) :: Nil) => unary({ _.localNegate }, r) }
   val logNegation = Directive { case (LogicalNegation(_), RDDResult(r) :: Nil) => unary({ _.localNot }, r) }
+
+  /* --- FOCAL EXPRESSIONS --- */
+  val focalMax = Directive { case (FocalMax(_, n), RDDResult(r) :: Nil) => Valid(RDDResult(r.focalMax(NC(n)))) }
+  val focalMin = Directive { case (FocalMin(_, n), RDDResult(r) :: Nil) => Valid(RDDResult(r.focalMin(NC(n)))) }
+  val focalMean = Directive { case (FocalMean(_, n), RDDResult(r) :: Nil) => Valid(RDDResult(r.focalMean(NC(n)))) }
+  val focalMedian = Directive { case (FocalMedian(_, n), RDDResult(r) :: Nil) => Valid(RDDResult(r.focalMedian(NC(n)))) }
+  val focalMode = Directive { case (FocalMode(_, n), RDDResult(r) :: Nil) => Valid(RDDResult(r.focalMode(NC(n)))) }
+  val focalSum = Directive { case (FocalSum(_, n), RDDResult(r) :: Nil) => Valid(RDDResult(r.focalSum(NC(n)))) }
+  val focalStdDev = Directive { case (FocalStdDev(_, n), RDDResult(r) :: Nil) => Valid(RDDResult(r.focalStandardDeviation(NC(n)))) }
 }
