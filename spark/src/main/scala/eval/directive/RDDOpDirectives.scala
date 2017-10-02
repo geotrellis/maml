@@ -121,16 +121,12 @@ object RDDOpDirectives {
   }
 
   val xor = Directive { case (Xor(_), childResults) =>
+    val rr: (RDD[(SpatialKey, Tile)], RDD[(SpatialKey, Tile)]) => RDD[(SpatialKey, Tile)] = { (r1, r2) =>
+      r1.combineValues(r2) { (t1, t2) => t1.combineDouble(t2)(gt.Xor.combine) }
+    }
+
     val results: Result = childResults.reduce { (res1, res2) =>
-      reduce(
-        {_ ^ _},
-        {_ ^: _},
-        {_ ^ d2i(_)},
-        {d2i(_) ^: _},
-        { (r1, r2) => r1.combineValues(r2) { (t1, t2) => t1.combineDouble(t2)(gt.Xor.combine) } },
-        res1,
-        res2
-      )
+      reduce({_ ^ _}, {_ ^: _}, {_ ^ d2i(_)}, {d2i(_) ^: _}, rr, res1, res2)
     }
 
     Valid(results)
@@ -138,52 +134,40 @@ object RDDOpDirectives {
 
   /* --- BINARY EXPRESSIONS --- */
 
-  val equalTo = Directive { case (Equal(_), childResults) =>
-    val results: Result = childResults.reduce { (res1, res2) =>
-      reduce({_.localEqual(_)}, {(i,r) => r.localEqual(i)}, {_.localEqual(_)}, {(d,r) => r.localEqual(d)}, {_.localEqual(_)}, res1, res2)
-    }
+  val equalTo = Directive { case (Equal(_), res1 :: res2 :: Nil) =>
+    val results: Result =
+      reduce(
+        {_.localEqual(_)}, {(i,r) => r.localEqual(i)},
+        {_.localEqual(_)}, {(d,r) => r.localEqual(d)},
+        {_.localEqual(_)}, res1, res2)
 
     Valid(results)
   }
 
-  val unequalTo = Directive { case (Unequal(_), childResults) =>
-    val results: Result = childResults.reduce { (res1, res2) =>
-      reduce({_.localUnequal(_)}, {(i,r) => r.localUnequal(i)}, {_.localUnequal(_)}, {(d,r) => r.localUnequal(d)}, {_.localUnequal(_)}, res1, res2)
-    }
+  val unequalTo = Directive { case (Unequal(_), res1 :: res2 :: Nil) =>
+    val results: Result =
+      reduce(
+        {_.localUnequal(_)}, {(i,r) => r.localUnequal(i)},
+        {_.localUnequal(_)}, {(d,r) => r.localUnequal(d)},
+        {_.localUnequal(_)}, res1, res2)
 
     Valid(results)
   }
 
-  val lessThan = Directive { case (Less(_), childResults) =>
-    val results: Result = childResults.reduce { (res1, res2) =>
-      reduce({_ < _}, {_ <<: _}, {_ < _}, {_ <<: _}, {_ < _}, res1, res2)
-    }
-
-    Valid(results)
+  val lessThan = Directive { case (Less(_), res1 :: res2 :: Nil) =>
+    Valid(reduce({_ < _}, {_ <<: _}, {_ < _}, {_ <<: _}, {_ < _}, res1, res2))
   }
 
-  val lessThanOrEqualTo = Directive { case (LessOrEqual(_), childResults) =>
-    val results: Result = childResults.reduce { (res1, res2) =>
-      reduce({_ <= _}, {_ <=: _}, {_ <= _}, {_ <=: _}, {_ <= _}, res1, res2)
-    }
-
-    Valid(results)
+  val lessThanOrEqualTo = Directive { case (LessOrEqual(_), res1 :: res2 :: Nil) =>
+    Valid(reduce({_ <= _}, {_ <=: _}, {_ <= _}, {_ <=: _}, {_ <= _}, res1, res2))
   }
 
-  val greaterThan = Directive { case (Greater(_), childResults) =>
-    val results: Result = childResults.reduce { (res1, res2) =>
-      reduce({_ > _}, {_ >>: _}, {_ > _}, {_ >>: _}, {_ > _}, res1, res2)
-    }
-
-    Valid(results)
+  val greaterThan = Directive { case (Greater(_), res1 :: res2 :: Nil) =>
+    Valid(reduce({_ > _}, {_ >>: _}, {_ > _}, {_ >>: _}, {_ > _}, res1, res2))
   }
 
-  val greaterThanOrEqualTo = Directive { case (GreaterOrEqual(_), childResults) =>
-    val results: Result = childResults.reduce { (res1, res2) =>
-      reduce({_ >= _}, {_ >=: _}, {_ >= _}, {_ >=: _}, {_ >= _}, res1, res2)
-    }
-
-    Valid(results)
+  val greaterThanOrEqualTo = Directive { case (GreaterOrEqual(_), res1 :: res2 :: Nil) =>
+    Valid(reduce({_ >= _}, {_ >=: _}, {_ >= _}, {_ >=: _}, {_ >= _}, res1, res2))
   }
 
   // TODO The mask can probably be something other than `Polygon`.
