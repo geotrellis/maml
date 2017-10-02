@@ -14,7 +14,7 @@ import Validated._
 
 
 object FocalDirectives {
-  val focalMaxDirective = Directive { case (fm@FocalMax(_, neighborhood), childResults) =>
+  val focalMax = Directive { case (fm@FocalMax(_, neighborhood), childResults) =>
     childResults
       .map({ _.as[LazyTile] })
       .toList.sequence
@@ -23,7 +23,7 @@ object FocalDirectives {
       })
   }
 
-  val focalMinDirective = Directive { case (fm@FocalMin(_, neighborhood), childResults) =>
+  val focalMin = Directive { case (fm@FocalMin(_, neighborhood), childResults) =>
     childResults
       .map({ _.as[LazyTile] })
       .toList.sequence
@@ -32,7 +32,7 @@ object FocalDirectives {
       })
   }
 
-  val focalMeanDirective = Directive { case (fm@FocalMean(_, neighborhood), childResults) =>
+  val focalMean = Directive { case (fm@FocalMean(_, neighborhood), childResults) =>
     childResults
       .map({ _.as[LazyTile] })
       .toList.sequence
@@ -41,7 +41,7 @@ object FocalDirectives {
       })
   }
 
-  val focalMedianDirective = Directive { case (fm@FocalMedian(_, neighborhood), childResults) =>
+  val focalMedian = Directive { case (fm@FocalMedian(_, neighborhood), childResults) =>
     childResults
       .map({ _.as[LazyTile] })
       .toList.sequence
@@ -50,7 +50,7 @@ object FocalDirectives {
       })
   }
 
-  val focalModeDirective = Directive { case (fm@FocalMode(_, neighborhood), childResults) =>
+  val focalMode = Directive { case (fm@FocalMode(_, neighborhood), childResults) =>
     childResults
       .map({ _.as[LazyTile] })
       .toList.sequence
@@ -59,7 +59,7 @@ object FocalDirectives {
       })
   }
 
-  val focalSumDirective = Directive { case (fm@FocalSum(_, neighborhood), childResults) =>
+  val focalSum = Directive { case (fm@FocalSum(_, neighborhood), childResults) =>
     childResults
       .map({ _.as[LazyTile] })
       .toList.sequence
@@ -68,7 +68,7 @@ object FocalDirectives {
       })
   }
 
-  val focalStandardDeviationDirective = Directive { case (fm@FocalStdDev(_, neighborhood), childResults) =>
+  val focalStandardDeviation = Directive { case (fm@FocalStdDev(_, neighborhood), childResults) =>
     childResults
       .map({ _.as[LazyTile] })
       .toList.sequence

@@ -12,21 +12,21 @@ import Validated._
 
 
 object OpDirectives {
-  val additionDirectiveDouble = Directive { case (a@Addition(_), childResults) if (a.kind == MamlKind.Double) =>
+  val additionDouble = Directive { case (a@Addition(_), childResults) if (a.kind == MamlKind.Double) =>
     childResults
       .map({ _.as[Double] })
       .toList.sequence
       .andThen({ results => Valid(DoubleResult(results.reduce(_ + _))) })
   }
 
-  val additionDirectiveInt = Directive { case (a@Addition(_), childResults) if (a.kind == MamlKind.Int) =>
+  val additionInt = Directive { case (a@Addition(_), childResults) if (a.kind == MamlKind.Int) =>
     childResults
       .map({ _.as[Int] })
       .toList.sequence
       .andThen({ results => Valid(IntResult(results.reduce(_ + _))) })
   }
 
-  val additionDirectiveTile = Directive { case (a@Addition(_), childResults) if (a.kind == MamlKind.Tile) =>
+  val additionTile = Directive { case (a@Addition(_), childResults) if (a.kind == MamlKind.Tile) =>
     val grouped = childResults
       .groupBy(_.kind)
     val dblRes: Interpreted[List[Double]] =
@@ -49,7 +49,7 @@ object OpDirectives {
     })
   }
 
-  val subtractionDirective = Directive { case (a@Subtraction(_), childResults) =>
+  val subtraction = Directive { case (a@Subtraction(_), childResults) =>
     val results = childResults.reduce({ (res1: Result, res2: Result) =>
       (res1, res2) match {
         case (TileResult(lt1), TileResult(lt2)) => TileResult(LazyTile.DualCombine(List(lt1, lt2), {_ - _}, {_ - _}))
@@ -66,7 +66,7 @@ object OpDirectives {
     Valid(results)
   }
 
-  val divisionDirective = Directive { case (a@Division(_), childResults) =>
+  val division = Directive { case (a@Division(_), childResults) =>
     val results = childResults.reduce({ (res1: Result, res2: Result) =>
       (res1, res2) match {
         case (TileResult(lt1), TileResult(lt2)) => TileResult(LazyTile.DualCombine(List(lt1, lt2), {_ / _}, {_ / _}))
@@ -83,19 +83,19 @@ object OpDirectives {
     Valid(results)
   }
 
-  val multiplicationDirectiveDouble = Directive { case (a@Multiplication(_), childResults) if (a.kind == MamlKind.Double) =>
+  val multiplicationDouble = Directive { case (a@Multiplication(_), childResults) if (a.kind == MamlKind.Double) =>
     childResults
       .map({ _.as[Double] })
       .toList.sequence
       .andThen({ results => Valid(DoubleResult(results.reduce(_ * _))) })
   }
-  val multiplicationDirectiveInt = Directive { case (a@Multiplication(_), childResults) if (a.kind == MamlKind.Double) =>
+  val multiplicationInt = Directive { case (a@Multiplication(_), childResults) if (a.kind == MamlKind.Double) =>
     childResults
       .map({ _.as[Double] })
       .toList.sequence
       .andThen({ results => Valid(DoubleResult(results.reduce(_ * _))) })
   }
-  val multiplicationDirectiveTile = Directive { case (a@Multiplication(_), childResults) if (a.kind == MamlKind.Tile) =>
+  val multiplicationTile = Directive { case (a@Multiplication(_), childResults) if (a.kind == MamlKind.Tile) =>
     val grouped = childResults
       .groupBy(_.kind)
     val dblRes: Interpreted[List[Double]] =
@@ -118,19 +118,19 @@ object OpDirectives {
     })
   }
 
-  val maxDirectiveDouble = Directive { case (a@Max(_), childResults) if (a.kind == MamlKind.Double) =>
+  val maxDouble = Directive { case (a@Max(_), childResults) if (a.kind == MamlKind.Double) =>
     childResults
       .map({ _.as[Double] })
       .toList.sequence
       .andThen({ results => Valid(DoubleResult(results.reduce(_ max _))) })
   }
-  val maxDirectiveInt = Directive { case (a@Max(_), childResults) if (a.kind == MamlKind.Double) =>
+  val maxInt = Directive { case (a@Max(_), childResults) if (a.kind == MamlKind.Double) =>
     childResults
       .map({ _.as[Double] })
       .toList.sequence
       .andThen({ results => Valid(DoubleResult(results.reduce(_ max _))) })
   }
-  val maxDirectiveTile = Directive { case (a@Max(_), childResults) if (a.kind == MamlKind.Tile) =>
+  val maxTile = Directive { case (a@Max(_), childResults) if (a.kind == MamlKind.Tile) =>
     val grouped = childResults
       .groupBy(_.kind)
     val dblRes: Interpreted[List[Double]] =
@@ -153,19 +153,19 @@ object OpDirectives {
     })
   }
 
-  val minDirectiveDouble = Directive { case (a@Min(_), childResults) if (a.kind == MamlKind.Double) =>
+  val minDouble = Directive { case (a@Min(_), childResults) if (a.kind == MamlKind.Double) =>
     childResults
       .map({ _.as[Double] })
       .toList.sequence
       .andThen({ results => Valid(DoubleResult(results.reduce(_ min _))) })
   }
-  val minDirectiveInt = Directive { case (a@Min(_), childResults) if (a.kind == MamlKind.Double) =>
+  val minInt = Directive { case (a@Min(_), childResults) if (a.kind == MamlKind.Double) =>
     childResults
       .map({ _.as[Double] })
       .toList.sequence
       .andThen({ results => Valid(DoubleResult(results.reduce(_ min _))) })
   }
-  val minDirectiveTile = Directive { case (a@Min(_), childResults) if (a.kind == MamlKind.Tile) =>
+  val minTile = Directive { case (a@Min(_), childResults) if (a.kind == MamlKind.Tile) =>
     val grouped = childResults
       .groupBy(_.kind)
     val dblRes: Interpreted[List[Double]] =
@@ -188,7 +188,7 @@ object OpDirectives {
     })
   }
 
-  val lessThanDirective = Directive { case (a@Less(_), childResults) =>
+  val lessThan = Directive { case (a@Less(_), childResults) =>
     import geotrellis.raster.mapalgebra.local.Less.compare
     val results = childResults.reduce({ (res1: Result, res2: Result) =>
       (res1, res2) match {
@@ -206,7 +206,7 @@ object OpDirectives {
     Valid(results)
   }
 
-  val lessThanOrEqualToDirective = Directive { case (a@LessOrEqual(_), childResults) =>
+  val lessThanOrEqualTo = Directive { case (a@LessOrEqual(_), childResults) =>
     import geotrellis.raster.mapalgebra.local.LessOrEqual.compare
     val results = childResults.reduce({ (res1: Result, res2: Result) =>
       (res1, res2) match {
@@ -224,7 +224,7 @@ object OpDirectives {
     Valid(results)
   }
 
-  val equalToDirective = Directive { case (a@Equal(_), childResults) =>
+  val equalTo = Directive { case (a@Equal(_), childResults) =>
     import geotrellis.raster.mapalgebra.local.Equal.compare
     val results = childResults.reduce({ (res1: Result, res2: Result) =>
       (res1, res2) match {
@@ -242,7 +242,7 @@ object OpDirectives {
     Valid(results)
   }
 
-  val greaterThanDirective = Directive { case (a@Greater(_), childResults) =>
+  val greaterThan = Directive { case (a@Greater(_), childResults) =>
     import geotrellis.raster.mapalgebra.local.Greater.compare
     val results = childResults.reduce({ (res1: Result, res2: Result) =>
       (res1, res2) match {
@@ -260,7 +260,7 @@ object OpDirectives {
     Valid(results)
   }
 
-  val greaterThanOrEqualToDirective = Directive { case (a@GreaterOrEqual(_), childResults) =>
+  val greaterThanOrEqualTo = Directive { case (a@GreaterOrEqual(_), childResults) =>
     import geotrellis.raster.mapalgebra.local.GreaterOrEqual.compare
     val results = childResults.reduce({ (res1: Result, res2: Result) =>
       (res1, res2) match {
@@ -278,4 +278,3 @@ object OpDirectives {
     Valid(results)
   }
 }
-
