@@ -34,15 +34,6 @@ import com.typesafe.config.ConfigFactory
 import scala.concurrent._
 
 
-case class InterpreterException(errors: NonEmptyList[InterpreterError]) extends Exception
-
-trait InterpreterExceptionHandling extends Directives {
-  val interpreterExceptionHandler = ExceptionHandler {
-    case ie: InterpreterException =>
-      complete{ (StatusCodes.BadRequest, ie.errors) }
-  }
-}
-
 object MamlService extends App with Service {
   override implicit val system = ActorSystem()
   override implicit val executor = system.dispatcher
