@@ -10,8 +10,10 @@ import com.azavea.maml.eval.directive._
 import com.azavea.maml.spark._
 import com.azavea.maml.spark.eval._
 import geotrellis.raster._
+import geotrellis.raster.render._
 import geotrellis.raster.mapalgebra.{local => gt}
 import geotrellis.spark._
+import geotrellis.spark.render._
 import geotrellis.vector._
 import org.apache.spark.rdd._
 
@@ -53,6 +55,10 @@ object RDDOpDirectives {
     case (RDDResult(rdd), DoubleResult(double)) => RDDResult(rdd.withContext(rd(_, double)))
     case (DoubleResult(double), RDDResult(rdd)) => RDDResult(rdd.withContext(dr(double, _)))
   }
+
+  /** Some sugar to wrap a common pattern. */
+  def unary(f: RDD[(SpatialKey,Tile)] => RDD[(SpatialKey,Tile)], r: TileLayerRDD[SpatialKey]): Interpreted[Result] =
+    Valid(RDDResult(r.withContext(f(_))))
 
   /* --- FOLDABLE EXPRESSIONS --- */
 
@@ -196,4 +202,38 @@ object RDDOpDirectives {
 
     Valid(results)
   }
+
+  /* --- UNARY EXPRESSIONS --- */
+
+  val classify = Directive { case (Classification(_, classMap), RDDResult(r) :: Nil) =>
+    unary({ _.color(ColorMap(classMap.classifications)) }, r)
+  }
+
+  val sin = Directive { case (Sin(_), RDDResult(r) :: Nil) => unary({ _.localMapDouble(math.sin(_)) }, r) }
+  val cos = Directive { case (Cos(_), RDDResult(r) :: Nil) => unary({ _.localMapDouble(math.cos(_)) }, r) }
+  val tan = Directive { case (Tan(_), RDDResult(r) :: Nil) => unary({ _.localMapDouble(math.tan(_)) }, r) }
+
+  val sinh = Directive { case (Sinh(_), RDDResult(r) :: Nil) => unary({ _.localMapDouble(math.sinh(_)) }, r) }
+  val cosh = Directive { case (Cosh(_), RDDResult(r) :: Nil) => unary({ _.localMapDouble(math.cosh(_)) }, r) }
+  val tanh = Directive { case (Tanh(_), RDDResult(r) :: Nil) => unary({ _.localMapDouble(math.tanh(_)) }, r) }
+
+  val asin = Directive { case (Asin(_), RDDResult(r) :: Nil) => unary({ _.localMapDouble(math.asin(_)) }, r) }
+  val acos = Directive { case (Acos(_), RDDResult(r) :: Nil) => unary({ _.localMapDouble(math.acos(_)) }, r) }
+  val atan = Directive { case (Atan(_), RDDResult(r) :: Nil) => unary({ _.localMapDouble(math.atan(_)) }, r) }
+
+  val floor = Directive { case (Floor(_), RDDResult(r) :: Nil) => unary({ _.localFloor }, r) }
+  val ceil  = Directive { case (Ceil(_),  RDDResult(r) :: Nil) => unary({ _.localCeil }, r) }
+
+  val loge  = Directive { case (LogE(_),  RDDResult(r) :: Nil) => unary({ _.localLog }, r) }
+  val log10 = Directive { case (Log10(_), RDDResult(r) :: Nil) => unary({ _.localLog10 }, r) }
+
+  val root  = Directive { case (SquareRoot(_), RDDResult(r) :: Nil) => unary({ _.localSqrt }, r) }
+  val round = Directive { case (Round(_),      RDDResult(r) :: Nil) => unary({ _.localRound }, r) }
+  val abs   = Directive { case (Abs(_),        RDDResult(r) :: Nil) => unary({ _.localAbs }, r) }
+
+  val defined   = Directive { case (Defined(_),   RDDResult(r) :: Nil) => unary({ _.localDefined }, r) }
+  val undefined = Directive { case (Undefined(_), RDDResult(r) :: Nil) => unary({ _.localUndefined }, r) }
+
+  val numNegation = Directive { case (NumericNegation(_), RDDResult(r) :: Nil) => unary({ _.localNegate }, r) }
+  val logNegation = Directive { case (LogicalNegation(_), RDDResult(r) :: Nil) => unary({ _.localNot }, r) }
 }
