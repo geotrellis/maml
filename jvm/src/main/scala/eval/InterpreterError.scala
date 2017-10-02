@@ -52,6 +52,11 @@ case class UnknownTileResolutionError(exp: Expression, coords: Option[(Int, Int,
   }
 }
 
-case class NonEvaluableNode(exp: Expression) extends InterpreterError {
-  def repr: String = s"Encountered non-evaluable node: $exp"
+case class NonEvaluableNode(exp: Expression, reason: Option[String]) extends InterpreterError {
+  def repr: String = reason match {
+    case Some(r) =>
+      s"Unable to evaluate $exp due to $r"
+    case None =>
+      s"Unable to evaluate $exp due to an unknown reason"
+  }
 }
