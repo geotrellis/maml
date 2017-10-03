@@ -29,6 +29,10 @@ object RDDOpDirectives {
   private def spatialRDDResults(grouped: Map[MamlKind, Seq[Result]]): Interpreted[List[TileLayerRDD[SpatialKey]]] =
     grouped(MamlKind.Tile).map(_.as[TileLayerRDD[SpatialKey]]).toList.sequence
 
+  /** Some sugar to wrap a common pattern. */
+  def unary(f: RDD[(SpatialKey,Tile)] => RDD[(SpatialKey,Tile)], r: TileLayerRDD[SpatialKey]): Interpreted[Result] =
+    Valid(RDDResult(r.withContext(f(_))))
+
   /** Perform a binary operation on RDDs, while preserving any metadata they had. */
   private def binary(
     fn: (RDD[(SpatialKey, Tile)], RDD[(SpatialKey, Tile)]) => RDD[(SpatialKey, Tile)],
@@ -56,10 +60,6 @@ object RDDOpDirectives {
     case (RDDResult(rdd), DoubleResult(double)) => RDDResult(rdd.withContext(rd(_, double)))
     case (DoubleResult(double), RDDResult(rdd)) => RDDResult(rdd.withContext(dr(double, _)))
   }
-
-  /** Some sugar to wrap a common pattern. */
-  def unary(f: RDD[(SpatialKey,Tile)] => RDD[(SpatialKey,Tile)], r: TileLayerRDD[SpatialKey]): Interpreted[Result] =
-    Valid(RDDResult(r.withContext(f(_))))
 
   /* --- FOLDABLE EXPRESSIONS --- */
 
@@ -202,6 +202,14 @@ object RDDOpDirectives {
     }
 
     Valid(results)
+  }
+
+  val pow = Directive { case (Pow(_), res1 :: res2 :: Nil) =>
+    val f: (RDD[(SpatialKey, Tile)], RDD[(SpatialKey, Tile)]) => RDD[(SpatialKey, Tile)] = { (a,b) =>
+      a.combineValues(b) { (t1,t2) => t1.combineDouble(t2)(math.pow) }
+    }
+
+    Valid(reduce({_ localPow _}, { (i,r) => r.localPow(i) }, { _ localPow _ }, { (d,r) => r.localPow(d) }, f, res1, res2))
   }
 
   /* --- UNARY EXPRESSIONS --- */
