@@ -71,6 +71,11 @@ case class Atan(children: List[Expression]) extends Operation with UnaryExpressi
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
+case class Round(children: List[Expression]) extends Operation with UnaryExpression {
+  val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.tileOrScalar
+  def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
+}
+
 case class Floor(children: List[Expression]) extends Operation with UnaryExpression {
   val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.tileOrScalar
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
@@ -97,17 +102,7 @@ case class SquareRoot(children: List[Expression]) extends Operation with UnaryEx
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
-case class Round(children: List[Expression]) extends Operation with UnaryExpression {
-  val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.tileOrScalar
-  def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
-}
-
 case class Abs(children: List[Expression]) extends Operation with UnaryExpression {
-  val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.tileOrScalar
-  def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
-}
-
-case class Pow(children: List[Expression]) extends Operation with UnaryExpression {
   val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.tileOrScalar
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }

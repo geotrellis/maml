@@ -38,6 +38,24 @@ case class Masking(children: List[Expression]) extends Operation with BinaryExpr
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
+case class Pow(children: List[Expression]) extends Operation with BinaryExpression {
+  val kindDerivation = { (k1: MamlKind, k2: MamlKind) =>
+    (k1, k2) match {
+      case (MamlKind.Tile, MamlKind.Tile) => MamlKind.Tile
+      case (MamlKind.Tile, MamlKind.Int) => MamlKind.Tile
+      case (MamlKind.Int, MamlKind.Tile) => MamlKind.Tile
+      case (MamlKind.Tile, MamlKind.Double) => MamlKind.Tile
+      case (MamlKind.Double, MamlKind.Tile) => MamlKind.Tile
+      case (MamlKind.Double, MamlKind.Int) => MamlKind.Double
+      case (MamlKind.Int, MamlKind.Double) => MamlKind.Double
+      case (MamlKind.Int, MamlKind.Int) => MamlKind.Double
+      case (MamlKind.Double, MamlKind.Double) => MamlKind.Double
+      case (x1, x2) => throw new InvalidParameterException(s"Expected tile and scalar kinds. Found $x1 and $x2")
+    }
+  }
+  def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
+}
+
 case class Less(children: List[Expression]) extends Operation with BinaryExpression {
   val kindDerivation = BinaryExpression.scalarCompareDerivation _
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
