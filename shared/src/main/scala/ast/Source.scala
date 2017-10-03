@@ -24,7 +24,7 @@ case class BoolLiteral(value: Boolean) extends Source {
   val kind = MamlKind.Bool
 }
 
-case class GeoJSON(geom: Json) extends Source {
+case class GeomJson(geojson: String) extends Source {
   val kind = MamlKind.Geom
 }
 
