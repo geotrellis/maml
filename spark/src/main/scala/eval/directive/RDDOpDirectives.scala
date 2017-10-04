@@ -61,6 +61,18 @@ object RDDOpDirectives {
     case (DoubleResult(double), RDDResult(rdd)) => RDDResult(rdd.withContext(dr(double, _)))
   }
 
+  /** Sugar for a common pattern with the unary math operations. */
+  private def mathy(
+    fr: RDD[(SpatialKey, Tile)] => RDD[(SpatialKey, Tile)],
+    fi: Int => Result,
+    fd: Double => Result,
+    res: Result
+  ): Interpreted[Result] = res match {
+    case RDDResult(r) => unary(fr, r)
+    case IntResult(i) => Valid(fi(i))
+    case DoubleResult(d) => Valid(fd(d))
+  }
+
   /* --- FOLDABLE EXPRESSIONS --- */
 
   val addition = Directive { case (a@Addition(_), childResults) =>
@@ -218,33 +230,73 @@ object RDDOpDirectives {
     unary({ _.color(ColorMap(classMap.classifications)) }, r)
   }
 
-  val sin = Directive { case (Sin(_), RDDResult(r) :: Nil) => unary({ _.localMapDouble(math.sin(_)) }, r) }
-  val cos = Directive { case (Cos(_), RDDResult(r) :: Nil) => unary({ _.localMapDouble(math.cos(_)) }, r) }
-  val tan = Directive { case (Tan(_), RDDResult(r) :: Nil) => unary({ _.localMapDouble(math.tan(_)) }, r) }
+  val sin = Directive { case (Sin(_), res :: Nil) =>
+    mathy({_.localMapDouble(math.sin(_))}, { i => DoubleResult(math.sin(i.toDouble)) }, { d => DoubleResult(math.sin(d)) }, res)
+  }
+  val cos = Directive { case (Cos(_), res :: Nil) =>
+    mathy({_.localMapDouble(math.cos(_))}, { i => DoubleResult(math.cos(i.toDouble)) }, { d => DoubleResult(math.cos(d)) }, res)
+  }
+  val tan = Directive { case (Tan(_), res :: Nil) =>
+    mathy({_.localMapDouble(math.tan(_))}, { i => DoubleResult(math.tan(i.toDouble)) }, { d => DoubleResult(math.tan(d)) }, res)
+  }
 
-  val sinh = Directive { case (Sinh(_), RDDResult(r) :: Nil) => unary({ _.localMapDouble(math.sinh(_)) }, r) }
-  val cosh = Directive { case (Cosh(_), RDDResult(r) :: Nil) => unary({ _.localMapDouble(math.cosh(_)) }, r) }
-  val tanh = Directive { case (Tanh(_), RDDResult(r) :: Nil) => unary({ _.localMapDouble(math.tanh(_)) }, r) }
+  val sinh = Directive { case (Sinh(_), res :: Nil) =>
+    mathy({_.localMapDouble(math.sinh(_))}, { i => DoubleResult(math.sinh(i.toDouble)) }, { d => DoubleResult(math.sinh(d)) }, res)
+  }
+  val cosh = Directive { case (Cosh(_), res :: Nil) =>
+    mathy({_.localMapDouble(math.cosh(_))}, { i => DoubleResult(math.cosh(i.toDouble)) }, { d => DoubleResult(math.cosh(d)) }, res)
+  }
+  val tanh = Directive { case (Tanh(_), res :: Nil) =>
+    mathy({_.localMapDouble(math.tanh(_))}, { i => DoubleResult(math.tanh(i.toDouble)) }, { d => DoubleResult(math.tanh(d)) }, res)
+  }
 
-  val asin = Directive { case (Asin(_), RDDResult(r) :: Nil) => unary({ _.localMapDouble(math.asin(_)) }, r) }
-  val acos = Directive { case (Acos(_), RDDResult(r) :: Nil) => unary({ _.localMapDouble(math.acos(_)) }, r) }
-  val atan = Directive { case (Atan(_), RDDResult(r) :: Nil) => unary({ _.localMapDouble(math.atan(_)) }, r) }
+  val asin = Directive { case (Asin(_), res :: Nil) =>
+    mathy({_.localMapDouble(math.asin(_))}, { i => DoubleResult(math.asin(i.toDouble)) }, { d => DoubleResult(math.asin(d)) }, res)
+  }
+  val acos = Directive { case (Acos(_), res :: Nil) =>
+    mathy({_.localMapDouble(math.acos(_))}, { i => DoubleResult(math.acos(i.toDouble)) }, { d => DoubleResult(math.acos(d)) }, res)
+  }
+  val atan = Directive { case (Atan(_), res :: Nil) =>
+    mathy({_.localMapDouble(math.atan(_))}, { i => DoubleResult(math.atan(i.toDouble)) }, { d => DoubleResult(math.atan(d)) }, res)
+  }
 
-  val floor = Directive { case (Floor(_), RDDResult(r) :: Nil) => unary({ _.localFloor }, r) }
-  val ceil  = Directive { case (Ceil(_),  RDDResult(r) :: Nil) => unary({ _.localCeil }, r) }
+  val floor = Directive { case (Floor(_), res :: Nil) =>
+    mathy({ _.localFloor }, { IntResult(_) }, { d => IntResult(math.floor(d).toInt) }, res)
+  }
+  val ceil = Directive { case (Ceil(_), res :: Nil) =>
+    mathy({ _.localCeil }, { IntResult(_) }, { d => IntResult(math.ceil(d).toInt) }, res)
+  }
 
-  val loge  = Directive { case (LogE(_),  RDDResult(r) :: Nil) => unary({ _.localLog }, r) }
-  val log10 = Directive { case (Log10(_), RDDResult(r) :: Nil) => unary({ _.localLog10 }, r) }
+  val loge  = Directive { case (LogE(_),  res :: Nil) =>
+    mathy({ _.localLog }, { i => DoubleResult(math.log(i)) }, { d => DoubleResult(math.log(d)) }, res)
+  }
+  val log10 = Directive { case (Log10(_), res :: Nil) =>
+    mathy({ _.localLog10 }, { i => DoubleResult(math.log10(i)) }, { d => DoubleResult(math.log10(d)) }, res)
+  }
 
-  val root  = Directive { case (SquareRoot(_), RDDResult(r) :: Nil) => unary({ _.localSqrt }, r) }
-  val round = Directive { case (Round(_),      RDDResult(r) :: Nil) => unary({ _.localRound }, r) }
-  val abs   = Directive { case (Abs(_),        RDDResult(r) :: Nil) => unary({ _.localAbs }, r) }
+  val root = Directive { case (SquareRoot(_), res :: Nil) =>
+    mathy({ _.localSqrt }, { i => DoubleResult(math.sqrt(i)) }, { d => DoubleResult(math.sqrt(d)) }, res)
+  }
+  val round = Directive { case (Round(_), res :: Nil) =>
+    mathy({ _.localRound }, { i => IntResult(math.round(i)) }, { d => IntResult(math.round(d).toInt) }, res)
+  }
+  val abs = Directive { case (Abs(_), res :: Nil) =>
+    mathy({ _.localAbs }, { i => IntResult(math.abs(i)) }, { d => DoubleResult(math.abs(d)) }, res)
+  }
 
-  val defined   = Directive { case (Defined(_),   RDDResult(r) :: Nil) => unary({ _.localDefined }, r) }
-  val undefined = Directive { case (Undefined(_), RDDResult(r) :: Nil) => unary({ _.localUndefined }, r) }
+  val defined = Directive { case (Defined(_), res :: Nil) =>
+    mathy({ _.localDefined }, { i => BoolResult(isData(i)) }, { d => BoolResult(isData(d)) }, res)
+  }
+  val undefined = Directive { case (Undefined(_), res :: Nil) =>
+    mathy({ _.localUndefined }, { i => BoolResult(!isData(i)) }, { d => BoolResult(!isData(d)) }, res)
+  }
 
-  val numNegation = Directive { case (NumericNegation(_), RDDResult(r) :: Nil) => unary({ _.localNegate }, r) }
-  val logNegation = Directive { case (LogicalNegation(_), RDDResult(r) :: Nil) => unary({ _.localNot }, r) }
+  val numNegation = Directive { case (NumericNegation(_), res :: Nil) =>
+    mathy({ _.localNegate }, { i => IntResult(i * -1) }, { d => DoubleResult(d * -1) }, res)
+  }
+  val logNegation = Directive { case (LogicalNegation(_), res :: Nil) =>
+    mathy({ _.localNot }, { i => IntResult(if (i == 0) 1 else 0) }, { d => IntResult(if (d == 0) 1 else 0) }, res)
+  }
 
   /* --- FOCAL EXPRESSIONS --- */
   val focalMax = Directive { case (FocalMax(_, n), RDDResult(r) :: Nil) => Valid(RDDResult(r.focalMax(NC(n)))) }
