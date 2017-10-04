@@ -11,6 +11,7 @@ import com.azavea.maml.ast.codec.tree.ExpressionTreeCodec
 import io.circe._
 import io.circe.syntax._
 import geotrellis.raster._
+import geotrellis.vector._
 import cats._
 import cats.data.{NonEmptyList => NEL, _}
 import Validated._
@@ -21,7 +22,7 @@ import scala.reflect._
 
 class EvaluationSpec extends FunSpec with Matchers with ExpressionTreeCodec {
 
-  implicit def tileIsTileLiteral(tile: Tile): TileLiteral = TileLiteral(tile)
+  implicit def tileIsTileLiteral(tile: Tile): TileLiteral = TileLiteral(tile, RasterExtent(tile, Extent(0, 0, 0, 0)))
 
   implicit class TypeRefinement(self: Interpreted[Result]) {
     def as[T: ClassTag]: Interpreted[T] = self match {
@@ -30,7 +31,7 @@ class EvaluationSpec extends FunSpec with Matchers with ExpressionTreeCodec {
     }
   }
 
-  val interpreter = Interpreter.naive(
+  val interpreter = NaiveInterpreter(List(
     intLiteral,
     dblLiteral,
     boolLiteral,
@@ -54,7 +55,7 @@ class EvaluationSpec extends FunSpec with Matchers with ExpressionTreeCodec {
     equalTo,
     greaterThanOrEqualTo,
     greaterThan
-  )
+  ))
 
   it("Should interpret and evaluate to Boolean literals") {
     interpreter(BoolLiteral(true)).as[Boolean] should be (Valid(true))
@@ -86,7 +87,6 @@ class EvaluationSpec extends FunSpec with Matchers with ExpressionTreeCodec {
   }
 
   it("Should interpret and evaluate comparisions with scalars") {
-    println((DoubleLiteral(20) < DoubleLiteral(20)).asJson.noSpaces)
     interpreter(DoubleLiteral(20) < DoubleLiteral(20)).as[Boolean] should be (Valid(false))
     interpreter(DoubleLiteral(19) < DoubleLiteral(20)).as[Boolean] should be (Valid(true))
     interpreter(DoubleLiteral(29) < DoubleLiteral(20)).as[Boolean] should be (Valid(false))

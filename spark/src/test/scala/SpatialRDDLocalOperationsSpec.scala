@@ -30,7 +30,7 @@ class SpatialRDDLocalOperationsSpec extends FunSpec
   with Matchers
   with TestEnvironment {
 
-  val interpreter = Interpreter.naive(
+  val interpreter = NaiveInterpreter(List(
     intLiteral,
     dblLiteral,
     RDDSourceDirectives.spatialRDDLiteralDirective,
@@ -38,7 +38,7 @@ class SpatialRDDLocalOperationsSpec extends FunSpec
     RDDOpDirectives.subtractionDirective,
     RDDOpDirectives.multiplicationDirective,
     RDDOpDirectives.divisionDirective
-  )
+  ))
 
   implicit class TypeRefinement(self: Interpreted[Result]) {
     def as[T: ClassTag]: Interpreted[T] = self match {
