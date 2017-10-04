@@ -19,6 +19,9 @@ import scala.reflect.ClassTag
 
 
 sealed trait LazyTile extends LazyLogging {
+  // TODO: We need to find a way to rip RasterExtent out of LazyTile
+  //       while still being able to provide it to Masking operations.
+  //       Is this a use case for futo or paramorphisms?
   def extent: RasterExtent
   def children: List[LazyTile]
   def cols: Int
