@@ -1,29 +1,22 @@
 package com.azavea.maml.spark
 
+import scala.reflect._
+
+import cats._
+import cats.data._
+import cats.data.Validated._
 import com.azavea.maml.ast._
 import com.azavea.maml.dsl._
 import com.azavea.maml.eval._
 import com.azavea.maml.eval.directive._
 import com.azavea.maml.eval.directive.SourceDirectives._
-
+import com.azavea.maml.spark.ast._
 import com.azavea.maml.spark.eval._
 import com.azavea.maml.spark.eval.directive._
-import com.azavea.maml.spark.eval.SpatialRDDResult._
-import com.azavea.maml.spark.ast._
-
 import geotrellis.raster._
 import geotrellis.spark._
 import geotrellis.spark.testkit._
-
-import cats._
-import cats.data.{NonEmptyList => NEL, _}
-import Validated._
-
 import org.scalatest._
-import org.apache.spark._
-import org.apache.spark.rdd._
-
-import scala.reflect._
 
 
 class SpatialRDDLocalOperationsSpec extends FunSpec
@@ -33,11 +26,11 @@ class SpatialRDDLocalOperationsSpec extends FunSpec
   val interpreter = NaiveInterpreter(List(
     intLiteral,
     dblLiteral,
-    RDDSourceDirectives.spatialRDDLiteralDirective,
-    RDDOpDirectives.additionDirective,
-    RDDOpDirectives.subtractionDirective,
-    RDDOpDirectives.multiplicationDirective,
-    RDDOpDirectives.divisionDirective
+    RDDSourceDirectives.rddLiteral,
+    RDDOpDirectives.addition,
+    RDDOpDirectives.subtraction,
+    RDDOpDirectives.multiplication,
+    RDDOpDirectives.division
   ))
 
   implicit class TypeRefinement(self: Interpreted[Result]) {
@@ -51,7 +44,7 @@ class SpatialRDDLocalOperationsSpec extends FunSpec
     createTileLayerRDD(IntArrayTile(0 until 10 toArray, 2, 5), TileLayout(1, 1, 2, 5))
 
   it("Should interpret and evaluate spatial RDDs") {
-    interpreter(SpatialRDDLiteral(rdd)).as[ContextRDD[SpatialKey, Tile, TileLayerMetadata[SpatialKey]]] match {
+    interpreter(RDDLiteral(rdd)).as[ContextRDD[SpatialKey, Tile, TileLayerMetadata[SpatialKey]]] match {
       case Valid(result) => rastersEqual(rdd, result)
       case i@Invalid(_) => fail(s"$i")
     }
@@ -63,7 +56,7 @@ class SpatialRDDLocalOperationsSpec extends FunSpec
       createTileLayerRDD(tile, TileLayout(1, 1, 2, 5))
     }
 
-    interpreter(SpatialRDDLiteral(rdd) + SpatialRDDLiteral(rdd)).as[ContextRDD[SpatialKey, Tile, TileLayerMetadata[SpatialKey]]] match {
+    interpreter(RDDLiteral(rdd) + RDDLiteral(rdd)).as[ContextRDD[SpatialKey, Tile, TileLayerMetadata[SpatialKey]]] match {
       case Valid(result) => rastersEqual(result, expected)
       case i@Invalid(_) => println(s"$i")
       }
@@ -73,7 +66,7 @@ class SpatialRDDLocalOperationsSpec extends FunSpec
     val expected: TileLayerRDD[SpatialKey] =
       createTileLayerRDD(IntArrayTile(1 until 11 toArray, 2, 5), TileLayout(1, 1, 2, 5))
 
-    interpreter(IntLiteral(1) + SpatialRDDLiteral(rdd)).as[ContextRDD[SpatialKey, Tile, TileLayerMetadata[SpatialKey]]] match {
+    interpreter(IntLiteral(1) + RDDLiteral(rdd)).as[ContextRDD[SpatialKey, Tile, TileLayerMetadata[SpatialKey]]] match {
       case Valid(result) => rastersEqual(result, expected)
       case i@Invalid(_) => println(s"$i")
       }
@@ -85,7 +78,7 @@ class SpatialRDDLocalOperationsSpec extends FunSpec
       createTileLayerRDD(tile, TileLayout(1, 1, 2, 5))
     }
 
-    interpreter(DoubleLiteral(1.0) + SpatialRDDLiteral(rdd)).as[ContextRDD[SpatialKey, Tile, TileLayerMetadata[SpatialKey]]] match {
+    interpreter(DoubleLiteral(1.0) + RDDLiteral(rdd)).as[ContextRDD[SpatialKey, Tile, TileLayerMetadata[SpatialKey]]] match {
       case Valid(result) => rastersEqual(result, expected)
       case i@Invalid(_) => println(s"$i")
       }
@@ -94,7 +87,7 @@ class SpatialRDDLocalOperationsSpec extends FunSpec
   it("Should subtract two spatial RDDs") {
     val expected = createTileLayerRDD(IntArrayTile.fill(0, 2, 5), TileLayout(1, 1, 2, 5))
 
-    interpreter(SpatialRDDLiteral(rdd) - SpatialRDDLiteral(rdd)).as[ContextRDD[SpatialKey, Tile, TileLayerMetadata[SpatialKey]]] match {
+    interpreter(RDDLiteral(rdd) - RDDLiteral(rdd)).as[ContextRDD[SpatialKey, Tile, TileLayerMetadata[SpatialKey]]] match {
       case Valid(result) => rastersEqual(result, expected)
       case i@Invalid(_) => println(s"$i")
       }
@@ -106,7 +99,7 @@ class SpatialRDDLocalOperationsSpec extends FunSpec
       createTileLayerRDD(tile, TileLayout(1, 1, 2, 5))
     }
 
-    interpreter(SpatialRDDLiteral(rdd) - IntLiteral(1)).as[ContextRDD[SpatialKey, Tile, TileLayerMetadata[SpatialKey]]] match {
+    interpreter(RDDLiteral(rdd) - IntLiteral(1)).as[ContextRDD[SpatialKey, Tile, TileLayerMetadata[SpatialKey]]] match {
       case Valid(result) => rastersEqual(result, expected)
       case i@Invalid(_) => println(s"$i")
       }
@@ -118,7 +111,7 @@ class SpatialRDDLocalOperationsSpec extends FunSpec
       createTileLayerRDD(tile, TileLayout(1, 1, 2, 5))
     }
 
-    interpreter(DoubleLiteral(1.0) - SpatialRDDLiteral(rdd)).as[ContextRDD[SpatialKey, Tile, TileLayerMetadata[SpatialKey]]] match {
+    interpreter(DoubleLiteral(1.0) - RDDLiteral(rdd)).as[ContextRDD[SpatialKey, Tile, TileLayerMetadata[SpatialKey]]] match {
       case Valid(result) => rastersEqual(result, expected)
       case i@Invalid(_) => println(s"$i")
       }
@@ -130,7 +123,7 @@ class SpatialRDDLocalOperationsSpec extends FunSpec
       createTileLayerRDD(tile, TileLayout(1, 1, 2, 5))
     }
 
-    interpreter(SpatialRDDLiteral(rdd) * SpatialRDDLiteral(rdd)).as[ContextRDD[SpatialKey, Tile, TileLayerMetadata[SpatialKey]]] match {
+    interpreter(RDDLiteral(rdd) * RDDLiteral(rdd)).as[ContextRDD[SpatialKey, Tile, TileLayerMetadata[SpatialKey]]] match {
       case Valid(result) => rastersEqual(result, expected)
       case i@Invalid(_) => println(s"$i")
       }
@@ -142,7 +135,7 @@ class SpatialRDDLocalOperationsSpec extends FunSpec
       createTileLayerRDD(tile, TileLayout(1, 1, 2, 5))
     }
 
-    interpreter(SpatialRDDLiteral(rdd) * IntLiteral(3)).as[ContextRDD[SpatialKey, Tile, TileLayerMetadata[SpatialKey]]] match {
+    interpreter(RDDLiteral(rdd) * IntLiteral(3)).as[ContextRDD[SpatialKey, Tile, TileLayerMetadata[SpatialKey]]] match {
       case Valid(result) => rastersEqual(result, expected)
       case i@Invalid(_) => println(s"$i")
     }
@@ -154,7 +147,7 @@ class SpatialRDDLocalOperationsSpec extends FunSpec
       createTileLayerRDD(tile * 5.0, TileLayout(1, 1, 2, 5))
     }
 
-    interpreter(DoubleLiteral(5.0) * SpatialRDDLiteral(rdd)).as[ContextRDD[SpatialKey, Tile, TileLayerMetadata[SpatialKey]]] match {
+    interpreter(DoubleLiteral(5.0) * RDDLiteral(rdd)).as[ContextRDD[SpatialKey, Tile, TileLayerMetadata[SpatialKey]]] match {
       case Valid(result) => rastersEqual(result, expected)
       case i@Invalid(_) => println(s"$i")
       }
@@ -166,7 +159,7 @@ class SpatialRDDLocalOperationsSpec extends FunSpec
       createTileLayerRDD(tile, TileLayout(1, 1, 2, 5))
     }
 
-    interpreter(SpatialRDDLiteral(rdd) / SpatialRDDLiteral(rdd)).as[ContextRDD[SpatialKey, Tile, TileLayerMetadata[SpatialKey]]] match {
+    interpreter(RDDLiteral(rdd) / RDDLiteral(rdd)).as[ContextRDD[SpatialKey, Tile, TileLayerMetadata[SpatialKey]]] match {
       case Valid(result) => rastersEqual(result, expected)
       case i@Invalid(_) => println(s"$i")
       }
@@ -178,7 +171,7 @@ class SpatialRDDLocalOperationsSpec extends FunSpec
       createTileLayerRDD(tile, TileLayout(1, 1, 2, 5))
     }
 
-    interpreter(SpatialRDDLiteral(rdd) / IntLiteral(1)).as[ContextRDD[SpatialKey, Tile, TileLayerMetadata[SpatialKey]]] match {
+    interpreter(RDDLiteral(rdd) / IntLiteral(1)).as[ContextRDD[SpatialKey, Tile, TileLayerMetadata[SpatialKey]]] match {
       case Valid(result) => rastersEqual(result, expected)
       case i@Invalid(_) => println(s"$i")
       }
@@ -190,7 +183,7 @@ class SpatialRDDLocalOperationsSpec extends FunSpec
       createTileLayerRDD(tile./:(5.0), TileLayout(1, 1, 2, 5))
     }
 
-    interpreter(DoubleLiteral(5.0) / SpatialRDDLiteral(rdd)).as[ContextRDD[SpatialKey, Tile, TileLayerMetadata[SpatialKey]]] match {
+    interpreter(DoubleLiteral(5.0) / RDDLiteral(rdd)).as[ContextRDD[SpatialKey, Tile, TileLayerMetadata[SpatialKey]]] match {
       case Valid(result) => rastersEqual(result, expected)
       case i@Invalid(_) => println(s"$i")
       }

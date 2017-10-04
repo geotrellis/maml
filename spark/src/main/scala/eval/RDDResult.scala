@@ -1,22 +1,16 @@
 package com.azavea.maml.spark.eval
 
-import com.azavea.maml.ast._
-import com.azavea.maml.eval._
-import com.azavea.maml.eval.tile._
-import com.azavea.maml.spark.ast._
-
-import geotrellis.raster._
-import geotrellis.spark._
-
-import cats.data.{NonEmptyList => NEL, _}
-import Validated._
-
-import org.apache.spark.rdd._
-
 import scala.reflect.ClassTag
 
+import cats.data.{NonEmptyList => NEL, _}
+import cats.data.Validated._
+import com.azavea.maml.ast._
+import com.azavea.maml.eval._
+import geotrellis.raster.Tile
+import geotrellis.spark._
 
-case class SpatialRDDResult(res: TileLayerRDD[SpatialKey]) extends Result {
+
+case class RDDResult(res: TileLayerRDD[SpatialKey]) extends Result {
   def as[T](implicit ct: ClassTag[T]): Interpreted[T] = {
     val cls = ct.runtimeClass
     if (classOf[ContextRDD[SpatialKey, Tile, TileLayerMetadata[SpatialKey]]] isAssignableFrom cls)
