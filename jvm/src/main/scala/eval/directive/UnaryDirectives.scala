@@ -10,11 +10,14 @@ import cats.implicits._
 import cats.data.{NonEmptyList => NEL, _}
 import Validated._
 import geotrellis.raster._
+import geotrellis.raster.render._
 
 import scala.util.Try
 
 
 object UnaryDirectives {
+
+  private def not[A](f: A => Boolean): A => Boolean = !f(_)
 
   private def tileOrScalarResult(
     t: LazyTile => LazyTile,
@@ -98,13 +101,13 @@ object UnaryDirectives {
     Valid(result)
   }
 
-  /** Specialty Arithmetic Operations */
+  /** Arithmetic Operations */
   val naturalLog = Directive { case  (nl@LogE(_), childResults) =>
     val result = tileOrScalarResult({ _.logE }, { i: Int => math.log(i2d(i)) }, { math.log(_) }, childResults.head)
     Valid(result)
   }
 
-  val log10 = Directive { case  (nl@LogE(_), childResults) =>
+  val log10 = Directive { case  (nl@Log10(_), childResults) =>
     val result = tileOrScalarResult({ _.log10 }, { i: Int => math.log10(i2d(i)) }, { math.log10(_) }, childResults.head)
     Valid(result)
   }
@@ -124,9 +127,28 @@ object UnaryDirectives {
     Valid(result)
   }
 
-  val isUndefined = Directive { case (d@Defined(_), childResults) =>
+  val isUndefined = Directive { case (d@Undefined(_), childResults) =>
     val result = tileOrBoolResult({ _.isUndefined }, { i: Int => isNoData(i) }, { isNoData(_) }, childResults.head)
     Valid(result)
+  }
+
+  val numericNegation = Directive { case (nn@NumericNegation(_), childResults) =>
+    val result = tileOrScalarResult({ _.changeSign }, { _ * -1 }, {_ * -1}, childResults.head)
+    Valid(result)
+  }
+
+  /** Logical Operations */
+  val logicalNegation = Directive { case (ln@LogicalNegation(_), childResults) =>
+    val result = tileOrBoolResult({ _.not }, {not(isData(_))}, {not(isData(_))}, childResults.head)
+    Valid(result)
+  }
+
+  /** Tile-specific Operations */
+  val classification = Directive { case (classify@Classification(_, classMap), childResults) =>
+    childResults.head match {
+      case TileResult(lzTile) => Valid(TileResult(lzTile.classify(BreakMap(classMap.classifications))))
+      case _ => Invalid(NEL.of(NonEvaluableNode(classify, Some("Classification node requires lazytile argument"))))
+    }
   }
 }
 

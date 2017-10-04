@@ -11,6 +11,13 @@ import scala.reflect.ClassTag
 
 
 case class NaiveInterpreter(directives: List[Directive]) extends Interpreter {
+
+  def prependDirective(directive: Directive): Interpreter =
+    NaiveInterpreter(directive +: directives)
+
+  def appendDirective(directive: Directive): Interpreter =
+    NaiveInterpreter(directives :+ directive)
+
   val fallbackDirective: Directive =
     { case (exp, res) => Invalid(NEL.of(UnhandledCase(exp, exp.kind))) }
 

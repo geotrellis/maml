@@ -20,11 +20,7 @@ object SourceDirectives {
 
   val boolLiteral = Directive { case (BoolLiteral(bool), _) => Valid(BoolResult(bool)) }
 
-  val tileLiteral = Directive { case (TileLiteral(tile), _) => Valid(TileResult(LazyTile(tile))) }
-
-  val bufferingTileLiteral = ScopedDirective[BufferingInterpreter.Scope] { case (TileLiteral(tile), _, scope) =>
-    Valid(TileResult(LazyTile(tile)))
-  }
+  val tileLiteral = Directive { case (TileLiteral(tile, extent), _) => Valid(TileResult(LazyTile(tile, extent))) }
 
   val geomJson = Directive { case (GeomJson(jsonString), _) =>
     Try(jsonString.parseGeoJson[Geometry]) match {

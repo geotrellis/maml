@@ -3,13 +3,14 @@ package com.azavea.maml.dsl.tile
 import com.azavea.maml.eval.tile._
 
 import geotrellis.raster._
+import geotrellis.raster.render.BreakMap
 import geotrellis.raster.mapalgebra.local._
 
 
 trait LazyTileOperations {
   val self: LazyTile
 
-  /** Simple local operations */
+  /** Arithmetic Operations*/
   def +(other: LazyTile): LazyTile = LazyTile.DualCombine(List(self, other), Add.combine, Add.combine)
   def +(other: Int): LazyTile = LazyTile.DualMap(List(self), { Add.combine(_, other) }, { Add.combine(_, other) })
   def +:(other: Int): LazyTile = LazyTile.DualMap(List(self), { Add.combine(_, other) }, { Add.combine(_, other) })
@@ -34,7 +35,52 @@ trait LazyTileOperations {
   def /(other: Double): LazyTile = LazyTile.DualMap(List(self), { Divide.combine(_, d2i(other)) }, { Divide.combine(_, other) })
   def /:(other: Double): LazyTile = LazyTile.DualMap(List(self), { Divide.combine(_, d2i(other)) }, { Divide.combine(_, other) })
 
-  /** Comparisons */
+  def logE: LazyTile = LazyTile.DualMap(List(self),
+    { z: Int => if(isNoData(z)) z else d2i(math.log(i2d(z))) },
+    { z => if(isNoData(z)) z else math.log(z) }
+  )
+
+  def log10: LazyTile = LazyTile.DualMap(List(self),
+    { z: Int => if(isNoData(z)) z else d2i(math.log10(i2d(z))) },
+    { z => if(isNoData(z)) z else math.log10(z) }
+  )
+
+  def sqrt: LazyTile = LazyTile.DualMap(List(self),
+    { z: Int => if(isNoData(z)) z else d2i(math.sqrt(i2d(z))) },
+    { z => if(isNoData(z)) z else math.sqrt(z) }
+  )
+
+  def abs: LazyTile = LazyTile.DualMap(List(self),
+    { z: Int => if(isNoData(z)) z else math.abs(z) },
+    { z => if(isNoData(z)) z else math.abs(z) }
+  )
+
+  def isDefined: LazyTile = LazyTile.DualMap(List(self),
+    { z: Int => if (isData(z)) 1 else 0 },
+    { z => if (isData(z)) 1.0 else 0.0 }
+  )
+
+  def isUndefined: LazyTile = LazyTile.DualMap(List(self),
+    { z: Int => if (isNoData(z)) 1 else 0 },
+    { z => if (isNoData(z)) 1.0 else 0.0 }
+  )
+
+  def pow(i: Int): LazyTile = LazyTile.DualMap(List(self),
+    { z: Int => if (isNoData(z)) 1 else 0 },
+    { z => if (isNoData(z)) 1.0 else 0.0 }
+  )
+
+  def pow(d: Double): LazyTile = LazyTile.DualMap(List(self),
+    { z: Int => if (isNoData(z)) 1 else 0 },
+    { z => if (isNoData(z)) 1.0 else 0.0 }
+  )
+
+  def changeSign: LazyTile = LazyTile.DualMap(List(self),
+    { z: Int => if (isNoData(z)) z else z * -1 },
+    { z => if (isNoData(z)) z else z * - 1 }
+  )
+
+  /** Numeric Comparisons */
   def <(other: LazyTile): LazyTile =
     LazyTile.DualCombine(List(self, other),
       {(i1: Int, i2: Int) => if (Less.compare(i1, i2)) 1 else 0 },
@@ -171,6 +217,10 @@ trait LazyTileOperations {
     { z => if(isNoData(z)) z else math.atan(z) }
   )
 
+  def atan2(other: LazyTile) = LazyTile.DualCombine(List(self, other), { (z1, z2) => d2i(math.atan2(i2d(z1), i2d(z2))) }, { (z1, z2) => math.atan2(z1, z2) })
+  def atan2(other: Int): LazyTile = LazyTile.DualMap(List(self), { i: Int => d2i(math.atan2(i, other)) }, { math.atan2(_, other) })
+  def atan2(other: Double): LazyTile = LazyTile.DualMap(List(self), { i: Int => d2i(math.atan2(i, other)) }, { math.atan2(_, other) })
+
   /** Rounding Operations */
   def round: LazyTile = LazyTile.DualMap(List(self), identity, { z => if(isNoData(z)) z else math.round(z) })
 
@@ -178,46 +228,29 @@ trait LazyTileOperations {
 
   def ceil: LazyTile = LazyTile.DualMap(List(self), identity, { z => if(isNoData(z)) z else math.ceil(z) })
 
-  /** Rarer Arithmetic Operations */
-  def logE: LazyTile = LazyTile.DualMap(List(self),
-    { z: Int => if(isNoData(z)) z else d2i(math.log(i2d(z))) },
-    { z => if(isNoData(z)) z else math.log(z) }
-  )
+  /** Logical Operations */
+  // TODO: Look into GT implementations for logical operations...
+  //       The handling of nodata vs 0 vs false is not obvious
+  def &&(other: LazyTile): LazyTile = LazyTile.DualCombine(List(self, other), And.combine, And.combine)
+  def &&(other: Int): LazyTile = LazyTile.DualMap(List(self), { And.combine(_, other) }, { And.combine(_, other) })
+  def &&:(other: Int): LazyTile = LazyTile.DualMap(List(self), { And.combine(_, other) }, { And.combine(_, other) })
+  def &&(other: Double): LazyTile = LazyTile.DualMap(List(self), { And.combine(_, d2i(other)) }, { And.combine(_, other) })
+  def &&:(other: Double): LazyTile = LazyTile.DualMap(List(self), { And.combine(_, d2i(other)) }, { And.combine(_, other) })
 
-  def log10: LazyTile = LazyTile.DualMap(List(self),
-    { z: Int => if(isNoData(z)) z else d2i(math.log10(i2d(z))) },
-    { z => if(isNoData(z)) z else math.log10(z) }
-  )
+  def ||(other: LazyTile): LazyTile = LazyTile.DualCombine(List(self, other), Or.combine, Or.combine)
+  def ||(other: Int): LazyTile = LazyTile.DualMap(List(self), { Or.combine(_, other) }, { Or.combine(_, other) })
+  def ||:(other: Int): LazyTile = LazyTile.DualMap(List(self), { Or.combine(_, other) }, { Or.combine(_, other) })
+  def ||(other: Double): LazyTile = LazyTile.DualMap(List(self), { Or.combine(_, d2i(other)) }, { Or.combine(_, other) })
+  def ||:(other: Double): LazyTile = LazyTile.DualMap(List(self), { Or.combine(_, d2i(other)) }, { Or.combine(_, other) })
 
-  def sqrt: LazyTile = LazyTile.DualMap(List(self),
-    { z: Int => if(isNoData(z)) z else d2i(math.sqrt(i2d(z))) },
-    { z => if(isNoData(z)) z else math.sqrt(z) }
-  )
+  def xor(other: LazyTile): LazyTile = LazyTile.DualCombine(List(self, other), Xor.combine, Xor.combine)
+  def xor(other: Int): LazyTile = LazyTile.DualMap(List(self), { Xor.combine(_, other) }, { Xor.combine(_, other) })
+  def xor(other: Double): LazyTile = LazyTile.DualMap(List(self), { Xor.combine(_, d2i(other)) }, { Xor.combine(_, other) })
 
-  def abs: LazyTile = LazyTile.DualMap(List(self),
-    { z: Int => if(isNoData(z)) z else math.abs(z) },
-    { z => if(isNoData(z)) z else math.abs(z) }
-  )
+  def not: LazyTile = LazyTile.DualMap(List(self), { z => if (isNoData(z)) z else if (z == 0) 1 else 0 }, { z => if (isNoData(z)) z else if (z == 0.0) 1.0 else 0.0 })
 
-  def isDefined: LazyTile = LazyTile.DualMap(List(self),
-    { z: Int => if (isData(z)) 1 else 0 },
-    { z => if (isData(z)) 1.0 else 0.0 }
-  )
+  /** Tile specific methods */
+  def classify(breaks: BreakMap[Double, Int]) = LazyTile.DualMap(List(self), { i => breaks(i2d(i)) }, { d => i2d(breaks(d)) })
 
-  def isUndefined: LazyTile = LazyTile.DualMap(List(self),
-    { z: Int => if (isNoData(z)) 1 else 0 },
-    { z => if (isNoData(z)) 1.0 else 0.0 }
-  )
-
-  def pow(i: Int): LazyTile = LazyTile.DualMap(List(self),
-    { z: Int => if (isNoData(z)) 1 else 0 },
-    { z => if (isNoData(z)) 1.0 else 0.0 }
-  )
-
-  def pow(d: Double): LazyTile = LazyTile.DualMap(List(self),
-    { z: Int => if (isNoData(z)) 1 else 0 },
-    { z => if (isNoData(z)) 1.0 else 0.0 }
-  )
 }
-
 

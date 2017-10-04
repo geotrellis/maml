@@ -5,11 +5,13 @@ import com.azavea.maml.eval.tile._
 import com.azavea.maml.ast._
 import com.azavea.maml.dsl.tile._
 
-import geotrellis.raster.Tile
 import cats._
+import cats.data._
 import cats.implicits._
 import cats.data.{NonEmptyList => NEL, _}
 import Validated._
+import geotrellis.vector._
+import geotrellis.raster.{Tile, isData}
 
 import scala.util.Try
 
@@ -23,6 +25,8 @@ object OpDirectives {
 
   private def lazytileResults(grouped: Map[MamlKind, Seq[Result]]): Interpreted[List[LazyTile]] =
     grouped(MamlKind.Tile).map(_.as[LazyTile]).toList.sequence
+
+  private def not[A, B](f: (A, B) => Boolean): (A, B) => Boolean = !f(_, _)
 
    private def tileReduction(
      ti: (LazyTile, Int) => LazyTile,
@@ -265,7 +269,7 @@ object OpDirectives {
     Valid(results)
   }
 
-  val notEqualTo = Directive { case (a@Equal(_), childResults) =>
+  val notEqualTo = Directive { case (a@Unequal(_), childResults) =>
     val results = childResults.reduce({ (res1: Result, res2: Result) =>
       tileOrBoolReduction(
         {_ !== _}, { (i, t) => t !== i }, {_ !== _}, { (d, t) => t !== d }, {_ !== _},
@@ -297,4 +301,74 @@ object OpDirectives {
     })
     Valid(results)
   }
+
+  /** Logical Operations */
+  // TODO: Update these functions when the int/double distinction is removed so that bool args
+  //        are respected
+  val and = Directive { case (and@And(_), childResults) =>
+    val results = childResults.reduce({ (res1: Result, res2: Result) =>
+      tileOrBoolReduction(
+        {_ && _}, {_ &&: _}, {_ && _}, { _ &&: _ }, {_ && _},
+        {isData(_) && isData(_)}, {isData(_) && isData(_)}, {isData(_) && isData(_)}, {isData(_) && isData(_)},
+        res1, res2
+      )
+    })
+    Valid(results)
+  }
+
+  val or = Directive { case (or@Or(_), childResults) =>
+    val results = childResults.reduce({ (res1: Result, res2: Result) =>
+      tileOrBoolReduction(
+        {_ || _}, {_ ||: _}, {_ || _}, { _ ||: _ }, {_ || _},
+        {isData(_) || isData(_)}, {isData(_) || isData(_)}, {isData(_) || isData(_)}, {isData(_) || isData(_)},
+        res1, res2
+      )
+    })
+    Valid(results)
+  }
+
+  val xor = Directive { case (xor@Xor(_), childResults) =>
+    val results = childResults.reduce({ (res1: Result, res2: Result) =>
+      tileOrBoolReduction(
+        {_ xor _}, { (i, t) => t xor i}, {_ xor _}, { (d, t) => t xor d }, {_ xor _},
+        {(x, y) => (isData(x) || isData(y) && !(isData(x) && isData(y)))},
+        {(x, y) => (isData(x) || isData(y) && !(isData(x) && isData(y)))},
+        {(x, y) => (isData(x) || isData(y) && !(isData(x) && isData(y)))},
+        {(x, y) => (isData(x) || isData(y) && !(isData(x) && isData(y)))},
+        res1, res2
+      )
+    })
+    Valid(results)
+  }
+
+  /** Tile-specific Operations */
+  val masking = Directive { case (mask@Masking(_), childResults) =>
+    ((childResults(0), childResults(1)) match {
+      case (TileResult(lzTile), GeomResult(geom)) =>
+        Valid((lzTile, geom))
+      case (GeomResult(geom), TileResult(lzTile)) =>
+        Valid((lzTile, geom))
+      case _ =>
+        Invalid(NEL.of(NonEvaluableNode(mask, Some("Masking operation requires both a tile and a vector argument"))))
+    }).andThen({ case (lzTile, geom) =>
+      geom.as[MultiPolygon] match {
+        case Some(mp) =>
+          Valid(TileResult(MaskingNode(List(lzTile), mp)))
+        case None =>
+          Invalid(NEL.of(NonEvaluableNode(mask, Some("Masking operation requires its vector argument to be a multipolygon"))))
+      }
+    })
+  }
+
+  val atan2 = Directive { case (atan2@Atan2(_), childResults) =>
+    val results = childResults.reduce({ (res1: Result, res2: Result) =>
+      tileOrScalarReduction(
+        {_.atan2(_)}, { (i, t) => t.atan2(i) }, {_.atan2(_)}, { (d, t) => t.atan2(d) }, {_.atan2(_)},
+        { math.atan2(_, _).toInt }, { math.atan2(_, _) }, { math.atan2(_, _) }, { math.atan2(_, _) },
+        res1, res2
+      )
+    })
+    Valid(results)
+  }
 }
+
