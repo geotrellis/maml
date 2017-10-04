@@ -59,6 +59,7 @@ object BufferingInterpreter {
       ScopedDirective.pure[Subtraction](OpDirectives.subtraction),
       ScopedDirective.pure[Multiplication](OpDirectives.multiplicationTile orElse OpDirectives.multiplicationInt orElse OpDirectives.multiplicationDouble),
       ScopedDirective.pure[Division](OpDirectives.division),
+      ScopedDirective.pure[Pow](OpDirectives.pow),
       ScopedDirective.pure[Max](OpDirectives.maxTile orElse OpDirectives.maxInt orElse OpDirectives.maxDouble),
       ScopedDirective.pure[Min](OpDirectives.minTile orElse OpDirectives.minInt orElse OpDirectives.minDouble),
       ScopedDirective.pure[Less](OpDirectives.lessThan),
