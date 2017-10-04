@@ -189,10 +189,11 @@ object RDDOpDirectives {
     Valid(reduce({_ >= _}, {_ >=: _}, {_ >= _}, {_ >=: _}, {_ >= _}, res1, res2))
   }
 
-  // TODO The mask can probably be something other than `Polygon`.
   val masking = Directive {
     case (Masking(_), RDDResult(r) :: GeomResult(g: Polygon) :: Nil) => Valid(RDDResult(r.mask(g)))
     case (Masking(_), GeomResult(g: Polygon) :: RDDResult(r) :: Nil) => Valid(RDDResult(r.mask(g)))
+    case (Masking(_), RDDResult(r) :: GeomResult(g: MultiPolygon) :: Nil) => Valid(RDDResult(r.mask(g)))
+    case (Masking(_), GeomResult(g: MultiPolygon) :: RDDResult(r) :: Nil) => Valid(RDDResult(r.mask(g)))
   }
 
   val atan2 = Directive { case (Atan2(_), childResults) =>
