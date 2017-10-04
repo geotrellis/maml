@@ -149,6 +149,18 @@ object OpDirectives {
     }
   }
 
+  val pow = Directive { case (p@Pow(_), childResults) =>
+    val results = childResults.reduce({ (res1: Result, res2: Result) =>
+      tileOrScalarReduction(
+        {_ ** _}, {_ **: _}, {_ ** _}, {_ **: _}, {_ ** _},
+        { math.pow(_, _).toInt }, { math.pow(_, _) }, { math.pow(_, _) }, { math.pow(_, _) },
+        res1, res2
+      )
+    })
+    Valid(results)
+  }
+
+  /** Numeric Comparison Operations */
   val maxDouble = Directive { case (a@Max(_), childResults) if (a.kind == MamlKind.Double) =>
     childResults
       .map({ _.as[Double] })
@@ -227,58 +239,58 @@ object OpDirectives {
 
   /** Numeric Comparison Operations */
   val lessThan = Directive { case (a@Less(_), childResults) =>
-  val results = childResults.reduce({ (res1: Result, res2: Result) =>
-    tileOrBoolReduction(
-      {_ < _}, { (i, t) => t < i }, {_ < _}, { (d, t) => t < d }, {_ < _},
-      {_ < _}, {_ < _}, {_ < _}, {_ < _.toInt},
-      res1, res2
-    )
-  })
-  Valid(results)
+    val results = childResults.reduce({ (res1: Result, res2: Result) =>
+      tileOrBoolReduction(
+        {_ < _}, { (i, t) => t < i }, {_ < _}, { (d, t) => t < d }, {_ < _},
+        {_ < _}, {_ < _}, {_ < _}, {_ < _.toInt},
+        res1, res2
+      )
+    })
+    Valid(results)
   }
 
   val lessThanOrEqualTo = Directive { case (a@LessOrEqual(_), childResults) =>
-  val results = childResults.reduce({ (res1: Result, res2: Result) =>
-    tileOrBoolReduction(
-      {_ <= _}, { (i, t) => t <= i }, {_ <= _}, { (d, t) => t <= d }, {_ <= _},
-      {_ <= _}, {_ <= _}, {_ <= _}, {_ <= _.toInt},
-      res1, res2
-    )
-  })
-  Valid(results)
+    val results = childResults.reduce({ (res1: Result, res2: Result) =>
+      tileOrBoolReduction(
+        {_ <= _}, { (i, t) => t <= i }, {_ <= _}, { (d, t) => t <= d }, {_ <= _},
+        {_ <= _}, {_ <= _}, {_ <= _}, {_ <= _.toInt},
+        res1, res2
+      )
+    })
+    Valid(results)
   }
 
   val equalTo = Directive { case (a@Equal(_), childResults) =>
-  val results = childResults.reduce({ (res1: Result, res2: Result) =>
-    tileOrBoolReduction(
-      {_ === _}, { (i, t) => t === i }, {_ === _}, { (d, t) => t === d }, {_ === _},
-      {_ == _}, {_ == _}, {_ == _}, {_ == _.toInt},
-      res1, res2
-    )
-  })
-  Valid(results)
+    val results = childResults.reduce({ (res1: Result, res2: Result) =>
+      tileOrBoolReduction(
+        {_ === _}, { (i, t) => t === i }, {_ === _}, { (d, t) => t === d }, {_ === _},
+        {_ == _}, {_ == _}, {_ == _}, {_ == _.toInt},
+        res1, res2
+      )
+    })
+    Valid(results)
   }
 
   val notEqualTo = Directive { case (a@Unequal(_), childResults) =>
-  val results = childResults.reduce({ (res1: Result, res2: Result) =>
-    tileOrBoolReduction(
-      {_ !== _}, { (i, t) => t !== i }, {_ !== _}, { (d, t) => t !== d }, {_ !== _},
-      {_ != _}, {_ != _}, {_ != _}, {_ != _.toInt},
-      res1, res2
-    )
-  })
-  Valid(results)
+    val results = childResults.reduce({ (res1: Result, res2: Result) =>
+      tileOrBoolReduction(
+        {_ !== _}, { (i, t) => t !== i }, {_ !== _}, { (d, t) => t !== d }, {_ !== _},
+        {_ != _}, {_ != _}, {_ != _}, {_ != _.toInt},
+        res1, res2
+      )
+    })
+    Valid(results)
   }
 
   val greaterThan = Directive { case (a@Greater(_), childResults) =>
-  val results = childResults.reduce({ (res1: Result, res2: Result) =>
-    tileOrBoolReduction(
-      {_ > _}, { (i, t) => t > i }, {_ > _}, { (d, t) => t > d }, {_ > _},
-      {_ > _}, {_ > _}, {_ > _}, {_ > _.toInt},
-      res1, res2
-    )
-  })
-  Valid(results)
+    val results = childResults.reduce({ (res1: Result, res2: Result) =>
+      tileOrBoolReduction(
+        {_ > _}, { (i, t) => t > i }, {_ > _}, { (d, t) => t > d }, {_ > _},
+        {_ > _}, {_ > _}, {_ > _}, {_ > _.toInt},
+        res1, res2
+      )
+    })
+    Valid(results)
   }
 
   val greaterThanOrEqualTo = Directive { case (a@GreaterOrEqual(_), childResults) =>
@@ -350,6 +362,7 @@ object OpDirectives {
     })
   }
 
+  /** Trigonometric Operations */
   val atan2 = Directive { case (atan2@Atan2(_), childResults) =>
     val results = childResults.reduce({ (res1: Result, res2: Result) =>
       tileOrScalarReduction(

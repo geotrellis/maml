@@ -39,6 +39,7 @@ object NaiveInterpreter {
       OpDirectives.subtraction,
       OpDirectives.multiplicationTile orElse OpDirectives.multiplicationInt orElse OpDirectives.multiplicationDouble,
       OpDirectives.division,
+      OpDirectives.pow,
       OpDirectives.maxTile orElse OpDirectives.maxInt orElse OpDirectives.maxDouble,
       OpDirectives.minTile orElse OpDirectives.minInt orElse OpDirectives.minDouble,
       OpDirectives.lessThan,
