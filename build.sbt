@@ -1,8 +1,12 @@
+import com.scalapenos.sbt.prompt.SbtPrompt.autoImport._
+
+promptTheme := com.scalapenos.sbt.prompt.PromptThemes.ScalapenosTheme
+
 val mamlVersion = "0.0.2" + scala.util.Properties.envOrElse("MAML_VERSION_SUFFIX", "")
 
 /** Project configurations */
 lazy val root = project.in(file("."))
-  .aggregate(mamlJS, mamlJVM, mamlSpark)
+  .aggregate(mamlJs, mamlJvm, mamlSpark)
   .settings(commonSettings:_*)
   .settings(
     licenses += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0.txt"))
@@ -42,10 +46,10 @@ lazy val maml = crossProject.in(file("."))
     name := "maml-js"
   ).jsSettings(commonSettings:_*)
 
-lazy val mamlJVM = maml.jvm
-lazy val mamlJS = maml.js
+lazy val mamlJvm = maml.jvm
+lazy val mamlJs = maml.js
 lazy val mamlSpark = project.in(file("spark"))
-  .dependsOn(mamlJVM)
+  .dependsOn(mamlJvm)
   .settings(publishSettings:_*)
   .settings(commonSettings:_*)
 

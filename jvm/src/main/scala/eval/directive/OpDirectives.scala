@@ -28,25 +28,6 @@ object OpDirectives {
 
   private def not[A, B](f: (A, B) => Boolean): (A, B) => Boolean = !f(_, _)
 
-  private def tileReduction(
-    ti: (LazyTile, Int) => LazyTile,
-    it: (Int, LazyTile) => LazyTile,
-    td: (LazyTile, Double) => LazyTile,
-    dt: (Double, LazyTile) => LazyTile,
-    tt: (LazyTile, LazyTile) => LazyTile,
-    res1: Result,
-    res2: Result
-  ): Result = (res1, res2) match {
-    case (TileResult(lt1), TileResult(lt2)) => TileResult(tt(lt1, lt2))
-    case (TileResult(lt), IntResult(int)) => TileResult((ti(lt, int)))
-    case (IntResult(int), TileResult(lt)) => TileResult((it(int, lt)))
-    case (TileResult(lt), DoubleResult(double)) => TileResult(td(lt, double))
-    case (DoubleResult(double), TileResult(lt)) => TileResult(dt(double, lt))
-    case (x, y) =>
-      println(x, y, "testing")
-      throw new Exception {}
-  }
-
   private def tileOrBoolReduction(
    ti: (LazyTile, Int) => LazyTile,
    it: (Int, LazyTile) => LazyTile,
