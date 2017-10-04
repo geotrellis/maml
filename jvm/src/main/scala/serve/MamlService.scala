@@ -57,13 +57,7 @@ trait Service extends InterpreterExceptionHandling {
 
   val cMap = ColorRamps.Viridis
 
-  val interpreter = Interpreter.buffering(
-    ScopedDirective.pure[TileLiteral](SourceDirectives.tileLiteral),
-    ScopedDirective.pure[IntLiteral](SourceDirectives.intLiteral),
-    ScopedDirective.pure[FocalMax](FocalDirectives.focalMax),
-    ScopedDirective.pure[Addition](OpDirectives.additionTile orElse OpDirectives.additionInt orElse OpDirectives.additionDouble),
-    ScopedDirective.pure[Equal](OpDirectives.equalTo)
-  )
+  val interpreter = BufferingInterpreter.DEFAULT
 
   implicit def encodeNEL[A: Encoder]: Encoder[NonEmptyList[A]] = Encoder.encodeList[A].contramap[NonEmptyList[A]](_.toList)
 

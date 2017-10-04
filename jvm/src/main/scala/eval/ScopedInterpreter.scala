@@ -11,6 +11,8 @@ import geotrellis.raster.GridBounds
 
 trait ScopedInterpreter[Scope] {
   def scopeFor(exp: Expression, previous: Option[Scope]): Scope
+  def appendDirective(directive: ScopedDirective[Scope]): ScopedInterpreter[Scope]
+  def prependDirective(directive: ScopedDirective[Scope]): ScopedInterpreter[Scope]
   def fallbackDirective: ScopedDirective[Scope]
   def instructions(expression: Expression, children: Seq[Result], scope: Scope): Interpreted[Result]
 

@@ -19,6 +19,10 @@ import scala.reflect.ClassTag
 
 
 sealed trait LazyTile extends LazyLogging {
+  // TODO: We need to find a way to rip RasterExtent out of LazyTile
+  //       while still being able to provide it to Masking operations.
+  //       Is this a use case for futo or paramorphisms?
+  def extent: RasterExtent
   def children: List[LazyTile]
   def cols: Int
   def rows: Int
@@ -51,7 +55,11 @@ sealed trait LazyTile extends LazyLogging {
 
 object LazyTile {
 
-  def apply(tile: Tile): LazyTile = Bound(tile)
+  def apply(tile: Tile, extent: Extent): LazyTile = Bound(tile, RasterExtent(extent, tile))
+
+  def apply(tile: Tile, rasterExtent: RasterExtent): LazyTile = Bound(tile, rasterExtent)
+
+  def apply(raster: Raster[Tile]): LazyTile = Bound(raster.tile, raster.rasterExtent)
 
   /** An LazyTile.Tree has a left and right. The terminal node will have Nil on the left and right */
   trait Branch extends LazyTile {
@@ -71,6 +79,7 @@ object LazyTile {
     val arity = 1
     require(children.length == arity, s"Incorrect arity: $arity argument(s) expected, ${children.length} found")
     def fst = children.head
+    def extent: RasterExtent = fst.extent
   }
 
   trait BinaryBranch extends Branch {
@@ -78,6 +87,7 @@ object LazyTile {
     require(children.length == arity, s"Incorrect arity: $arity argument(s) expected, ${children.length} found")
     def fst = children(0)
     def snd = children(1)
+    def extent: RasterExtent = fst.extent combine snd.extent
   }
 
   trait Terminal extends LazyTile {
@@ -85,7 +95,7 @@ object LazyTile {
   }
 
   /** This object represents tile data sources */
-  case class Bound(tile: Tile) extends Terminal {
+  case class Bound(tile: Tile, extent: RasterExtent) extends Terminal {
     def children: List[LazyTile] = List.empty
     def cols: Int = tile.cols
     def rows: Int = tile.rows

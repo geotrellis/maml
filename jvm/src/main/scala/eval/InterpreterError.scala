@@ -30,8 +30,12 @@ case class UnhandledCase(exp: Expression, kind: MamlKind) extends InterpreterErr
   def repr = s"A branch of Interpreter logic has yet to be implemented for the expression ${exp} and the kind $kind"
 }
 
-case class ASTDecodeError(json: Json, msg: DecodingFailure) extends InterpreterError {
-  def repr = s"Unable to decode the json ${json} as AST: ${msg}"
+case class ASTParseError(json: String, reason: String) extends InterpreterError {
+  def repr = s"Unable to parse ${json} as JSON: ${reason}"
+}
+
+case class ASTDecodeError(json: Json, reason: String) extends InterpreterError {
+  def repr = s"Unable to decode the json ${json} as AST: ${reason}"
 }
 
 case class EvalTypeError(found: String, expected: List[String]) extends InterpreterError {

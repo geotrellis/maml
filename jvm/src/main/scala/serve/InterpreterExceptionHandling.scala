@@ -10,8 +10,6 @@ import akka.http.scaladsl.server.{Directives, ExceptionHandler}
 import de.heikoseeberger.akkahttpcirce.ErrorAccumulatingCirceSupport._
 
 
-case class InterpreterException(errors: NonEmptyList[InterpreterError]) extends Exception
-
 trait InterpreterExceptionHandling extends Directives {
   val interpreterExceptionHandler = ExceptionHandler {
     case ie: InterpreterException =>
