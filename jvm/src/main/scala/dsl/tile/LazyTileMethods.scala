@@ -13,27 +13,34 @@ trait LazyTileOperations {
   /** Arithmetic Operations*/
   def +(other: LazyTile): LazyTile = LazyTile.DualCombine(List(self, other), Add.combine, Add.combine)
   def +(other: Int): LazyTile = LazyTile.DualMap(List(self), { Add.combine(_, other) }, { Add.combine(_, other) })
-  def +:(other: Int): LazyTile = LazyTile.DualMap(List(self), { Add.combine(_, other) }, { Add.combine(_, other) })
+  def +:(other: Int): LazyTile = LazyTile.DualMap(List(self), { Add.combine(other, _) }, { Add.combine(other, _) })
   def +(other: Double): LazyTile = LazyTile.DualMap(List(self), { Add.combine(_, d2i(other)) }, { Add.combine(_, other) })
-  def +:(other: Double): LazyTile = LazyTile.DualMap(List(self), { Add.combine(_, d2i(other)) }, { Add.combine(_, other) })
+  def +:(other: Double): LazyTile = LazyTile.DualMap(List(self), { Add.combine(d2i(other), _) }, { Add.combine(other, _) })
 
   def -(other: LazyTile): LazyTile = LazyTile.DualCombine(List(self, other), Subtract.combine, Subtract.combine)
   def -(other: Int): LazyTile = LazyTile.DualMap(List(self), { Subtract.combine(_, other) }, { Subtract.combine(_, i2d(other)) })
-  def -:(other: Int): LazyTile = LazyTile.DualMap(List(self), { Subtract.combine(_, other) }, { Subtract.combine(_, i2d(other)) })
+  def -:(other: Int): LazyTile = LazyTile.DualMap(List(self), { Subtract.combine(other, _) }, { Subtract.combine(i2d(other), _) })
   def -(other: Double): LazyTile = LazyTile.DualMap(List(self), { Subtract.combine(_, d2i(other)) }, { Subtract.combine(_, other) })
-  def -:(other: Double): LazyTile = LazyTile.DualMap(List(self), { Subtract.combine(_, d2i(other)) }, { Subtract.combine(_, other) })
+  def -:(other: Double): LazyTile = LazyTile.DualMap(List(self), { Subtract.combine(d2i(other), _) }, { Subtract.combine(other, _) })
 
   def *(other: LazyTile): LazyTile = LazyTile.DualCombine(List(self, other), Multiply.combine, Multiply.combine)
   def *(other: Int): LazyTile = LazyTile.DualMap(List(self), { Multiply.combine(_, other) }, { Multiply.combine(_, i2d(other)) })
-  def *:(other: Int): LazyTile = LazyTile.DualMap(List(self), { Multiply.combine(_, other) }, { Multiply.combine(_, i2d(other)) })
+  def *:(other: Int): LazyTile = LazyTile.DualMap(List(self), { Multiply.combine(other, _) }, { Multiply.combine(i2d(other), _) })
   def *(other: Double): LazyTile = LazyTile.DualMap(List(self), { Multiply.combine(_, d2i(other)) }, { Multiply.combine(_, other) })
-  def *:(other: Double): LazyTile = LazyTile.DualMap(List(self), { Multiply.combine(_, d2i(other)) }, { Multiply.combine(_, other) })
+  def *:(other: Double): LazyTile = LazyTile.DualMap(List(self), { Multiply.combine(d2i(other), _) }, { Multiply.combine(other, _) })
 
   def /(other: LazyTile): LazyTile = LazyTile.DualCombine(List(self, other), Divide.combine, Divide.combine)
   def /(other: Int): LazyTile = LazyTile.DualMap(List(self), { Divide.combine(_, other) }, { Divide.combine(_, i2d(other)) })
-  def /:(other: Int): LazyTile = LazyTile.DualMap(List(self), { Divide.combine(_, other) }, { Divide.combine(_, i2d(other)) })
+  def /:(other: Int): LazyTile = LazyTile.DualMap(List(self), { Divide.combine(other, _) }, { Divide.combine(i2d(other), _) })
   def /(other: Double): LazyTile = LazyTile.DualMap(List(self), { Divide.combine(_, d2i(other)) }, { Divide.combine(_, other) })
-  def /:(other: Double): LazyTile = LazyTile.DualMap(List(self), { Divide.combine(_, d2i(other)) }, { Divide.combine(_, other) })
+  def /:(other: Double): LazyTile = LazyTile.DualMap(List(self), { Divide.combine(d2i(other), _) }, { Divide.combine(other, _) })
+
+  def **(other: LazyTile): LazyTile = LazyTile.DualCombine(List(self, other), Pow.combine, Pow.combine)
+  def **(other: Int): LazyTile = LazyTile.DualMap(List(self), { Pow.combine(_, other) }, { Pow.combine(_, i2d(other)) })
+  def **:(other: Int): LazyTile = LazyTile.DualMap(List(self), { Pow.combine(other, _) }, { Pow.combine(i2d(other), _) })
+  def **(other: Double): LazyTile = LazyTile.DualMap(List(self), { Pow.combine(_, d2i(other)) }, { Pow.combine(_, other) })
+  def **:(other: Double): LazyTile = LazyTile.DualMap(List(self), { Pow.combine(d2i(other), _) }, { Pow.combine(other, _) })
+
 
   def logE: LazyTile = LazyTile.DualMap(List(self),
     { z: Int => if(isNoData(z)) z else d2i(math.log(i2d(z))) },
