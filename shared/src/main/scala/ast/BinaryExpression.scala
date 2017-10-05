@@ -105,4 +105,3 @@ case class Atan2(children: List[Expression]) extends Operation with BinaryExpres
   val kindDerivation = BinaryExpression.scalarCompareDerivation _
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
-

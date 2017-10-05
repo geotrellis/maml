@@ -126,4 +126,3 @@ case class LogicalNegation(children: List[Expression]) extends Operation with Un
   val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.tileOnly ++ UnaryExpression.boolOnly
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
-

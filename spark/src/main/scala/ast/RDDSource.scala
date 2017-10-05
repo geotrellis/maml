@@ -5,11 +5,12 @@ import com.azavea.maml.ast._
 import geotrellis.spark._
 
 
-case class SpatialRDDLiteral(value: TileLayerRDD[SpatialKey]) extends Source {
-  val id = value.toString
+/** An Expression leaf node that contains a GeoTrellis layer of Tiles. */
+case class RDDLiteral(value: TileLayerRDD[SpatialKey]) extends Source {
   val kind = MamlKind.Tile
 }
 
-case class SpatialRDDSource(id: String) extends UnboundSource {
+/** An unbound source to be realized into an [[RDDLiteral]]. */
+case class RDDSource(id: String) extends UnboundSource {
   val kind = MamlKind.Tile
 }

@@ -1,6 +1,6 @@
 package com.azavea.maml.ast
 
-trait MamlKind
+sealed trait MamlKind
 object MamlKind {
   case object Bool extends MamlKind
   case object Int extends MamlKind
