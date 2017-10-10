@@ -1,15 +1,16 @@
 package com.azavea.maml.spark.eval.directive
 
+import com.azavea.maml._
+import com.azavea.maml.ast._
+import com.azavea.maml.eval._
+import com.azavea.maml.spark.eval._
+import com.azavea.maml.eval.directive._
+import com.azavea.maml.util.{NeighborhoodConversion => NC}
+
 import cats._
 import cats.data.{NonEmptyList => NEL, _}
 import cats.data.Validated._
 import cats.implicits._
-import com.azavea.maml.ast._
-import com.azavea.maml.eval._
-import com.azavea.maml.eval.directive._
-import com.azavea.maml.spark._
-import com.azavea.maml.spark.eval._
-import com.azavea.maml.util.{NeighborhoodConversion => NC}
 import geotrellis.raster._
 import geotrellis.raster.render._
 import geotrellis.raster.mapalgebra.{local => gt}

@@ -1,37 +1,32 @@
-package com.azavea.maml.spark
+package com.azavea.maml
 
-import scala.reflect._
-
-import cats._
-import cats.data._
-import cats.data.Validated._
 import com.azavea.maml.ast._
 import com.azavea.maml.dsl._
 import com.azavea.maml.eval._
 import com.azavea.maml.eval.directive._
-import com.azavea.maml.eval.directive.SourceDirectives._
 import com.azavea.maml.spark.ast._
 import com.azavea.maml.spark.eval._
 import com.azavea.maml.spark.eval.directive._
+
+import cats._
+import cats.data._
+import cats.data.Validated._
+import cats._
+import cats.data.{NonEmptyList => NEL, _}
+import cats.data.Validated._
+import org.scalatest._
 import geotrellis.raster._
 import geotrellis.spark._
 import geotrellis.spark.testkit._
-import org.scalatest._
+
+import scala.reflect._
 
 
-class SpatialRDDLocalOperationsSpec extends FunSpec
+class RDDOpDirectivesSpec extends FunSpec
   with Matchers
   with TestEnvironment {
 
-  val interpreter = NaiveInterpreter(List(
-    intLiteral,
-    dblLiteral,
-    RDDSourceDirectives.rddLiteral,
-    RDDOpDirectives.addition,
-    RDDOpDirectives.subtraction,
-    RDDOpDirectives.multiplication,
-    RDDOpDirectives.division
-  ))
+  val interpreter = RDDInterpreter.DEFAULT
 
   implicit class TypeRefinement(self: Interpreted[Result]) {
     def as[T: ClassTag]: Interpreted[T] = self match {

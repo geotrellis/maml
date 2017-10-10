@@ -1,13 +1,15 @@
-package com.azavea.maml.spark.eval
+package com.azavea.maml.eval
 
-import scala.reflect.ClassTag
+import com.azavea.maml.eval.tile._
+import com.azavea.maml.ast._
+import com.azavea.maml.eval._
 
 import cats.data.{NonEmptyList => NEL, _}
 import cats.data.Validated._
-import com.azavea.maml.ast._
-import com.azavea.maml.eval._
-import geotrellis.raster.Tile
+import geotrellis.raster._
 import geotrellis.spark._
+
+import scala.reflect.ClassTag
 
 
 case class RDDResult(res: TileLayerRDD[SpatialKey]) extends Result {

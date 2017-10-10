@@ -36,9 +36,9 @@ lazy val maml = crossProject.in(file("."))
       "com.typesafe.akka"           %% "akka-actor"           % "2.4.9",
       "com.typesafe.akka"           %% "akka-stream"          % "2.4.9",
       "com.typesafe.akka"           %% "akka-testkit"         % "2.4.9",
-      "com.typesafe.akka"           %% "akka-http"            % "10.0.9",
-      "com.typesafe.akka"           %% "akka-http-spray-json" % "10.0.9",
-      "com.typesafe.akka"           %% "akka-http-testkit"    % "10.0.9",
+      "com.typesafe.akka"           %% "akka-http"            % "10.0.10",
+      "com.typesafe.akka"           %% "akka-http-spray-json" % "10.0.10",
+      "com.typesafe.akka"           %% "akka-http-testkit"    % "10.0.10",
       "de.heikoseeberger"           %% "akka-http-circe"      % "1.17.0"
     )
   ).jvmSettings(commonSettings:_*)
