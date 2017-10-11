@@ -31,31 +31,7 @@ class EvaluationSpec extends FunSpec with Matchers with ExpressionTreeCodec {
     }
   }
 
-  val interpreter = NaiveInterpreter(List(
-    intLiteral,
-    dblLiteral,
-    boolLiteral,
-    tileLiteral,
-    additionInt,
-    additionDouble,
-    additionTile,
-    subtraction,
-    division,
-    multiplicationInt,
-    multiplicationDouble,
-    multiplicationTile,
-    maxDouble,
-    maxInt,
-    maxTile,
-    minDouble,
-    minInt,
-    minTile,
-    lessThan,
-    lessThanOrEqualTo,
-    equalTo,
-    greaterThanOrEqualTo,
-    greaterThan
-  ))
+  val interpreter = NaiveInterpreter.DEFAULT
 
   it("Should interpret and evaluate to Boolean literals") {
     interpreter(BoolLiteral(true)).as[Boolean] should be (Valid(true))

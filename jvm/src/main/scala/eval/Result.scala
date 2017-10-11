@@ -58,7 +58,7 @@ case class TileResult(res: LazyTile) extends Result {
   def as[T](implicit ct: ClassTag[T]): Interpreted[T] = {
     val cls = ct.runtimeClass
     if (classOf[Tile] isAssignableFrom cls)
-      Valid(res.evaluate.asInstanceOf[T])
+      Valid(res.evaluateDouble.asInstanceOf[T])
     else if (classOf[LazyTile] isAssignableFrom cls)
       Valid(res.asInstanceOf[T])
     else
