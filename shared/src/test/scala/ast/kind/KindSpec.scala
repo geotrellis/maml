@@ -17,10 +17,6 @@ class KindSpec extends FunSpec with Matchers {
     FocalMax(List(TileSource("test")), Square(1))
   }
 
-  it("Refuses to typecheck an invalid focal tree") {
-    an[java.lang.IllegalArgumentException] should be thrownBy FocalMax(List(IntLiteral(42)), Square(1))
-  }
-
   it("Should correctly determine the output type for a foldable operation (tile)") {
     Max(List(IntLiteral(42), TileSource("test"), IntLiteral(51))).kind should be (MamlKind.Tile)
   }
