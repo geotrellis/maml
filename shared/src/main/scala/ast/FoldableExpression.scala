@@ -16,14 +16,14 @@ trait FoldableExpression extends Expression {
 object FoldableExpression {
   def tileOrScalarDerivation(exp: FoldableExpression)(k1: MamlKind, k2: MamlKind): MamlKind = (k1, k2) match {
     case (MamlKind.Tile, MamlKind.Tile) => MamlKind.Tile
-    case (MamlKind.Int, MamlKind.Int) => MamlKind.Int
-    case (MamlKind.Tile, MamlKind.Int) => MamlKind.Tile
-    case (MamlKind.Int, MamlKind.Tile) => MamlKind.Tile
-    case (MamlKind.Double, MamlKind.Double) => MamlKind.Double
-    case (MamlKind.Tile, MamlKind.Double) => MamlKind.Tile
-    case (MamlKind.Double, MamlKind.Tile) => MamlKind.Tile
-    case (MamlKind.Double, MamlKind.Int) => MamlKind.Double
-    case (MamlKind.Int, MamlKind.Double) => MamlKind.Double
+    case (MamlKind.Scalar, MamlKind.Scalar) => MamlKind.Scalar
+    case (MamlKind.Tile, MamlKind.Scalar) => MamlKind.Tile
+    case (MamlKind.Scalar, MamlKind.Tile) => MamlKind.Tile
+    case (MamlKind.Scalar, MamlKind.Scalar) => MamlKind.Scalar
+    case (MamlKind.Tile, MamlKind.Scalar) => MamlKind.Tile
+    case (MamlKind.Scalar, MamlKind.Tile) => MamlKind.Tile
+    case (MamlKind.Scalar, MamlKind.Scalar) => MamlKind.Scalar
+    case (MamlKind.Scalar, MamlKind.Scalar) => MamlKind.Scalar
     case (x1, x2) => throw new InvalidParameterException(s"Expected tile, int, or double kind. Found $x1 $x2")
   }
 }

@@ -14,9 +14,7 @@ import Validated._
 import scala.util.{Try, Success, Failure}
 
 object SourceDirectives {
-  val intLiteral = Directive { case (IntLiteral(int), _) => Valid(IntResult(int)) }
-
-  val dblLiteral = Directive { case (DoubleLiteral(dbl), _) => Valid(DoubleResult(dbl)) }
+  val scalarLiteral = Directive { case (ScalarLiteral(dbl), _) => Valid(ScalarResult(dbl)) }
 
   val boolLiteral = Directive { case (BoolLiteral(bool), _) => Valid(BoolResult(bool)) }
 

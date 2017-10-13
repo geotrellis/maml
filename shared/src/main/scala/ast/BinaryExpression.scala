@@ -16,12 +16,12 @@ trait BinaryExpression extends Expression {
 object BinaryExpression {
   def scalarCompareDerivation(k1: MamlKind, k2: MamlKind): MamlKind = (k1, k2) match {
     case (MamlKind.Tile, MamlKind.Tile) => MamlKind.Tile
-    case (MamlKind.Tile, MamlKind.Int) => MamlKind.Tile
-    case (MamlKind.Tile, MamlKind.Double) => MamlKind.Tile
-    case (MamlKind.Int, MamlKind.Tile) => MamlKind.Tile
-    case (MamlKind.Double, MamlKind.Tile) => MamlKind.Tile
-    case (MamlKind.Int, MamlKind.Int) => MamlKind.Bool
-    case (MamlKind.Double, MamlKind.Double) => MamlKind.Bool
+    case (MamlKind.Tile, MamlKind.Scalar) => MamlKind.Tile
+    case (MamlKind.Tile, MamlKind.Scalar) => MamlKind.Tile
+    case (MamlKind.Scalar, MamlKind.Tile) => MamlKind.Tile
+    case (MamlKind.Scalar, MamlKind.Tile) => MamlKind.Tile
+    case (MamlKind.Scalar, MamlKind.Scalar) => MamlKind.Bool
+    case (MamlKind.Scalar, MamlKind.Scalar) => MamlKind.Bool
     case (x1, x2) => throw new InvalidParameterException(s"Expected tile or scalar kinds. Found $x1 and $x2")
   }
 }
@@ -42,14 +42,14 @@ case class Pow(children: List[Expression]) extends Operation with BinaryExpressi
   val kindDerivation = { (k1: MamlKind, k2: MamlKind) =>
     (k1, k2) match {
       case (MamlKind.Tile, MamlKind.Tile) => MamlKind.Tile
-      case (MamlKind.Tile, MamlKind.Int) => MamlKind.Tile
-      case (MamlKind.Int, MamlKind.Tile) => MamlKind.Tile
-      case (MamlKind.Tile, MamlKind.Double) => MamlKind.Tile
-      case (MamlKind.Double, MamlKind.Tile) => MamlKind.Tile
-      case (MamlKind.Double, MamlKind.Int) => MamlKind.Double
-      case (MamlKind.Int, MamlKind.Double) => MamlKind.Double
-      case (MamlKind.Int, MamlKind.Int) => MamlKind.Double
-      case (MamlKind.Double, MamlKind.Double) => MamlKind.Double
+      case (MamlKind.Tile, MamlKind.Scalar) => MamlKind.Tile
+      case (MamlKind.Scalar, MamlKind.Tile) => MamlKind.Tile
+      case (MamlKind.Tile, MamlKind.Scalar) => MamlKind.Tile
+      case (MamlKind.Scalar, MamlKind.Tile) => MamlKind.Tile
+      case (MamlKind.Scalar, MamlKind.Scalar) => MamlKind.Scalar
+      case (MamlKind.Scalar, MamlKind.Scalar) => MamlKind.Scalar
+      case (MamlKind.Scalar, MamlKind.Scalar) => MamlKind.Scalar
+      case (MamlKind.Scalar, MamlKind.Scalar) => MamlKind.Scalar
       case (x1, x2) => throw new InvalidParameterException(s"Expected tile and scalar kinds. Found $x1 and $x2")
     }
   }

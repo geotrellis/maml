@@ -22,10 +22,10 @@ import org.apache.spark.rdd._
 
 object RDDOpDirectives {
   private def doubleResults(grouped: Map[MamlKind, Seq[Result]]): Interpreted[List[Double]] =
-    grouped.getOrElse(MamlKind.Double, List.empty).map(_.as[Double]).toList.sequence
+    grouped.getOrElse(MamlKind.Scalar, List.empty).map(_.as[Double]).toList.sequence
 
   private def intResults(grouped: Map[MamlKind, Seq[Result]]): Interpreted[List[Int]] =
-    grouped.getOrElse(MamlKind.Int, List.empty).map(_.as[Int]).toList.sequence
+    grouped.getOrElse(MamlKind.Scalar, List.empty).map(_.as[Int]).toList.sequence
 
   private def spatialRDDResults(grouped: Map[MamlKind, Seq[Result]]): Interpreted[List[TileLayerRDD[SpatialKey]]] =
     grouped(MamlKind.Tile).map(_.as[TileLayerRDD[SpatialKey]]).toList.sequence
@@ -56,10 +56,10 @@ object RDDOpDirectives {
     res2: Result
   ): Result = (res1, res2) match {
     case (RDDResult(r1), RDDResult(r2)) => RDDResult(binary(rr, r1, r2))
-    case (RDDResult(rdd), IntResult(int)) => RDDResult(rdd.withContext(ri(_, int)))
-    case (IntResult(int), RDDResult(rdd)) => RDDResult(rdd.withContext(ir(int, _)))
-    case (RDDResult(rdd), DoubleResult(double)) => RDDResult(rdd.withContext(rd(_, double)))
-    case (DoubleResult(double), RDDResult(rdd)) => RDDResult(rdd.withContext(dr(double, _)))
+    case (RDDResult(rdd), ScalarResult(int)) => RDDResult(rdd.withContext(ri(_, int)))
+    case (ScalarResult(int), RDDResult(rdd)) => RDDResult(rdd.withContext(ir(int, _)))
+    case (RDDResult(rdd), ScalarResult(double)) => RDDResult(rdd.withContext(rd(_, double)))
+    case (ScalarResult(double), RDDResult(rdd)) => RDDResult(rdd.withContext(dr(double, _)))
   }
 
   /** Sugar for a common pattern with the unary math operations. */
@@ -70,8 +70,8 @@ object RDDOpDirectives {
     res: Result
   ): Interpreted[Result] = res match {
     case RDDResult(r) => unary(fr, r)
-    case IntResult(i) => Valid(fi(i))
-    case DoubleResult(d) => Valid(fd(d))
+    case ScalarResult(i) => Valid(fi(i))
+    case ScalarResult(d) => Valid(fd(d))
   }
 
   /* --- FOLDABLE EXPRESSIONS --- */
@@ -209,10 +209,10 @@ object RDDOpDirectives {
     val results: Result = childResults match {
       case (RDDResult(r1) :: RDDResult(r2) :: Nil) =>
         RDDResult(binary({ (a,b) => a.combineValues(b) { (t1,t2) => t1.combineDouble(t2)(math.atan2) }}, r1, r2))
-      case (RDDResult(r) :: IntResult(i) :: Nil) => RDDResult(ri(r, i))
-      case (IntResult(i) :: RDDResult(r) :: Nil) => RDDResult(ri(r, i))
-      case (RDDResult(r) :: DoubleResult(d) :: Nil) => RDDResult(rd(r, d))
-      case (DoubleResult(d) :: RDDResult(r) :: Nil) => RDDResult(rd(r, d))
+      case (RDDResult(r) :: ScalarResult(i) :: Nil) => RDDResult(ri(r, i))
+      case (ScalarResult(i) :: RDDResult(r) :: Nil) => RDDResult(ri(r, i))
+      case (RDDResult(r) :: ScalarResult(d) :: Nil) => RDDResult(rd(r, d))
+      case (ScalarResult(d) :: RDDResult(r) :: Nil) => RDDResult(rd(r, d))
     }
 
     Valid(results)
@@ -233,57 +233,57 @@ object RDDOpDirectives {
   }
 
   val sin = Directive { case (Sin(_), res :: Nil) =>
-    mathy({_.localMapDouble(math.sin(_))}, { i => DoubleResult(math.sin(i.toDouble)) }, { d => DoubleResult(math.sin(d)) }, res)
+    mathy({_.localMapDouble(math.sin(_))}, { i => ScalarResult(math.sin(i.toDouble)) }, { d => ScalarResult(math.sin(d)) }, res)
   }
   val cos = Directive { case (Cos(_), res :: Nil) =>
-    mathy({_.localMapDouble(math.cos(_))}, { i => DoubleResult(math.cos(i.toDouble)) }, { d => DoubleResult(math.cos(d)) }, res)
+    mathy({_.localMapDouble(math.cos(_))}, { i => ScalarResult(math.cos(i.toDouble)) }, { d => ScalarResult(math.cos(d)) }, res)
   }
   val tan = Directive { case (Tan(_), res :: Nil) =>
-    mathy({_.localMapDouble(math.tan(_))}, { i => DoubleResult(math.tan(i.toDouble)) }, { d => DoubleResult(math.tan(d)) }, res)
+    mathy({_.localMapDouble(math.tan(_))}, { i => ScalarResult(math.tan(i.toDouble)) }, { d => ScalarResult(math.tan(d)) }, res)
   }
 
   val sinh = Directive { case (Sinh(_), res :: Nil) =>
-    mathy({_.localMapDouble(math.sinh(_))}, { i => DoubleResult(math.sinh(i.toDouble)) }, { d => DoubleResult(math.sinh(d)) }, res)
+    mathy({_.localMapDouble(math.sinh(_))}, { i => ScalarResult(math.sinh(i.toDouble)) }, { d => ScalarResult(math.sinh(d)) }, res)
   }
   val cosh = Directive { case (Cosh(_), res :: Nil) =>
-    mathy({_.localMapDouble(math.cosh(_))}, { i => DoubleResult(math.cosh(i.toDouble)) }, { d => DoubleResult(math.cosh(d)) }, res)
+    mathy({_.localMapDouble(math.cosh(_))}, { i => ScalarResult(math.cosh(i.toDouble)) }, { d => ScalarResult(math.cosh(d)) }, res)
   }
   val tanh = Directive { case (Tanh(_), res :: Nil) =>
-    mathy({_.localMapDouble(math.tanh(_))}, { i => DoubleResult(math.tanh(i.toDouble)) }, { d => DoubleResult(math.tanh(d)) }, res)
+    mathy({_.localMapDouble(math.tanh(_))}, { i => ScalarResult(math.tanh(i.toDouble)) }, { d => ScalarResult(math.tanh(d)) }, res)
   }
 
   val asin = Directive { case (Asin(_), res :: Nil) =>
-    mathy({_.localMapDouble(math.asin(_))}, { i => DoubleResult(math.asin(i.toDouble)) }, { d => DoubleResult(math.asin(d)) }, res)
+    mathy({_.localMapDouble(math.asin(_))}, { i => ScalarResult(math.asin(i.toDouble)) }, { d => ScalarResult(math.asin(d)) }, res)
   }
   val acos = Directive { case (Acos(_), res :: Nil) =>
-    mathy({_.localMapDouble(math.acos(_))}, { i => DoubleResult(math.acos(i.toDouble)) }, { d => DoubleResult(math.acos(d)) }, res)
+    mathy({_.localMapDouble(math.acos(_))}, { i => ScalarResult(math.acos(i.toDouble)) }, { d => ScalarResult(math.acos(d)) }, res)
   }
   val atan = Directive { case (Atan(_), res :: Nil) =>
-    mathy({_.localMapDouble(math.atan(_))}, { i => DoubleResult(math.atan(i.toDouble)) }, { d => DoubleResult(math.atan(d)) }, res)
+    mathy({_.localMapDouble(math.atan(_))}, { i => ScalarResult(math.atan(i.toDouble)) }, { d => ScalarResult(math.atan(d)) }, res)
   }
 
   val floor = Directive { case (Floor(_), res :: Nil) =>
-    mathy({ _.localFloor }, { IntResult(_) }, { d => IntResult(math.floor(d).toInt) }, res)
+    mathy({ _.localFloor }, { ScalarResult(_) }, { d => ScalarResult(math.floor(d).toInt) }, res)
   }
   val ceil = Directive { case (Ceil(_), res :: Nil) =>
-    mathy({ _.localCeil }, { IntResult(_) }, { d => IntResult(math.ceil(d).toInt) }, res)
+    mathy({ _.localCeil }, { ScalarResult(_) }, { d => ScalarResult(math.ceil(d).toInt) }, res)
   }
 
   val loge  = Directive { case (LogE(_),  res :: Nil) =>
-    mathy({ _.localLog }, { i => DoubleResult(math.log(i)) }, { d => DoubleResult(math.log(d)) }, res)
+    mathy({ _.localLog }, { i => ScalarResult(math.log(i)) }, { d => ScalarResult(math.log(d)) }, res)
   }
   val log10 = Directive { case (Log10(_), res :: Nil) =>
-    mathy({ _.localLog10 }, { i => DoubleResult(math.log10(i)) }, { d => DoubleResult(math.log10(d)) }, res)
+    mathy({ _.localLog10 }, { i => ScalarResult(math.log10(i)) }, { d => ScalarResult(math.log10(d)) }, res)
   }
 
   val root = Directive { case (SquareRoot(_), res :: Nil) =>
-    mathy({ _.localSqrt }, { i => DoubleResult(math.sqrt(i)) }, { d => DoubleResult(math.sqrt(d)) }, res)
+    mathy({ _.localSqrt }, { i => ScalarResult(math.sqrt(i)) }, { d => ScalarResult(math.sqrt(d)) }, res)
   }
   val round = Directive { case (Round(_), res :: Nil) =>
-    mathy({ _.localRound }, { i => IntResult(math.round(i)) }, { d => IntResult(math.round(d).toInt) }, res)
+    mathy({ _.localRound }, { i => ScalarResult(math.round(i)) }, { d => ScalarResult(math.round(d).toInt) }, res)
   }
   val abs = Directive { case (Abs(_), res :: Nil) =>
-    mathy({ _.localAbs }, { i => IntResult(math.abs(i)) }, { d => DoubleResult(math.abs(d)) }, res)
+    mathy({ _.localAbs }, { i => ScalarResult(math.abs(i)) }, { d => ScalarResult(math.abs(d)) }, res)
   }
 
   val defined = Directive { case (Defined(_), res :: Nil) =>
@@ -294,10 +294,10 @@ object RDDOpDirectives {
   }
 
   val numNegation = Directive { case (NumericNegation(_), res :: Nil) =>
-    mathy({ _.localNegate }, { i => IntResult(i * -1) }, { d => DoubleResult(d * -1) }, res)
+    mathy({ _.localNegate }, { i => ScalarResult(i * -1) }, { d => ScalarResult(d * -1) }, res)
   }
   val logNegation = Directive { case (LogicalNegation(_), res :: Nil) =>
-    mathy({ _.localNot }, { i => IntResult(if (i == 0) 1 else 0) }, { d => IntResult(if (d == 0) 1 else 0) }, res)
+    mathy({ _.localNot }, { i => ScalarResult(if (i == 0) 1 else 0) }, { d => ScalarResult(if (d == 0) 1 else 0) }, res)
   }
 
   /* --- FOCAL EXPRESSIONS --- */

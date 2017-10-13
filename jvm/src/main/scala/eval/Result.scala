@@ -17,7 +17,7 @@ trait Result {
   def kind: MamlKind
 }
 
-case class DoubleResult(res: Double) extends Result {
+case class ScalarResult(res: Double) extends Result {
   def as[T](implicit ct: ClassTag[T]): Interpreted[T] = {
     val cls = ct.runtimeClass
     if (classOf[Int] isAssignableFrom cls)
@@ -27,20 +27,7 @@ case class DoubleResult(res: Double) extends Result {
     else
       Invalid(NEL.of(EvalTypeError(cls.getName, List("int", "double"))))
   }
-  def kind: MamlKind = MamlKind.Double
-}
-
-case class IntResult(res: Int) extends Result {
-  def as[T](implicit ct: ClassTag[T]): Interpreted[T] = {
-    val cls = ct.runtimeClass
-    if (classOf[Int] isAssignableFrom cls)
-      Valid(res.toInt.asInstanceOf[T])
-    else if (classOf[Double] isAssignableFrom cls)
-      Valid(res.toDouble.asInstanceOf[T])
-    else
-      Invalid(NEL.of(EvalTypeError(cls.getName, List("int", "double"))))
-  }
-  def kind: MamlKind = MamlKind.Int
+  def kind: MamlKind = MamlKind.Scalar
 }
 
 case class GeomResult(res: Geometry) extends Result {
