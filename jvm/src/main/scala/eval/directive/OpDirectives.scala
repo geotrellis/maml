@@ -373,5 +373,12 @@ object OpDirectives {
     })
     Valid(results)
   }
+
+  val ternIf = Directive { case (branch@Branch(_), childResults) =>
+    childResults(0) match {
+      case BoolResult(cond) => if (cond) Valid(childResults(1)) else Valid(childResults(2))
+      case _ => Invalid(NEL.of(NonEvaluableNode(branch, Some("Masking operation requires a boolean argument"))))
+    }
+  }
 }
 

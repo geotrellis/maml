@@ -53,6 +53,7 @@ object NaiveInterpreter {
       OpDirectives.xor,
       OpDirectives.masking,
       OpDirectives.atan2,
+      OpDirectives.ternIf,
       UnaryDirectives.sin,
       UnaryDirectives.cos,
       UnaryDirectives.tan,
