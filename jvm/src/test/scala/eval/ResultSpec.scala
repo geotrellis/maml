@@ -17,16 +17,16 @@ import org.scalatest._
 class ResultSpec extends FunSpec with Matchers {
 
   it("Evaluate to desired output (int)") {
-    IntResult(42 + 1).as[Int] should be (Valid(43))
+    ScalarResult(42 + 1).as[Int] should be (Valid(43))
   }
 
   it("Evaluate to desired output (double)") {
-    IntResult(42 + 1).as[Double] should be (Valid(43.0))
+    ScalarResult(42 + 1).as[Double] should be (Valid(43.0))
   }
 
   it("Evaluate to desired output (tile)") {
     TileResult(LazyTile(IntArrayTile(1 to 4 toArray, 2, 2), Extent(0,0,0,0))).as[Int] should be (Invalid(NEL.of(EvalTypeError("int", List("Tile")))))
-    IntResult(1).as[Tile] should matchPattern { case Invalid(_) => }
+    ScalarResult(1).as[Tile] should matchPattern { case Invalid(_) => }
 
     TileResult(LazyTile(IntArrayTile(1 to 4 toArray, 2, 2), Extent(0,0,0,0))).as[Tile] should matchPattern { case Valid(_) => }
 

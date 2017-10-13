@@ -18,10 +18,7 @@ import scala.util.Try
 
 object OpDirectives {
   private def doubleResults(grouped: Map[MamlKind, Seq[Result]]): Interpreted[List[Double]] =
-    grouped.getOrElse(MamlKind.Double, List.empty).map(_.as[Double]).toList.sequence
-
-  private def intResults(grouped: Map[MamlKind, Seq[Result]]): Interpreted[List[Int]] =
-    grouped.getOrElse(MamlKind.Int, List.empty).map(_.as[Int]).toList.sequence
+    grouped.getOrElse(MamlKind.Scalar, List.empty).map(_.as[Double]).toList.sequence
 
   private def lazytileResults(grouped: Map[MamlKind, Seq[Result]]): Interpreted[List[LazyTile]] =
     grouped(MamlKind.Tile).map(_.as[LazyTile]).toList.sequence
@@ -29,73 +26,46 @@ object OpDirectives {
   private def not[A, B](f: (A, B) => Boolean): (A, B) => Boolean = !f(_, _)
 
   private def tileOrBoolReduction(
-   ti: (LazyTile, Int) => LazyTile,
-   it: (Int, LazyTile) => LazyTile,
    td: (LazyTile, Double) => LazyTile,
    dt: (Double, LazyTile) => LazyTile,
    tt: (LazyTile, LazyTile) => LazyTile,
-   ii: (Int, Int) => Boolean,
-   di: (Double, Int) => Boolean,
    dd: (Double, Double) => Boolean,
-   id: (Int, Double) => Boolean,
    res1: Result,
    res2: Result
   ): Result = (res1, res2) match {
    case (TileResult(lt1), TileResult(lt2)) => TileResult(tt(lt1, lt2))
-   case (TileResult(lt), IntResult(int)) => TileResult((ti(lt, int)))
-   case (IntResult(int), TileResult(lt)) => TileResult((it(int, lt)))
-   case (TileResult(lt), DoubleResult(double)) => TileResult(td(lt, double))
-   case (DoubleResult(double), TileResult(lt)) => TileResult(dt(double, lt))
-   case (IntResult(int1), IntResult(int2)) => BoolResult(ii(int1, int2))
-   case (DoubleResult(dbl), IntResult(int)) => BoolResult(di(dbl, int))
-   case (DoubleResult(dbl1), DoubleResult(dbl2)) => BoolResult(dd(dbl1, dbl2))
-   case (IntResult(int), DoubleResult(dbl)) => BoolResult(id(int, dbl))
+   case (TileResult(lt), ScalarResult(double)) => TileResult(td(lt, double))
+   case (ScalarResult(double), TileResult(lt)) => TileResult(dt(double, lt))
+   case (ScalarResult(dbl1), ScalarResult(dbl2)) => BoolResult(dd(dbl1, dbl2))
   }
 
   private def tileOrScalarReduction(
-   ti: (LazyTile, Int) => LazyTile,
-   it: (Int, LazyTile) => LazyTile,
    td: (LazyTile, Double) => LazyTile,
    dt: (Double, LazyTile) => LazyTile,
    tt: (LazyTile, LazyTile) => LazyTile,
-   ii: (Int, Int) => Int,
-   di: (Double, Int) => Double,
    dd: (Double, Double) => Double,
-   id: (Int, Double) => Double,
    res1: Result,
    res2: Result
   ): Result = (res1, res2) match {
    case (TileResult(lt1), TileResult(lt2)) => TileResult(tt(lt1, lt2))
-   case (TileResult(lt), IntResult(int)) => TileResult((ti(lt, int)))
-   case (IntResult(int), TileResult(lt)) => TileResult((it(int, lt)))
-   case (TileResult(lt), DoubleResult(double)) => TileResult(td(lt, double))
-   case (DoubleResult(double), TileResult(lt)) => TileResult(dt(double, lt))
-   case (IntResult(int1), IntResult(int2)) => IntResult(ii(int1, int2))
-   case (DoubleResult(dbl), IntResult(int)) => DoubleResult(di(dbl, int))
-   case (DoubleResult(dbl1), DoubleResult(dbl2)) => DoubleResult(dd(dbl1, dbl2))
-   case (IntResult(int), DoubleResult(dbl)) => DoubleResult(id(int, dbl))
+   case (TileResult(lt), ScalarResult(double)) => TileResult(td(lt, double))
+   case (ScalarResult(double), TileResult(lt)) => TileResult(dt(double, lt))
+   case (ScalarResult(dbl1), ScalarResult(dbl2)) => ScalarResult(dd(dbl1, dbl2))
   }
 
   /** Arithmetic Operations */
-  val additionDouble = Directive { case (a@Addition(_), childResults) if (a.kind == MamlKind.Double) =>
+  val additionScalar = Directive { case (a@Addition(_), childResults) if (a.kind == MamlKind.Scalar) =>
     childResults
       .map({ _.as[Double] })
       .toList.sequence
-      .andThen({ results => Valid(DoubleResult(results.reduce(_ + _))) })
-  }
-
-  val additionInt = Directive { case (a@Addition(_), childResults) if (a.kind == MamlKind.Int) =>
-    childResults
-      .map({ _.as[Int] })
-      .toList.sequence
-      .andThen({ results => Valid(IntResult(results.reduce(_ + _))) })
+      .andThen({ results => Valid(ScalarResult(results.reduce(_ + _))) })
   }
 
   val additionTile = Directive { case (a@Addition(_), childResults) if (a.kind == MamlKind.Tile) =>
     val grouped = childResults.groupBy(_.kind)
 
     val scalarSums =
-      (doubleResults(grouped) |@| intResults(grouped)).map { case (dbls, ints) => dbls.sum + ints.sum }
+      doubleResults(grouped).map { case dbls => dbls.sum }
 
     (lazytileResults(grouped) |@| scalarSums).map { case (tiles, sums) =>
       val tileSum = tiles.reduce({ (lt1: LazyTile, lt2: LazyTile) => LazyTile.DualCombine(List(lt1, lt2), {_ + _}, {_ + _}) })
@@ -106,8 +76,8 @@ object OpDirectives {
   val subtraction = Directive { case (a@Subtraction(_), childResults) =>
     val results = childResults.reduce({ (res1, res2) =>
       tileOrScalarReduction(
-        {_ - _}, {_ -: _}, {_ - _}, {_ -: _}, {_ - _},
-        {_ - _}, {_ - _}, {_ - _}, {_ - _},
+        {_ - _}, {_ -: _}, {_ - _},
+        {_ - _},
         res1, res2)
     })
     Valid(results)
@@ -116,32 +86,25 @@ object OpDirectives {
   val division = Directive { case (a@Division(_), childResults) =>
     val results = childResults.reduce({ (res1: Result, res2: Result) =>
       tileOrScalarReduction(
-        {_ / _}, {_ /: _}, {_ / _}, {_ /: _}, {_ / _},
-        {_ / _}, {_ / _}, {_ / _}, {_ / _},
+        {_ / _}, {_ /: _}, {_ / _},
+        {_ / _},
         res1, res2)
     })
     Valid(results)
   }
 
-  val multiplicationDouble = Directive { case (a@Multiplication(_), childResults) if (a.kind == MamlKind.Double) =>
+  val multiplicationScalar = Directive { case (a@Multiplication(_), childResults) if (a.kind == MamlKind.Scalar) =>
     childResults
       .map({ _.as[Double] })
       .toList.sequence
-      .andThen({ results => Valid(DoubleResult(results.reduce(_ * _))) })
-  }
-
-  val multiplicationInt = Directive { case (a@Multiplication(_), childResults) if (a.kind == MamlKind.Double) =>
-    childResults
-      .map({ _.as[Double] })
-      .toList.sequence
-      .andThen({ results => Valid(DoubleResult(results.reduce(_ * _))) })
+      .andThen({ results => Valid(ScalarResult(results.reduce(_ * _))) })
   }
 
   val multiplicationTile = Directive { case (a@Multiplication(_), childResults) if (a.kind == MamlKind.Tile) =>
     val grouped = childResults.groupBy(_.kind)
 
     val scalarProduct =
-      (doubleResults(grouped) |@| intResults(grouped)).map { case (dbls, ints) => dbls.product * ints.product }
+      doubleResults(grouped).map { case dbls => dbls.product}
 
     (lazytileResults(grouped) |@| scalarProduct).map { case (tiles, product) =>
       val tileProduct = tiles.reduce({ (lt1: LazyTile, lt2: LazyTile) => LazyTile.DualCombine(List(lt1, lt2), {_ * _}, {_ * _}) })
@@ -152,8 +115,8 @@ object OpDirectives {
   val pow = Directive { case (p@Pow(_), childResults) =>
     val results = childResults.reduce({ (res1: Result, res2: Result) =>
       tileOrScalarReduction(
-        {_ ** _}, {_ **: _}, {_ ** _}, {_ **: _}, {_ ** _},
-        { math.pow(_, _).toInt }, { math.pow(_, _) }, { math.pow(_, _) }, { math.pow(_, _) },
+        {_ ** _}, {_ **: _}, {_ ** _},
+        { math.pow(_, _).toInt },
         res1, res2
       )
     })
@@ -161,32 +124,18 @@ object OpDirectives {
   }
 
   /** Numeric Comparison Operations */
-  val maxDouble = Directive { case (a@Max(_), childResults) if (a.kind == MamlKind.Double) =>
+  val maxScalar = Directive { case (a@Max(_), childResults) if (a.kind == MamlKind.Scalar) =>
     childResults
       .map({ _.as[Double] })
       .toList.sequence
-      .andThen({ results => Valid(DoubleResult(results.reduce(_ max _))) })
-  }
-
-  val maxInt = Directive { case (a@Max(_), childResults) if (a.kind == MamlKind.Double) =>
-    childResults
-      .map({ _.as[Double] })
-      .toList.sequence
-      .andThen({ results => Valid(DoubleResult(results.reduce(_ max _))) })
+      .andThen({ results => Valid(ScalarResult(results.reduce(_ max _))) })
   }
 
   val maxTile = Directive { case (a@Max(_), childResults) if (a.kind == MamlKind.Tile) =>
   val grouped = childResults.groupBy(_.kind)
 
   val scalarMax: Interpreted[Option[Double]] =
-    (doubleResults(grouped) |@| intResults(grouped)).map { case (dbls, ints) =>
-      (Try(dbls.max).toOption, Try(ints.max).toOption) match {
-        case (Some(dbl), Some(int)) => Some(dbl max int)
-        case (None, Some(int)) => Some(int)
-        case (Some(dbl), None) => Some(dbl)
-        case _ => None
-      }
-    }
+    doubleResults(grouped).map({ case dbls => Try(dbls.max).toOption })
 
   (lazytileResults(grouped) |@| scalarMax).map({ case (tiles, maximum) =>
     val tileMax = tiles.reduce({ (lt1: LazyTile, lt2: LazyTile) => LazyTile.DualCombine(List(lt1, lt2), {_ max _}, {_ max _}) })
@@ -199,32 +148,18 @@ object OpDirectives {
   })
   }
 
-  val minDouble = Directive { case (a@Min(_), childResults) if (a.kind == MamlKind.Double) =>
+  val minScalar = Directive { case (a@Min(_), childResults) if (a.kind == MamlKind.Scalar) =>
   childResults
     .map({ _.as[Double] })
     .toList.sequence
-    .andThen({ results => Valid(DoubleResult(results.reduce(_ min _))) })
-  }
-
-  val minInt = Directive { case (a@Min(_), childResults) if (a.kind == MamlKind.Double) =>
-  childResults
-    .map({ _.as[Double] })
-    .toList.sequence
-    .andThen({ results => Valid(DoubleResult(results.reduce(_ min _))) })
+    .andThen({ results => Valid(ScalarResult(results.reduce(_ min _))) })
   }
 
   val minTile = Directive { case (a@Min(_), childResults) if (a.kind == MamlKind.Tile) =>
   val grouped = childResults.groupBy(_.kind)
 
   val scalarMin: Interpreted[Option[Double]] =
-    (doubleResults(grouped) |@| intResults(grouped)).map { case (dbls, ints) =>
-      (Try(dbls.min).toOption, Try(ints.min).toOption) match {
-        case (Some(dbl), Some(int)) => Some(dbl min int)
-        case (None, Some(int)) => Some(int)
-        case (Some(dbl), None) => Some(dbl)
-        case _ => None
-      }
-    }
+    doubleResults(grouped).map({ case dbls => Try(dbls.min).toOption })
 
   (lazytileResults(grouped) |@| scalarMin).map({ case (tiles, minimum) =>
     val tileMin = tiles.reduce({ (lt1: LazyTile, lt2: LazyTile) => LazyTile.DualCombine(List(lt1, lt2), {_ min _}, {_ min _}) })
@@ -241,8 +176,8 @@ object OpDirectives {
   val lessThan = Directive { case (a@Less(_), childResults) =>
     val results = childResults.reduce({ (res1: Result, res2: Result) =>
       tileOrBoolReduction(
-        {_ < _}, { (i, t) => t < i }, {_ < _}, { (d, t) => t < d }, {_ < _},
-        {_ < _}, {_ < _}, {_ < _}, {_ < _.toInt},
+        {_ < _}, { (d, t) => t < d }, {_ < _},
+        {_ < _},
         res1, res2
       )
     })
@@ -252,8 +187,8 @@ object OpDirectives {
   val lessThanOrEqualTo = Directive { case (a@LessOrEqual(_), childResults) =>
     val results = childResults.reduce({ (res1: Result, res2: Result) =>
       tileOrBoolReduction(
-        {_ <= _}, { (i, t) => t <= i }, {_ <= _}, { (d, t) => t <= d }, {_ <= _},
-        {_ <= _}, {_ <= _}, {_ <= _}, {_ <= _.toInt},
+        {_ <= _}, { (d, t) => t <= d }, {_ <= _},
+        {_ <= _},
         res1, res2
       )
     })
@@ -263,8 +198,8 @@ object OpDirectives {
   val equalTo = Directive { case (a@Equal(_), childResults) =>
     val results = childResults.reduce({ (res1: Result, res2: Result) =>
       tileOrBoolReduction(
-        {_ === _}, { (i, t) => t === i }, {_ === _}, { (d, t) => t === d }, {_ === _},
-        {_ == _}, {_ == _}, {_ == _}, {_ == _.toInt},
+        {_ === _}, { (d, t) => t === d }, {_ === _},
+        {_ == _},
         res1, res2
       )
     })
@@ -274,8 +209,8 @@ object OpDirectives {
   val notEqualTo = Directive { case (a@Unequal(_), childResults) =>
     val results = childResults.reduce({ (res1: Result, res2: Result) =>
       tileOrBoolReduction(
-        {_ !== _}, { (i, t) => t !== i }, {_ !== _}, { (d, t) => t !== d }, {_ !== _},
-        {_ != _}, {_ != _}, {_ != _}, {_ != _.toInt},
+        {_ !== _}, { (d, t) => t !== d }, {_ !== _},
+        {_ != _},
         res1, res2
       )
     })
@@ -285,8 +220,8 @@ object OpDirectives {
   val greaterThan = Directive { case (a@Greater(_), childResults) =>
     val results = childResults.reduce({ (res1: Result, res2: Result) =>
       tileOrBoolReduction(
-        {_ > _}, { (i, t) => t > i }, {_ > _}, { (d, t) => t > d }, {_ > _},
-        {_ > _}, {_ > _}, {_ > _}, {_ > _.toInt},
+        {_ > _}, { (d, t) => t > d }, {_ > _},
+        {_ > _},
         res1, res2
       )
     })
@@ -296,8 +231,8 @@ object OpDirectives {
   val greaterThanOrEqualTo = Directive { case (a@GreaterOrEqual(_), childResults) =>
     val results = childResults.reduce({ (res1: Result, res2: Result) =>
       tileOrBoolReduction(
-        {_ >= _}, { (i, t) => t > i }, {_ >= _}, { (d, t) => t > d }, {_ >= _},
-        {_ >= _}, {_ >= _}, {_ >= _}, {_ >= _.toInt},
+        {_ >= _}, { (d, t) => t > d }, {_ >= _},
+        {_ >= _},
         res1, res2
       )
     })
@@ -310,8 +245,8 @@ object OpDirectives {
   val and = Directive { case (and@And(_), childResults) =>
     val results = childResults.reduce({ (res1: Result, res2: Result) =>
       tileOrBoolReduction(
-        {_ && _}, {_ &&: _}, {_ && _}, { _ &&: _ }, {_ && _},
-        {isData(_) && isData(_)}, {isData(_) && isData(_)}, {isData(_) && isData(_)}, {isData(_) && isData(_)},
+        {_ && _}, { _ &&: _ }, {_ && _},
+        {isData(_) && isData(_)},
         res1, res2
       )
     })
@@ -321,8 +256,8 @@ object OpDirectives {
   val or = Directive { case (or@Or(_), childResults) =>
     val results = childResults.reduce({ (res1: Result, res2: Result) =>
       tileOrBoolReduction(
-        {_ || _}, {_ ||: _}, {_ || _}, { _ ||: _ }, {_ || _},
-        {isData(_) || isData(_)}, {isData(_) || isData(_)}, {isData(_) || isData(_)}, {isData(_) || isData(_)},
+        {_ || _}, { _ ||: _ }, {_ || _},
+        {isData(_) || isData(_)},
         res1, res2
       )
     })
@@ -332,10 +267,7 @@ object OpDirectives {
   val xor = Directive { case (xor@Xor(_), childResults) =>
     val results = childResults.reduce({ (res1: Result, res2: Result) =>
       tileOrBoolReduction(
-        {_ xor _}, { (i, t) => t xor i}, {_ xor _}, { (d, t) => t xor d }, {_ xor _},
-        {(x, y) => (isData(x) || isData(y) && !(isData(x) && isData(y)))},
-        {(x, y) => (isData(x) || isData(y) && !(isData(x) && isData(y)))},
-        {(x, y) => (isData(x) || isData(y) && !(isData(x) && isData(y)))},
+        {_ xor _}, { (d, t) => t xor d }, {_ xor _},
         {(x, y) => (isData(x) || isData(y) && !(isData(x) && isData(y)))},
         res1, res2
       )
@@ -366,8 +298,8 @@ object OpDirectives {
   val atan2 = Directive { case (atan2@Atan2(_), childResults) =>
     val results = childResults.reduce({ (res1: Result, res2: Result) =>
       tileOrScalarReduction(
-        {_.atan2(_)}, { (i, t) => t.atan2(i) }, {_.atan2(_)}, { (d, t) => t.atan2(d) }, {_.atan2(_)},
-        { math.atan2(_, _).toInt }, { math.atan2(_, _) }, { math.atan2(_, _) }, { math.atan2(_, _) },
+        {_.atan2(_)}, { (d, t) => t.atan2(d) }, {_.atan2(_)},
+        { math.atan2(_, _).toInt },
         res1, res2
       )
     })

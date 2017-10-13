@@ -12,12 +12,8 @@ trait Source extends Expression {
   override val sources: List[Source] = List(this)
 }
 
-case class IntLiteral(value: Int) extends Source {
-  val kind = MamlKind.Int
-}
-
-case class DoubleLiteral(value: Double) extends Source {
-  val kind = MamlKind.Double
+case class ScalarLiteral(value: Double) extends Source {
+  val kind = MamlKind.Scalar
 }
 
 case class BoolLiteral(value: Boolean) extends Source {
@@ -30,12 +26,8 @@ case class GeomJson(geojson: String) extends Source {
 
 trait UnboundSource extends Source
 
-case class IntSource(id: String) extends UnboundSource {
-  val kind = MamlKind.Int
-}
-
-case class DoubleSource(id: String) extends UnboundSource {
-  val kind = MamlKind.Double
+case class ScalarSource(id: String) extends UnboundSource {
+  val kind = MamlKind.Scalar
 }
 
 case class TileSource(id: String) extends UnboundSource {

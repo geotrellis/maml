@@ -22,6 +22,6 @@ class KindSpec extends FunSpec with Matchers {
   }
 
   it("Should correctly determine the output type for a foldable operation (scalar)") {
-    Max(List(IntLiteral(42), IntLiteral(51))).kind should be (MamlKind.Int)
+    Max(List(IntLiteral(42), IntLiteral(51))).kind should be (MamlKind.Scalar)
   }
 }
