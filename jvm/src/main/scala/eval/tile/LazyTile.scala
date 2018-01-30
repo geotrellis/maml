@@ -65,12 +65,14 @@ object LazyTile {
   trait Branch extends LazyTile {
     lazy val cols = {
       val colList = children.map(_.cols).distinct
-      require(colList.length == 1, "Ambiguous column count")
+      // This require block breaks things when there's an imbalance of focal operations on the children
+      //require(colList.length == 1, "Ambiguous column count")
       colList.head
     }
     lazy val rows = {
       val rowList = children.map(_.cols).distinct
-      require(rowList.length == 1, "Ambiguous row count")
+      // This require block breaks things when there's an imbalance of focal operations on the children
+      //require(rowList.length == 1, "Ambiguous row count")
       rowList.head
     }
   }
