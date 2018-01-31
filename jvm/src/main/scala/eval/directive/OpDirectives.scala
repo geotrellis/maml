@@ -95,9 +95,9 @@ object OpDirectives {
     val grouped = childResults.groupBy(_.kind)
 
     val scalarSums =
-      (doubleResults(grouped) |@| intResults(grouped)).map { case (dbls, ints) => dbls.sum + ints.sum }
+      (doubleResults(grouped), intResults(grouped)).mapN { case (dbls, ints) => dbls.sum + ints.sum }
 
-    (lazytileResults(grouped) |@| scalarSums).map { case (tiles, sums) =>
+    (lazytileResults(grouped), scalarSums).mapN { case (tiles, sums) =>
       val tileSum = tiles.reduce({ (lt1: LazyTile, lt2: LazyTile) => LazyTile.DualCombine(List(lt1, lt2), {_ + _}, {_ + _}) })
       TileResult(LazyTile.DualMap(List(tileSum), { i: Int => i + sums.toInt }, { i: Double => i + sums }))
     }
@@ -141,9 +141,9 @@ object OpDirectives {
     val grouped = childResults.groupBy(_.kind)
 
     val scalarProduct =
-      (doubleResults(grouped) |@| intResults(grouped)).map { case (dbls, ints) => dbls.product * ints.product }
+      (doubleResults(grouped), intResults(grouped)).mapN { case (dbls, ints) => dbls.product * ints.product }
 
-    (lazytileResults(grouped) |@| scalarProduct).map { case (tiles, product) =>
+    (lazytileResults(grouped), scalarProduct).mapN { case (tiles, product) =>
       val tileProduct = tiles.reduce({ (lt1: LazyTile, lt2: LazyTile) => LazyTile.DualCombine(List(lt1, lt2), {_ * _}, {_ * _}) })
       TileResult(LazyTile.DualMap(List(tileProduct), { i: Int => i * product.toInt }, { i: Double => i * product }))
     }
@@ -179,7 +179,7 @@ object OpDirectives {
   val grouped = childResults.groupBy(_.kind)
 
   val scalarMax: Interpreted[Option[Double]] =
-    (doubleResults(grouped) |@| intResults(grouped)).map { case (dbls, ints) =>
+    (doubleResults(grouped), intResults(grouped)).mapN { case (dbls, ints) =>
       (Try(dbls.max).toOption, Try(ints.max).toOption) match {
         case (Some(dbl), Some(int)) => Some(dbl max int)
         case (None, Some(int)) => Some(int)
@@ -188,7 +188,7 @@ object OpDirectives {
       }
     }
 
-  (lazytileResults(grouped) |@| scalarMax).map({ case (tiles, maximum) =>
+  (lazytileResults(grouped), scalarMax).mapN({ case (tiles, maximum) =>
     val tileMax = tiles.reduce({ (lt1: LazyTile, lt2: LazyTile) => LazyTile.DualCombine(List(lt1, lt2), {_ max _}, {_ max _}) })
     maximum match {
       case Some(scalarMax) =>
@@ -217,7 +217,7 @@ object OpDirectives {
   val grouped = childResults.groupBy(_.kind)
 
   val scalarMin: Interpreted[Option[Double]] =
-    (doubleResults(grouped) |@| intResults(grouped)).map { case (dbls, ints) =>
+    (doubleResults(grouped), intResults(grouped)).mapN { case (dbls, ints) =>
       (Try(dbls.min).toOption, Try(ints.min).toOption) match {
         case (Some(dbl), Some(int)) => Some(dbl min int)
         case (None, Some(int)) => Some(int)
@@ -226,7 +226,7 @@ object OpDirectives {
       }
     }
 
-  (lazytileResults(grouped) |@| scalarMin).map({ case (tiles, minimum) =>
+  (lazytileResults(grouped), scalarMin).mapN({ case (tiles, minimum) =>
     val tileMin = tiles.reduce({ (lt1: LazyTile, lt2: LazyTile) => LazyTile.DualCombine(List(lt1, lt2), {_ min _}, {_ min _}) })
     minimum match {
       case Some(scalarMin) =>

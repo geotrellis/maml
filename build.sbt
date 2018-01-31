@@ -2,7 +2,7 @@ import com.scalapenos.sbt.prompt.SbtPrompt.autoImport._
 
 promptTheme := com.scalapenos.sbt.prompt.PromptThemes.ScalapenosTheme
 
-val mamlVersion = "0.0.3" + scala.util.Properties.envOrElse("MAML_VERSION_SUFFIX", "")
+val mamlVersion = "0.0.4" + scala.util.Properties.envOrElse("MAML_VERSION_SUFFIX", "")
 
 /** Project configurations */
 lazy val root = project.in(file("."))
@@ -19,12 +19,12 @@ lazy val maml = crossProject.in(file("."))
     libraryDependencies ++= Seq(
       "org.scalacheck" %% "scalacheck"              % "1.13.4" % "test",
       "org.scalatest"  %% "scalatest"               % "3.0.1"  % "test",
-      "org.typelevel"  %% "cats"                    % "0.9.0",
-      "io.circe"      %%% "circe-core"              % "0.8.0",
-      "io.circe"      %%% "circe-generic"           % "0.8.0",
-      "io.circe"      %%% "circe-generic-extras"    % "0.8.0",
-      "io.circe"      %%% "circe-parser"            % "0.8.0",
-      "io.circe"      %%% "circe-optics"            % "0.8.0"
+      "org.typelevel"  %% "cats-core"               % "1.0.1",
+      "io.circe"      %%% "circe-core"              % "0.9.1",
+      "io.circe"      %%% "circe-generic"           % "0.9.1",
+      "io.circe"      %%% "circe-generic-extras"    % "0.9.1",
+      "io.circe"      %%% "circe-parser"            % "0.9.1",
+      "io.circe"      %%% "circe-optics"            % "0.9.1"
     )
   ).jvmSettings(
     name := "maml-jvm",
