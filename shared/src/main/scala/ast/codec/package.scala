@@ -12,7 +12,7 @@ package object codec extends MamlUtilityCodecs {
     def _label: Option[String] = root.metadata.label.string.getOption(self)
     def _symbol: Option[String] = root.selectDynamic("apply").string.getOption(self)
 
-    def _fields: Option[Seq[String]] = root.obj.getOption(self).map(_.fields)
+    def _keys: Option[Seq[String]] = root.obj.getOption(self).map(_.keys.toSeq)
   }
 
   implicit class CirceMapAlgebraHCursorMethods(val self: HCursor) {
@@ -20,6 +20,6 @@ package object codec extends MamlUtilityCodecs {
     def _label: Option[String] = self.value._label
     def _symbol: Option[String] = self.value._symbol
 
-    def _fields: Option[Seq[String]] = self.value._fields
+    def _keys: Option[Seq[String]] = self.value._keys
   }
 }
