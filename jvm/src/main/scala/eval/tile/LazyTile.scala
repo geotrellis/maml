@@ -17,7 +17,6 @@ import com.typesafe.scalalogging.LazyLogging
 
 import scala.reflect.ClassTag
 
-
 sealed trait LazyTile extends LazyLogging {
   // TODO: We need to find a way to rip RasterExtent out of LazyTile
   //       while still being able to provide it to Masking operations.
@@ -70,7 +69,7 @@ object LazyTile {
       colList.head
     }
     lazy val rows = {
-      val rowList = children.map(_.cols).distinct
+      val rowList = children.map(_.rows).distinct
       // This require block breaks things when there's an imbalance of focal operations on the children
       //require(rowList.length == 1, "Ambiguous row count")
       rowList.head
