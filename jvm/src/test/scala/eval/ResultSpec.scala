@@ -33,4 +33,17 @@ class ResultSpec extends FunSpec with Matchers {
     TileResult(LazyTile.MapInt(List(LazyTile(IntArrayTile(1 to 4 toArray, 2, 2), Extent(0,0,0,0))), { i: Int => i + 4 }))
       .as[Tile] should matchPattern { case Valid(_) => }
   }
+
+  it("Evaluate float tile with different cols / rows") {
+    val zero = LazyTile(Raster(FloatArrayTile.fill(0, 52, 36), Extent(0, 0, 4, 4)))
+    val one = LazyTile(Raster(FloatArrayTile.fill(1, 52, 36), Extent(0, 0, 4, 4)))
+    val tr = TileResult(LazyTile.DualCombine(List(zero, one), _ - _, _ - _))
+    val tile = tr.as[Tile].valueOr(r => throw new Exception(r.toString))
+
+    tr.res.cols should be (zero.cols)
+    tr.res.rows should be (zero.rows)
+
+    tr.res.cols should be (tile.cols)
+    tr.res.rows should be (tile.rows)
+  }
 }
