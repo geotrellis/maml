@@ -185,4 +185,8 @@ class EvaluationSpec extends FunSpec with Matchers with ExpressionTreeCodec {
       case i@Invalid(_) => fail(s"$i")
     }
   }
+
+  it("Should evaluate a ternary if") {
+    interpreter(Branch(List(BoolLiteral(true), DoubleLiteral(1.0), DoubleLiteral(0.0)))).as[Double] should be (Valid(1.0))
+  }
 }
