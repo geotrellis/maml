@@ -8,7 +8,7 @@ import cats.effect._
 
 
 object BindSources {
-  def getBindings(expression: Expression)(implicit t: Timer[IO]): IO[Map[UnboundSource, Source]] =
+  def getBindings(expression: Expression)(implicit t: Timer[IO]): IO[Map[UnboundSource, BoundSource]] =
     expression.unboundSources.map { u =>
       u.resolveBinding.map { res => (u -> res) }
     }.toList

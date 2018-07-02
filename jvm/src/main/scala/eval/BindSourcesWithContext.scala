@@ -1,6 +1,7 @@
 package com.azavea.maml.eval
 
 import com.azavea.maml.ast._
+import com.azavea.maml.util.NeighborhoodConversion
 
 import geotrellis.vector.Extent
 import cats._
@@ -12,36 +13,50 @@ import cats.effect._
 object BindSourcesWithContext {
   def forTmsTile(expression: Expression)(implicit t: Timer[IO]): (Int, Int, Int) => IO[Expression] =
     (z: Int, x: Int, y: Int) => {
-      def eval(expr: Expression, bindings: Map[UnboundSource, Source]): IO[Expression] = {
+      def eval(expr: Expression, buffer: Int): IO[Expression] = {
         expr match {
-          case unboundTileSource: UnboundTileSource => IO.pure(bindings(unboundTileSource))
-          case unboundSource: UnboundSource => IO.pure(bindings(unboundSource))
-          case src: Source => IO.pure(src)
-          case subExpression => eval(expr, bindings)
+          case unboundTileSource: UnboundTileSource =>
+            unboundTileSource.resolveBindingForTmsTile(z, x, y, buffer)
+          case unboundSource: UnboundSource =>
+            unboundSource.resolveBinding
+          case boundSource: BoundSource =>
+            IO.pure(boundSource)
+          case focal: FocalExpression =>
+            focal.children
+              .map(eval(_, buffer + NeighborhoodConversion(focal.neighborhood).extent))
+              .parSequence
+              .map(expr.withChildren(_))
+
+          case _ =>
+            expr.children
+              .map(eval(_, buffer))
+              .parSequence
+              .map(expr.withChildren(_))
         }
       }
 
-      for {
-        bindings <- BindSources.getBindings(expression)
-        evaluated <- eval(expression, bindings)
-      } yield evaluated
+      eval(expression, 0)
     }
 
-  def forExtent(expression: Expression)(implicit t: Timer[IO]): Extent => IO[Expression] =
-    (extent: Extent) => {
-      def eval(expr: Expression, bindings: Map[UnboundSource, Source]): IO[Expression] = {
+  def forExtent(expression: Expression)(implicit t: Timer[IO]): (Int, Extent) => IO[Expression] =
+    (zoom: Int, extent: Extent) => {
+      def eval(expr: Expression): IO[Expression] = {
         expr match {
-          case unboundTileSource: UnboundTileSource => IO.pure(bindings(unboundTileSource))
-          case unboundSource: UnboundSource => IO.pure(bindings(unboundSource))
-          case src: Source => IO.pure(src)
-          case subExpression => eval(expr, bindings)
+          case unboundTileSource: UnboundTileSource =>
+            unboundTileSource.resolveBindingForExtent(zoom, extent)
+          case unboundSource: UnboundSource =>
+            unboundSource.resolveBinding
+          case boundSource: BoundSource =>
+            IO.pure(boundSource)
+          case _ =>
+            expr.children
+              .map(eval(_))
+              .parSequence
+              .map(expr.withChildren(_))
         }
       }
 
-      for {
-        bindings <- BindSources.getBindings(expression)
-        evaluated <- eval(expression, bindings)
-      } yield evaluated
+      eval(expression)
     }
 }
 
