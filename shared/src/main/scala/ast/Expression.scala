@@ -8,7 +8,9 @@ case class ExpressionPath(indices: Seq[Int])
 /** The ur-type for a recursive representation of MapAlgebra operations */
 trait Expression extends Product with Serializable {
   def children: List[Expression]
-  def sources: List[Source]
+  def sources: Set[Source]
+  def unboundSources: Set[UnboundSource]
+  def boundSources: Set[BoundSource]
   def kind: MamlKind
   def withChildren(newChildren: List[Expression]): Expression
 }

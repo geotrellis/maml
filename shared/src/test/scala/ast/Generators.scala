@@ -1,6 +1,7 @@
 package com.azavea.maml.ast
 
 import com.azavea.maml.util._
+import TestUtilities._
 
 import org.scalacheck._
 import org.scalacheck.Gen._
@@ -13,16 +14,11 @@ import java.util.UUID
 
 object Generators {
 
-  lazy val genTileSourceAST = for {
-    str <- arbitrary[String]
-    cons <- Gen.lzy(TileSource.apply _)
-  } yield cons(str)
-
-  lazy val genScalarSourceAST = for {
+  lazy val genScalarSourceAST: Gen[Source] = for {
     int <- arbitrary[Int]
     dbl <- arbitrary[Double]
     str <- arbitrary[String]
-    src <- Gen.lzy(Gen.oneOf(IntSource(str), DoubleSource(str), IntLiteral(int), DoubleLiteral(dbl)))
+    src <- Gen.oneOf(IntLiteral(int), DoubleLiteral(dbl))
   } yield src
 
   def genBinaryOpAST(depth: Int) = for {
@@ -84,12 +80,10 @@ object Generators {
 //    (2 -> genFocalOpAST(depth))
 //  )
 
-  def genLeafAST = Gen.oneOf(genScalarSourceAST, genTileSourceAST)
-
   /* We are forced to manually control flow in this generator to prevent stack overflows
    *  See: http://stackoverflow.com/questions/19829293/scalacheck-arbitrary-implicits-and-recursive-generators
    */
   def genExpression(depth: Int = 1): Gen[Expression] =
-    if (depth >= 100) genLeafAST
-    else Gen.frequency((1 -> genBinaryOpAST(depth + 1)), (1 -> genLeafAST))
+    if (depth >= 100) genScalarSourceAST
+    else Gen.frequency((1 -> genBinaryOpAST(depth + 1)), (1 -> genScalarSourceAST))
 }

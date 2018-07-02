@@ -1,54 +1,40 @@
 package com.azavea.maml.ast
 
-import cats.effect.IO
 import io.circe.Json
 import io.circe.generic.JsonCodec
-
-import java.util.UUID
+import cats.effect.IO
 
 
 trait Source extends Expression {
   val children: List[Expression] = List.empty
   def withChildren(children: List[Expression]) = this
-  override val sources: List[Source] = List(this)
+  override val sources: Set[Source] = Set(this)
 }
 
-case class IntLiteral(value: Int) extends Source {
-  val kind = MamlKind.Int
-}
-
-case class DoubleLiteral(value: Double) extends Source {
-  val kind = MamlKind.Double
-}
-
-case class BoolLiteral(value: Boolean) extends Source {
-  val kind = MamlKind.Bool
-}
-
-case class GeoJson(geojson: String) extends Source {
-  val kind = MamlKind.Geom
+trait BoundSource extends Source {
+  override val boundSources: Set[BoundSource] = Set(this)
+  override val unboundSources: Set[UnboundSource] = Set()
 }
 
 trait UnboundSource extends Source {
-  def resolveBinding: IO[Source]
+  def resolveBinding: IO[BoundSource]
+  override val boundSources: Set[BoundSource] = Set()
+  override val unboundSources: Set[UnboundSource] = Set(this)
 }
 
-//case class IntSource(id: String) extends UnboundSource {
-//  val kind = MamlKind.Int
-//}
+case class IntLiteral(value: Int) extends BoundSource {
+  val kind = MamlKind.Int
+}
 
-//case class DoubleSource(id: String) extends UnboundSource {
-//  val kind = MamlKind.Double
-//}
+case class DoubleLiteral(value: Double) extends BoundSource {
+  val kind = MamlKind.Double
+}
 
-//case class TileSource(id: String) extends UnboundSource {
-//  val kind = MamlKind.Tile
-//}
+case class BoolLiteral(value: Boolean) extends BoundSource {
+  val kind = MamlKind.Bool
+}
 
-//case class GeomSource(id: String) extends UnboundSource {
-//  val kind = MamlKind.Geom
-//}
+case class GeoJson(geojson: String) extends BoundSource {
+  val kind = MamlKind.Geom
+}
 
-//case class BoolSource(id: String) extends UnboundSource {
-//  val kind = MamlKind.Bool
-//}

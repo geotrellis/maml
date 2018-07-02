@@ -2,6 +2,7 @@ package com.azavea.maml.ast.kind
 
 import com.azavea.maml.ast._
 import com.azavea.maml.util._
+import TestUtilities._
 
 import org.scalatest._
 import io.circe._
