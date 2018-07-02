@@ -13,7 +13,7 @@ lazy val root = project.in(file("."))
   ).enablePlugins(ScalaJSPlugin)
 
 val circeVer = "0.10.0-M1"
-val gtVer    = "2.0.0-RC1"
+val gtVer    = "2.0.0-RC2"
 
 lazy val maml = crossProject.in(file("."))
   .settings(publishSettings:_*)
@@ -45,7 +45,11 @@ lazy val mamlJvm = maml.jvm
 lazy val mamlJs = maml.js
 lazy val mamlSpark = project.in(file("spark"))
   .dependsOn(mamlJvm)
-  .settings(publishSettings:_*)
+  .settings(
+    libraryDependencies ++= Seq(
+      "org.locationtech.geotrellis" %% "geotrellis-spark-testkit" % gtVer % "test"
+    )
+  ).settings(publishSettings:_*)
   .settings(commonSettings:_*)
 
 
@@ -67,7 +71,10 @@ val commonSettings = Seq(
   version := mamlVersion,
   scalaVersion := "2.11.11",
   crossScalaVersions := Seq("2.11.11", "2.12.3"),
-  resolvers += Resolver.sonatypeRepo("releases"),
+  resolvers ++= Seq(
+    Resolver.sonatypeRepo("releases"),
+    "locationtech-releases" at "https://repo.locationtech.org/content/groups/releases"
+  ),
   addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full),
   scalacOptions := Seq(
     "-deprecation",

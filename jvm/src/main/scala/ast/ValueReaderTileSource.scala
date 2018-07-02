@@ -14,7 +14,7 @@ import geotrellis.vector.Extent
 import geotrellis.raster.{IntConstantTile, MultibandTile, NODATA, CellType, Tile, RasterExtent}
 import geotrellis.spark._
 import geotrellis.spark.io._
-import geotrellis.spark.io.s3.S3ValueReader
+import geotrellis.spark.io.s3.{S3ValueReader, S3CollectionLayerReader}
 
 
 import java.security.InvalidParameterException
@@ -50,7 +50,19 @@ case class S3ValueReaderTileSource(bucket: String, root: String, layerId: String
     }
   }
 
-  def resolveBindingForExtent(extent: Extent)(implicit t: Timer[IO]): IO[BoundSource] = ???
+  def resolveBindingForExtent(extent: Extent, zoom: Int)(implicit t: Timer[IO]): IO[BoundSource] =
+    resolveBindingForExtent(extent, zoom, 0)
+
+  def resolveBindingForExtent(extent: Extent, zoom: Int, buffer: Int)(implicit t: Timer[IO]): IO[BoundSource] =
+    IO {
+      val reader = S3CollectionLayerReader(bucket, root)
+      val query = new LayerQuery[SpatialKey, TileLayerMetadata[SpatialKey]].where(Intersects(extent.buffer(buffer.toDouble)))
+      reader.read[SpatialKey, MultibandTile, TileLayerMetadata[SpatialKey]](LayerId(layerId, zoom), query)
+    } map { tiles =>
+      tiles.map(_._2.band(band)).reduce(_ merge _)
+    } map { merged =>
+      TileLiteral(merged, RasterExtent(merged, extent))
+    }
 }
 
 
