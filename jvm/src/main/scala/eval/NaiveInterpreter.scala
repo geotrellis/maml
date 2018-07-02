@@ -34,7 +34,7 @@ object NaiveInterpreter {
       SourceDirectives.intLiteral,
       SourceDirectives.dblLiteral,
       SourceDirectives.boolLiteral,
-      SourceDirectives.geomJson,
+      SourceDirectives.geoJson,
       OpDirectives.additionTile orElse OpDirectives.additionInt orElse OpDirectives.additionDouble,
       OpDirectives.subtraction,
       OpDirectives.multiplicationTile orElse OpDirectives.multiplicationInt orElse OpDirectives.multiplicationDouble,

@@ -22,7 +22,7 @@ object SourceDirectives {
 
   val tileLiteral = Directive { case (TileLiteral(tile, extent), _) => Valid(TileResult(LazyTile(tile, extent))) }
 
-  val geomJson = Directive { case (GeomJson(jsonString), _) =>
+  val geoJson = Directive { case (GeoJson(jsonString), _) =>
     Try(jsonString.parseGeoJson[Geometry]) match {
       case Success(geom) => Valid(GeomResult(geom))
       case Failure(e) =>

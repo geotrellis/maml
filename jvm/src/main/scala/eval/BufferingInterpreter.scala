@@ -54,7 +54,7 @@ object BufferingInterpreter {
       ScopedDirective.pure[IntLiteral](SourceDirectives.intLiteral),
       ScopedDirective.pure[DoubleLiteral](SourceDirectives.dblLiteral),
       ScopedDirective.pure[BoolLiteral](SourceDirectives.boolLiteral),
-      ScopedDirective.pure[GeomJson](SourceDirectives.geomJson),
+      ScopedDirective.pure[GeoJson](SourceDirectives.geoJson),
       ScopedDirective.pure[Addition](OpDirectives.additionTile orElse OpDirectives.additionInt orElse OpDirectives.additionDouble),
       ScopedDirective.pure[Subtraction](OpDirectives.subtraction),
       ScopedDirective.pure[Multiplication](OpDirectives.multiplicationTile orElse OpDirectives.multiplicationInt orElse OpDirectives.multiplicationDouble),

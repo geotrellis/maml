@@ -21,11 +21,6 @@ trait ExpressionTreeCodec
   /** TODO: Add codec paths besides `raster source` and `operation` when supported */
   implicit def mamlDecoder = Decoder.instance[Expression] { ma =>
     ma._type match {
-      case Some("TileSource") => ma.as[TileSource]
-      case Some("IntSource") => ma.as[IntSource]
-      case Some("DoubleSource") => ma.as[DoubleSource]
-      case Some("BoolSource") => ma.as[BoolSource]
-      case Some("GeomSource") => ma.as[GeomSource]
       case Some("IntLiteral") => ma.as[IntLiteral]
       case Some("DoubleLiteral") => ma.as[DoubleLiteral]
       case Some("BoolLiteral") => ma.as[BoolLiteral]
@@ -50,11 +45,6 @@ trait ExpressionTreeCodec
 
   implicit def mamlEncoder: Encoder[Expression] = new Encoder[Expression] {
     final def apply(ast: Expression): Json = ast match {
-      case node: TileSource => node.asJson
-      case node: IntSource => node.asJson
-      case node: DoubleSource => node.asJson
-      case node: BoolSource => node.asJson
-      case node: GeomSource => node.asJson
       case node: IntLiteral => node.asJson
       case node: DoubleLiteral => node.asJson
       case node: BoolLiteral => node.asJson

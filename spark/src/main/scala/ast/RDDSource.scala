@@ -10,7 +10,3 @@ case class RDDLiteral(value: TileLayerRDD[SpatialKey]) extends Source {
   val kind = MamlKind.Tile
 }
 
-/** An unbound source to be realized into an [[RDDLiteral]]. */
-case class RDDSource(id: String) extends UnboundSource {
-  val kind = MamlKind.Tile
-}

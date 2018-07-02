@@ -12,39 +12,34 @@ lazy val root = project.in(file("."))
     licenses += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0.txt"))
   ).enablePlugins(ScalaJSPlugin)
 
+val circeVer = "0.10.0-M1"
+val gtVer    = "2.0.0-RC1"
+
 lazy val maml = crossProject.in(file("."))
   .settings(publishSettings:_*)
   .settings(commonSettings:_*)
   .settings(
     libraryDependencies ++= Seq(
-      "org.scalacheck" %% "scalacheck"              % "1.13.4" % "test",
-      "org.scalatest"  %% "scalatest"               % "3.0.1"  % "test",
-      "org.typelevel"  %% "cats-core"               % "1.0.1",
-      "io.circe"      %%% "circe-core"              % "0.9.1",
-      "io.circe"      %%% "circe-generic"           % "0.9.1",
-      "io.circe"      %%% "circe-generic-extras"    % "0.9.1",
-      "io.circe"      %%% "circe-parser"            % "0.9.1",
-      "io.circe"      %%% "circe-optics"            % "0.9.1"
+      "org.scalacheck"  %% "scalacheck"           % "1.13.4" % "test",
+      "org.scalatest"   %% "scalatest"            % "3.0.1"  % "test",
+      "org.typelevel"   %% "cats-core"            % "1.0.1",
+      "io.circe"       %%% "circe-core"           % circeVer,
+      "io.circe"       %%% "circe-generic"        % circeVer,
+      "io.circe"       %%% "circe-generic-extras" % circeVer,
+      "io.circe"       %%% "circe-parser"         % circeVer,
+      "io.circe"       %%% "circe-optics"         % circeVer,
+      "org.typelevel"   %% "cats-effect"          % "1.0.0-RC2"
+
     )
   ).jvmSettings(
     name := "maml-jvm",
     libraryDependencies ++= Seq(
-      "org.locationtech.geotrellis" %% "geotrellis-raster"    % "1.1.1",
-      "org.locationtech.geotrellis" %% "geotrellis-spark"     % "1.1.1",
-      "org.locationtech.geotrellis" %% "geotrellis-s3"        % "1.1.1",
-      "org.apache.spark"            %% "spark-core"           % "2.2.0",
-      "com.typesafe.akka"           %% "akka-actor"           % "2.4.9",
-      "com.typesafe.akka"           %% "akka-stream"          % "2.4.9",
-      "com.typesafe.akka"           %% "akka-testkit"         % "2.4.9",
-      "com.typesafe.akka"           %% "akka-http"            % "10.0.10",
-      "com.typesafe.akka"           %% "akka-http-spray-json" % "10.0.10",
-      "com.typesafe.akka"           %% "akka-http-testkit"    % "10.0.10",
-      "de.heikoseeberger"           %% "akka-http-circe"      % "1.17.0"
+      "org.locationtech.geotrellis" %% "geotrellis-raster"    % gtVer,
+      "org.locationtech.geotrellis" %% "geotrellis-spark"     % gtVer,
+      "org.locationtech.geotrellis" %% "geotrellis-s3"        % gtVer,
+      "org.apache.spark"            %% "spark-core"           % "2.2.0"
     )
-  ).jvmSettings(commonSettings:_*)
-  .jsSettings(
-    name := "maml-js"
-  ).jsSettings(commonSettings:_*)
+  ).jsSettings(name := "maml-js")
 
 lazy val mamlJvm = maml.jvm
 lazy val mamlJs = maml.js

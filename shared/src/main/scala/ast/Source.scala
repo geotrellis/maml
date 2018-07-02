@@ -1,5 +1,6 @@
 package com.azavea.maml.ast
 
+import cats.effect.IO
 import io.circe.Json
 import io.circe.generic.JsonCodec
 
@@ -24,28 +25,30 @@ case class BoolLiteral(value: Boolean) extends Source {
   val kind = MamlKind.Bool
 }
 
-case class GeomJson(geojson: String) extends Source {
+case class GeoJson(geojson: String) extends Source {
   val kind = MamlKind.Geom
 }
 
-trait UnboundSource extends Source
-
-case class IntSource(id: String) extends UnboundSource {
-  val kind = MamlKind.Int
+trait UnboundSource extends Source {
+  def resolveBinding: IO[Source]
 }
 
-case class DoubleSource(id: String) extends UnboundSource {
-  val kind = MamlKind.Double
-}
+//case class IntSource(id: String) extends UnboundSource {
+//  val kind = MamlKind.Int
+//}
 
-case class TileSource(id: String) extends UnboundSource {
-  val kind = MamlKind.Tile
-}
+//case class DoubleSource(id: String) extends UnboundSource {
+//  val kind = MamlKind.Double
+//}
 
-case class GeomSource(id: String) extends UnboundSource {
-  val kind = MamlKind.Geom
-}
+//case class TileSource(id: String) extends UnboundSource {
+//  val kind = MamlKind.Tile
+//}
 
-case class BoolSource(id: String) extends UnboundSource {
-  val kind = MamlKind.Bool
-}
+//case class GeomSource(id: String) extends UnboundSource {
+//  val kind = MamlKind.Geom
+//}
+
+//case class BoolSource(id: String) extends UnboundSource {
+//  val kind = MamlKind.Bool
+//}

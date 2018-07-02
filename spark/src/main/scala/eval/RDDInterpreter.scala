@@ -21,7 +21,7 @@ object RDDInterpreter {
       SourceDirectives.intLiteral,
       SourceDirectives.dblLiteral,
       SourceDirectives.boolLiteral,
-      SourceDirectives.geomJson,
+      SourceDirectives.geoJson,
       RDDOpDirectives.addition,
       RDDOpDirectives.subtraction,
       RDDOpDirectives.multiplication,
