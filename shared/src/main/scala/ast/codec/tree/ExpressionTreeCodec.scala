@@ -43,7 +43,7 @@ trait ExpressionTreeCodec
     }
   }
 
-  implicit def mamlEncoder: Encoder[Expression] = new Encoder[Expression] {
+  implicit def mamlEncoder[A: Encoder]: Encoder[Expression] = new Encoder[Expression] {
     final def apply(ast: Expression): Json = ast match {
       case node: IntLiteral => node.asJson
       case node: DoubleLiteral => node.asJson
@@ -63,6 +63,7 @@ trait ExpressionTreeCodec
       case node: FocalMode => node.asJson
       case node: FocalSum => node.asJson
       case node: FocalStdDev => node.asJson
+      case node: A => node.asJson
       case _ =>
         throw new InvalidParameterException(s"Unrecognized AST: $ast")
     }
