@@ -20,6 +20,8 @@ import geotrellis.spark.io.s3.{S3ValueReader, S3CollectionLayerReader}
 import java.security.InvalidParameterException
 
 
+/**
+ * Reference implementation of UnboundTileSource which allows serving tiles with AWS S3 backing */
 case class S3ValueReaderTileSource(bucket: String, root: String, layerId: String, band: Int, celltype: Option[CellType]) extends UnboundTileSource {
   val kind = MamlKind.Tile
 
@@ -32,17 +34,13 @@ case class S3ValueReaderTileSource(bucket: String, root: String, layerId: String
       case None     => IntConstantTile(NODATA, 256, 256)
     }
     val reader = S3ValueReader(bucket, root).reader[SpatialKey, MultibandTile](LayerId(layerId, zoom))
-    val recover = PartialFunction[Throwable, IO[Tile]] { case lre: LayerReadError => IO.pure(emptyTile) }
-    def fetch(xCoord: Int, yCoord: Int) = IO(reader.read(SpatialKey(xCoord, yCoord)))
-    (fetch(x - 1, y - 1).map(_.band(band)).recoverWith(recover),
-     fetch(x,     y - 1).map(_.band(band)).recoverWith(recover),
-     fetch(x + 1, y - 1).map(_.band(band)).recoverWith(recover),
-     fetch(x - 1,     y).map(_.band(band)).recoverWith(recover),
-     fetch(x,         y).map(_.band(band)).recoverWith(recover),
-     fetch(x + 1,     y).map(_.band(band)).recoverWith(recover),
-     fetch(x - 1, y + 1).map(_.band(band)).recoverWith(recover),
-     fetch(x,     y + 1).map(_.band(band)).recoverWith(recover),
-     fetch(x + 1, y + 1).map(_.band(band)).recoverWith(recover)
+    def fetch(xCoord: Int, yCoord: Int) = IO {
+      reader.read(SpatialKey(xCoord, yCoord)).band(band)
+    }.recoverWith({ case lre: LayerReadError => IO.pure(emptyTile) })
+
+    (fetch(x - 1, y - 1), fetch(x, y - 1), fetch(x + 1, y - 1),
+     fetch(x - 1, y),     fetch(x, y),     fetch(x + 1, y),
+     fetch(x - 1, y + 1), fetch(x, y + 1), fetch(x + 1, y + 1)
     ).parMapN { (tl, tm, tr, ml, mm, mr, bl, bm, br) =>
       val extent = TileLayouts(zoom).mapTransform(SpatialKey(x, y))
       val tile = TileWithNeighbors(mm, Some(NeighboringTiles(tl, tm, tr, ml, mr, bl, bm, br))).withBuffer(buffer)

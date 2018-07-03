@@ -2,7 +2,7 @@ import com.scalapenos.sbt.prompt.SbtPrompt.autoImport._
 
 promptTheme := com.scalapenos.sbt.prompt.PromptThemes.ScalapenosTheme
 
-val mamlVersion = "0.0.4" + scala.util.Properties.envOrElse("MAML_VERSION_SUFFIX", "")
+val mamlVersion = "0.0.5" + scala.util.Properties.envOrElse("MAML_VERSION_SUFFIX", "")
 
 /** Project configurations */
 lazy val root = project.in(file("."))
@@ -20,16 +20,16 @@ lazy val maml = crossProject.in(file("."))
   .settings(commonSettings:_*)
   .settings(
     libraryDependencies ++= Seq(
-      "org.scalacheck"  %% "scalacheck"           % "1.13.4" % "test",
-      "org.scalatest"   %% "scalatest"            % "3.0.1"  % "test",
-      "org.typelevel"   %% "cats-core"            % "1.0.1",
-      "io.circe"       %%% "circe-core"           % circeVer,
-      "io.circe"       %%% "circe-generic"        % circeVer,
-      "io.circe"       %%% "circe-generic-extras" % circeVer,
-      "io.circe"       %%% "circe-parser"         % circeVer,
-      "io.circe"       %%% "circe-optics"         % circeVer,
-      "org.typelevel"   %% "cats-effect"          % "1.0.0-RC2"
-
+      "org.scalacheck"             %% "scalacheck"           % "1.13.4" % "test",
+      "org.scalatest"              %% "scalatest"            % "3.0.1"  % "test",
+      "org.typelevel"              %% "cats-core"            % "1.0.1",
+      "com.typesafe.scala-logging" %% "scala-logging"        % "3.9.0",
+      "io.circe"                   %% "circe-core"           % circeVer,
+      "io.circe"                   %% "circe-generic"        % circeVer,
+      "io.circe"                   %% "circe-generic-extras" % circeVer,
+      "io.circe"                   %% "circe-parser"         % circeVer,
+      "io.circe"                   %% "circe-optics"         % circeVer,
+      "org.typelevel"              %% "cats-effect"          % "1.0.0-RC2"
     )
   ).jvmSettings(
     name := "maml-jvm",

@@ -19,8 +19,6 @@ object BindSourcesWithContext {
             unboundTileSource.resolveBindingForTmsTile(z, x, y, buffer)
           case unboundSource: UnboundSource =>
             unboundSource.resolveBinding
-          case boundSource: BoundSource =>
-            IO.pure(boundSource)
           case focal: FocalExpression =>
             focal.children
               .map(eval(_, buffer + NeighborhoodConversion(focal.neighborhood).extent))
@@ -46,8 +44,6 @@ object BindSourcesWithContext {
             unboundTileSource.resolveBindingForExtent(zoom, extent)
           case unboundSource: UnboundSource =>
             unboundSource.resolveBinding
-          case boundSource: BoundSource =>
-            IO.pure(boundSource)
           case _ =>
             expr.children
               .map(eval(_))
