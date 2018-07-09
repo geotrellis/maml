@@ -1,5 +1,10 @@
 package com.azavea.maml.ast
 
+import com.azavea.maml.error._
+
+import cats._
+import cats.data.{NonEmptyList => NEL, _}
+import Validated._
 import io.circe.Json
 import io.circe.generic.JsonCodec
 import cats.effect.IO
@@ -15,8 +20,12 @@ trait Literal extends Source
 trait Variable extends Source {
   def name: String
   override def varMap: Map[String, MamlKind] = Map(name -> kind)
-  override def bind(args: Map[String, Literal]): Expression =
-    args.get(name).getOrElse(throw new IllegalArgumentException("sa;ldfkha"))
+
+  override def bind(args: Map[String, Literal]): ValidatedNel[MamlError, Expression] =
+    args.get(name) match {
+      case Some(arg) => Valid(arg)
+      case None => Invalid(NEL.of(NoVariableBinding(this, args)))
+    }
 }
 
 case class IntLit(value: Int) extends Literal {
