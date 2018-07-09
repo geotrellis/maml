@@ -23,7 +23,8 @@ trait Variable extends Source {
 
   override def bind(args: Map[String, Literal]): ValidatedNel[MamlError, Expression] =
     args.get(name) match {
-      case Some(arg) => Valid(arg)
+      case Some(literal) if literal.kind == kind => Valid(literal)
+      case Some(literal) => Invalid(NEL.of(DivergingTypes(literal.kind.toString, List(kind.toString))))
       case None => Invalid(NEL.of(NoVariableBinding(this, args)))
     }
 }
