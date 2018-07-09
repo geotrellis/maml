@@ -39,7 +39,7 @@ class RDDOpDirectivesSpec extends FunSpec
     createTileLayerRDD(IntArrayTile(0 until 10 toArray, 2, 5), TileLayout(1, 1, 2, 5))
 
   it("Should interpret and evaluate spatial RDDs") {
-    interpreter(RDDLiteral(rdd)).as[ContextRDD[SpatialKey, Tile, TileLayerMetadata[SpatialKey]]] match {
+    interpreter(RddLit(rdd)).as[ContextRDD[SpatialKey, Tile, TileLayerMetadata[SpatialKey]]] match {
       case Valid(result) => rastersEqual(rdd, result)
       case i@Invalid(_) => fail(s"$i")
     }
@@ -51,7 +51,7 @@ class RDDOpDirectivesSpec extends FunSpec
       createTileLayerRDD(tile, TileLayout(1, 1, 2, 5))
     }
 
-    interpreter(RDDLiteral(rdd) + RDDLiteral(rdd)).as[ContextRDD[SpatialKey, Tile, TileLayerMetadata[SpatialKey]]] match {
+    interpreter(RddLit(rdd) + RddLit(rdd)).as[ContextRDD[SpatialKey, Tile, TileLayerMetadata[SpatialKey]]] match {
       case Valid(result) => rastersEqual(result, expected)
       case i@Invalid(_) => println(s"$i")
       }
@@ -61,7 +61,7 @@ class RDDOpDirectivesSpec extends FunSpec
     val expected: TileLayerRDD[SpatialKey] =
       createTileLayerRDD(IntArrayTile(1 until 11 toArray, 2, 5), TileLayout(1, 1, 2, 5))
 
-    interpreter(IntLiteral(1) + RDDLiteral(rdd)).as[ContextRDD[SpatialKey, Tile, TileLayerMetadata[SpatialKey]]] match {
+    interpreter(IntLit(1) + RddLit(rdd)).as[ContextRDD[SpatialKey, Tile, TileLayerMetadata[SpatialKey]]] match {
       case Valid(result) => rastersEqual(result, expected)
       case i@Invalid(_) => println(s"$i")
       }
@@ -73,7 +73,7 @@ class RDDOpDirectivesSpec extends FunSpec
       createTileLayerRDD(tile, TileLayout(1, 1, 2, 5))
     }
 
-    interpreter(DoubleLiteral(1.0) + RDDLiteral(rdd)).as[ContextRDD[SpatialKey, Tile, TileLayerMetadata[SpatialKey]]] match {
+    interpreter(DblLit(1.0) + RddLit(rdd)).as[ContextRDD[SpatialKey, Tile, TileLayerMetadata[SpatialKey]]] match {
       case Valid(result) => rastersEqual(result, expected)
       case i@Invalid(_) => println(s"$i")
       }
@@ -82,7 +82,7 @@ class RDDOpDirectivesSpec extends FunSpec
   it("Should subtract two spatial RDDs") {
     val expected = createTileLayerRDD(IntArrayTile.fill(0, 2, 5), TileLayout(1, 1, 2, 5))
 
-    interpreter(RDDLiteral(rdd) - RDDLiteral(rdd)).as[ContextRDD[SpatialKey, Tile, TileLayerMetadata[SpatialKey]]] match {
+    interpreter(RddLit(rdd) - RddLit(rdd)).as[ContextRDD[SpatialKey, Tile, TileLayerMetadata[SpatialKey]]] match {
       case Valid(result) => rastersEqual(result, expected)
       case i@Invalid(_) => println(s"$i")
       }
@@ -94,7 +94,7 @@ class RDDOpDirectivesSpec extends FunSpec
       createTileLayerRDD(tile, TileLayout(1, 1, 2, 5))
     }
 
-    interpreter(RDDLiteral(rdd) - IntLiteral(1)).as[ContextRDD[SpatialKey, Tile, TileLayerMetadata[SpatialKey]]] match {
+    interpreter(RddLit(rdd) - IntLit(1)).as[ContextRDD[SpatialKey, Tile, TileLayerMetadata[SpatialKey]]] match {
       case Valid(result) => rastersEqual(result, expected)
       case i@Invalid(_) => println(s"$i")
       }
@@ -106,7 +106,7 @@ class RDDOpDirectivesSpec extends FunSpec
       createTileLayerRDD(tile, TileLayout(1, 1, 2, 5))
     }
 
-    interpreter(DoubleLiteral(1.0) - RDDLiteral(rdd)).as[ContextRDD[SpatialKey, Tile, TileLayerMetadata[SpatialKey]]] match {
+    interpreter(DblLit(1.0) - RddLit(rdd)).as[ContextRDD[SpatialKey, Tile, TileLayerMetadata[SpatialKey]]] match {
       case Valid(result) => rastersEqual(result, expected)
       case i@Invalid(_) => println(s"$i")
       }
@@ -118,7 +118,7 @@ class RDDOpDirectivesSpec extends FunSpec
       createTileLayerRDD(tile, TileLayout(1, 1, 2, 5))
     }
 
-    interpreter(RDDLiteral(rdd) * RDDLiteral(rdd)).as[ContextRDD[SpatialKey, Tile, TileLayerMetadata[SpatialKey]]] match {
+    interpreter(RddLit(rdd) * RddLit(rdd)).as[ContextRDD[SpatialKey, Tile, TileLayerMetadata[SpatialKey]]] match {
       case Valid(result) => rastersEqual(result, expected)
       case i@Invalid(_) => println(s"$i")
       }
@@ -130,7 +130,7 @@ class RDDOpDirectivesSpec extends FunSpec
       createTileLayerRDD(tile, TileLayout(1, 1, 2, 5))
     }
 
-    interpreter(RDDLiteral(rdd) * IntLiteral(3)).as[ContextRDD[SpatialKey, Tile, TileLayerMetadata[SpatialKey]]] match {
+    interpreter(RddLit(rdd) * IntLit(3)).as[ContextRDD[SpatialKey, Tile, TileLayerMetadata[SpatialKey]]] match {
       case Valid(result) => rastersEqual(result, expected)
       case i@Invalid(_) => println(s"$i")
     }
@@ -142,7 +142,7 @@ class RDDOpDirectivesSpec extends FunSpec
       createTileLayerRDD(tile * 5.0, TileLayout(1, 1, 2, 5))
     }
 
-    interpreter(DoubleLiteral(5.0) * RDDLiteral(rdd)).as[ContextRDD[SpatialKey, Tile, TileLayerMetadata[SpatialKey]]] match {
+    interpreter(DblLit(5.0) * RddLit(rdd)).as[ContextRDD[SpatialKey, Tile, TileLayerMetadata[SpatialKey]]] match {
       case Valid(result) => rastersEqual(result, expected)
       case i@Invalid(_) => println(s"$i")
       }
@@ -154,7 +154,7 @@ class RDDOpDirectivesSpec extends FunSpec
       createTileLayerRDD(tile, TileLayout(1, 1, 2, 5))
     }
 
-    interpreter(RDDLiteral(rdd) / RDDLiteral(rdd)).as[ContextRDD[SpatialKey, Tile, TileLayerMetadata[SpatialKey]]] match {
+    interpreter(RddLit(rdd) / RddLit(rdd)).as[ContextRDD[SpatialKey, Tile, TileLayerMetadata[SpatialKey]]] match {
       case Valid(result) => rastersEqual(result, expected)
       case i@Invalid(_) => println(s"$i")
       }
@@ -166,7 +166,7 @@ class RDDOpDirectivesSpec extends FunSpec
       createTileLayerRDD(tile, TileLayout(1, 1, 2, 5))
     }
 
-    interpreter(RDDLiteral(rdd) / IntLiteral(1)).as[ContextRDD[SpatialKey, Tile, TileLayerMetadata[SpatialKey]]] match {
+    interpreter(RddLit(rdd) / IntLit(1)).as[ContextRDD[SpatialKey, Tile, TileLayerMetadata[SpatialKey]]] match {
       case Valid(result) => rastersEqual(result, expected)
       case i@Invalid(_) => println(s"$i")
       }
@@ -178,7 +178,7 @@ class RDDOpDirectivesSpec extends FunSpec
       createTileLayerRDD(tile./:(5.0), TileLayout(1, 1, 2, 5))
     }
 
-    interpreter(DoubleLiteral(5.0) / RDDLiteral(rdd)).as[ContextRDD[SpatialKey, Tile, TileLayerMetadata[SpatialKey]]] match {
+    interpreter(DblLit(5.0) / RddLit(rdd)).as[ContextRDD[SpatialKey, Tile, TileLayerMetadata[SpatialKey]]] match {
       case Valid(result) => rastersEqual(result, expected)
       case i@Invalid(_) => println(s"$i")
       }

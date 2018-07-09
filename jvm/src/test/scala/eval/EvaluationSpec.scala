@@ -22,7 +22,7 @@ import scala.reflect._
 
 class EvaluationSpec extends FunSpec with Matchers with ExpressionTreeCodec {
 
-  implicit def tileIsTileLiteral(tile: Tile): TileLiteral = TileLiteral(tile, RasterExtent(tile, Extent(0, 0, 0, 0)))
+  implicit def tileIsTileLiteral(tile: Tile): Expression = RasterLit(Raster(tile, Extent(0, 0, 0, 0)))
 
   implicit class TypeRefinement(self: Interpreted[Result]) {
     def as[T: ClassTag]: Interpreted[T] = self match {
@@ -34,58 +34,58 @@ class EvaluationSpec extends FunSpec with Matchers with ExpressionTreeCodec {
   val interpreter = NaiveInterpreter.DEFAULT
 
   it("Should interpret and evaluate to Boolean literals") {
-    interpreter(BoolLiteral(true)).as[Boolean] should be (Valid(true))
+    interpreter(BoolLit(true)).as[Boolean] should be (Valid(true))
     interpreter(false).as[Boolean] should be (Valid(false))
     interpreter(true).as[Boolean] should be (Valid(true))
   }
 
   it("Should interpret and evaluate to Int literals") {
-    interpreter(IntLiteral(42)).as[Int] should be (Valid(42))
-    interpreter(IntLiteral(4200)).as[Int] should be (Valid(4200))
+    interpreter(IntLit(42)).as[Int] should be (Valid(42))
+    interpreter(IntLit(4200)).as[Int] should be (Valid(4200))
   }
 
 
   it("Should interpret and evaluate to double literals") {
-    interpreter(DoubleLiteral(42.0)).as[Double] should be (Valid(42.0))
-    interpreter(DoubleLiteral(4200.0123)).as[Double] should be (Valid(4200.0123))
+    interpreter(DblLit(42.0)).as[Double] should be (Valid(42.0))
+    interpreter(DblLit(4200.0123)).as[Double] should be (Valid(4200.0123))
   }
 
   it("Should interpret and evaluate addition with scalars") {
-    interpreter(IntLiteral(42) + DoubleLiteral(42)).as[Double] should be (Valid(84.0))
+    interpreter(IntLit(42) + DblLit(42)).as[Double] should be (Valid(84.0))
   }
 
   it("Should interpret and evaluate multiplication with scalars") {
-    interpreter(IntLiteral(2) * DoubleLiteral(42)).as[Double] should be (Valid(84.0))
+    interpreter(IntLit(2) * DblLit(42)).as[Double] should be (Valid(84.0))
   }
 
   it("Should interpret and evaluate division with scalars") {
-    interpreter(DoubleLiteral(20) / DoubleLiteral(2) / DoubleLiteral(2)).as[Double] should be (Valid(5.0))
+    interpreter(DblLit(20) / DblLit(2) / DblLit(2)).as[Double] should be (Valid(5.0))
   }
 
   it("Should interpret and evaluate comparisions with scalars") {
-    interpreter(DoubleLiteral(20) < DoubleLiteral(20)).as[Boolean] should be (Valid(false))
-    interpreter(DoubleLiteral(19) < DoubleLiteral(20)).as[Boolean] should be (Valid(true))
-    interpreter(DoubleLiteral(29) < DoubleLiteral(20)).as[Boolean] should be (Valid(false))
+    interpreter(DblLit(20) < DblLit(20)).as[Boolean] should be (Valid(false))
+    interpreter(DblLit(19) < DblLit(20)).as[Boolean] should be (Valid(true))
+    interpreter(DblLit(29) < DblLit(20)).as[Boolean] should be (Valid(false))
 
-    interpreter(DoubleLiteral(20) <= DoubleLiteral(20)).as[Boolean] should be (Valid(true))
-    interpreter(DoubleLiteral(19) <= DoubleLiteral(20)).as[Boolean] should be (Valid(true))
-    interpreter(DoubleLiteral(29) <= DoubleLiteral(20)).as[Boolean] should be (Valid(false))
+    interpreter(DblLit(20) <= DblLit(20)).as[Boolean] should be (Valid(true))
+    interpreter(DblLit(19) <= DblLit(20)).as[Boolean] should be (Valid(true))
+    interpreter(DblLit(29) <= DblLit(20)).as[Boolean] should be (Valid(false))
 
-    interpreter(DoubleLiteral(20) === DoubleLiteral(20)).as[Boolean] should be (Valid(true))
-    interpreter(DoubleLiteral(19) === DoubleLiteral(20)).as[Boolean] should be (Valid(false))
-    interpreter(DoubleLiteral(29) === DoubleLiteral(20)).as[Boolean] should be (Valid(false))
+    interpreter(DblLit(20) === DblLit(20)).as[Boolean] should be (Valid(true))
+    interpreter(DblLit(19) === DblLit(20)).as[Boolean] should be (Valid(false))
+    interpreter(DblLit(29) === DblLit(20)).as[Boolean] should be (Valid(false))
 
-    interpreter(DoubleLiteral(20) >= DoubleLiteral(20)).as[Boolean] should be (Valid(true))
-    interpreter(DoubleLiteral(19) >= DoubleLiteral(20)).as[Boolean] should be (Valid(false))
-    interpreter(DoubleLiteral(29) >= DoubleLiteral(20)).as[Boolean] should be (Valid(true))
+    interpreter(DblLit(20) >= DblLit(20)).as[Boolean] should be (Valid(true))
+    interpreter(DblLit(19) >= DblLit(20)).as[Boolean] should be (Valid(false))
+    interpreter(DblLit(29) >= DblLit(20)).as[Boolean] should be (Valid(true))
 
-    interpreter(DoubleLiteral(20) > DoubleLiteral(20)).as[Boolean] should be (Valid(false))
-    interpreter(DoubleLiteral(19) > DoubleLiteral(20)).as[Boolean] should be (Valid(false))
-    interpreter(DoubleLiteral(29) > DoubleLiteral(20)).as[Boolean] should be (Valid(true))
+    interpreter(DblLit(20) > DblLit(20)).as[Boolean] should be (Valid(false))
+    interpreter(DblLit(19) > DblLit(20)).as[Boolean] should be (Valid(false))
+    interpreter(DblLit(29) > DblLit(20)).as[Boolean] should be (Valid(true))
   }
 
   it("Should interpret and evaluate ndvi") {
-    interpreter((DoubleLiteral(5) - DoubleLiteral(2)) / (DoubleLiteral(5) + DoubleLiteral(2))).as[Double] match {
+    interpreter((DblLit(5) - DblLit(2)) / (DblLit(5) + DblLit(2))).as[Double] match {
       case Valid(x) => x should be (0.42857 +- 0.001)
       case i@Invalid(_) => fail(s"$i")
     }

@@ -21,9 +21,17 @@ trait ExpressionTreeCodec
   /** TODO: Add codec paths besides `raster source` and `operation` when supported */
   implicit def mamlDecoder = Decoder.instance[Expression] { ma =>
     ma._type match {
-      case Some("IntLiteral") => ma.as[IntLiteral]
-      case Some("DoubleLiteral") => ma.as[DoubleLiteral]
-      case Some("BoolLiteral") => ma.as[BoolLiteral]
+      case Some("IntLit") => ma.as[IntLit]
+      case Some("IntVar") => ma.as[IntVar]
+      case Some("DblLit") => ma.as[DblLit]
+      case Some("DblVar") => ma.as[DblVar]
+      case Some("BoolLit") => ma.as[BoolLit]
+      case Some("BoolVar") => ma.as[BoolVar]
+      case Some("GeomLit") => ma.as[GeomLit]
+      case Some("GeomVar") => ma.as[GeomVar]
+      case Some("RasterLit") =>
+        Left(DecodingFailure(s"Can't deserialize raster from JSON in: $ma", ma.history))
+      case Some("RasterVar") => ma.as[RasterVar]
       case Some("Addition") => ma.as[Addition]
       case Some("Subtraction") => ma.as[Subtraction]
       case Some("Multiplication") => ma.as[Multiplication]
@@ -39,15 +47,24 @@ trait ExpressionTreeCodec
       case Some("FocalMode") => ma.as[FocalMode]
       case Some("FocalSum") => ma.as[FocalSum]
       case Some("FocalStdDev") => ma.as[FocalStdDev]
-      case None => Left(DecodingFailure(s"Unrecognized node: $ma", ma.history))
+      case None =>
+        Left(DecodingFailure(s"Unrecognized node: $ma", ma.history))
     }
   }
 
-  implicit def mamlEncoder[A: Encoder]: Encoder[Expression] = new Encoder[Expression] {
+  implicit def mamlEncoder: Encoder[Expression] = new Encoder[Expression] {
     final def apply(ast: Expression): Json = ast match {
-      case node: IntLiteral => node.asJson
-      case node: DoubleLiteral => node.asJson
-      case node: BoolLiteral => node.asJson
+      case node: IntLit => node.asJson
+      case node: IntVar => node.asJson
+      case node: DblLit => node.asJson
+      case node: DblVar => node.asJson
+      case node: BoolLit => node.asJson
+      case node: BoolVar => node.asJson
+      case node: GeomLit => node.asJson
+      case node: GeomVar => node.asJson
+      case node: RasterLit[_] =>
+        throw new InvalidParameterException(s"Can't serialize rasters to JSON in: $node")
+      case node: RasterVar => node.asJson
       case node: Addition => node.asJson
       case node: Subtraction => node.asJson
       case node: Multiplication => node.asJson
@@ -63,7 +80,6 @@ trait ExpressionTreeCodec
       case node: FocalMode => node.asJson
       case node: FocalSum => node.asJson
       case node: FocalStdDev => node.asJson
-      case node: A => node.asJson
       case _ =>
         throw new InvalidParameterException(s"Unrecognized AST: $ast")
     }

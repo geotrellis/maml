@@ -30,7 +30,7 @@ object NaiveInterpreter {
 
   def DEFAULT = NaiveInterpreter(
     List(
-      SourceDirectives.tileLiteral,
+      SourceDirectives.rasterLiteral,
       SourceDirectives.intLiteral,
       SourceDirectives.dblLiteral,
       SourceDirectives.boolLiteral,

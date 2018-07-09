@@ -28,32 +28,32 @@ object FoldableExpression {
   }
 }
 
-case class Addition(children: List[Expression]) extends Operation with FoldableExpression {
+case class Addition(children: List[Expression]) extends FoldableExpression {
   val kindDerivation = FoldableExpression.tileOrScalarDerivation(this)(_, _)
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
-case class Subtraction(children: List[Expression]) extends Operation with FoldableExpression {
+case class Subtraction(children: List[Expression]) extends FoldableExpression {
   val kindDerivation = FoldableExpression.tileOrScalarDerivation(this)(_, _)
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
-case class Multiplication(children: List[Expression]) extends Operation with FoldableExpression {
+case class Multiplication(children: List[Expression]) extends FoldableExpression {
   val kindDerivation = FoldableExpression.tileOrScalarDerivation(this)(_, _)
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
-case class Division(children: List[Expression]) extends Operation with FoldableExpression {
+case class Division(children: List[Expression]) extends FoldableExpression {
   val kindDerivation = FoldableExpression.tileOrScalarDerivation(this)(_, _)
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
-case class Max(children: List[Expression]) extends Operation with FoldableExpression {
+case class Max(children: List[Expression]) extends FoldableExpression {
   val kindDerivation = FoldableExpression.tileOrScalarDerivation(this)(_, _)
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
-case class Min(children: List[Expression]) extends Operation with FoldableExpression {
+case class Min(children: List[Expression]) extends FoldableExpression {
   val kindDerivation = FoldableExpression.tileOrScalarDerivation(this)(_, _)
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }

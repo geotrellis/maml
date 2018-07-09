@@ -20,108 +20,108 @@ object UnaryExpression {
   val tileOrScalar = tileOnly ++ intOnly ++ dblOnly
 }
 
-case class Classification(children: List[Expression], classMap: ClassMap) extends Operation with UnaryExpression {
+case class Classification(children: List[Expression], classMap: ClassMap) extends UnaryExpression {
   val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.tileOrScalar
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
-case class Sin(children: List[Expression]) extends Operation with UnaryExpression {
+case class Sin(children: List[Expression]) extends UnaryExpression {
   val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.tileOrScalar
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
-case class Cos(children: List[Expression]) extends Operation with UnaryExpression {
+case class Cos(children: List[Expression]) extends UnaryExpression {
   val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.tileOrScalar
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
-case class Tan(children: List[Expression]) extends Operation with UnaryExpression {
+case class Tan(children: List[Expression]) extends UnaryExpression {
   val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.tileOrScalar
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
-case class Sinh(children: List[Expression]) extends Operation with UnaryExpression {
+case class Sinh(children: List[Expression]) extends UnaryExpression {
   val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.tileOrScalar
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
-case class Cosh(children: List[Expression]) extends Operation with UnaryExpression {
+case class Cosh(children: List[Expression]) extends UnaryExpression {
   val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.tileOrScalar
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
-case class Tanh(children: List[Expression]) extends Operation with UnaryExpression {
+case class Tanh(children: List[Expression]) extends UnaryExpression {
   val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.tileOrScalar
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
-case class Asin(children: List[Expression]) extends Operation with UnaryExpression {
+case class Asin(children: List[Expression]) extends UnaryExpression {
   val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.tileOrScalar
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
-case class Acos(children: List[Expression]) extends Operation with UnaryExpression {
+case class Acos(children: List[Expression]) extends UnaryExpression {
   val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.tileOrScalar
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
-case class Atan(children: List[Expression]) extends Operation with UnaryExpression {
+case class Atan(children: List[Expression]) extends UnaryExpression {
   val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.tileOrScalar
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
-case class Round(children: List[Expression]) extends Operation with UnaryExpression {
+case class Round(children: List[Expression]) extends UnaryExpression {
   val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.tileOrScalar
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
-case class Floor(children: List[Expression]) extends Operation with UnaryExpression {
+case class Floor(children: List[Expression]) extends UnaryExpression {
   val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.tileOrScalar
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
-case class Ceil(children: List[Expression]) extends Operation with UnaryExpression {
+case class Ceil(children: List[Expression]) extends UnaryExpression {
   val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.tileOrScalar
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
 /** Natural Log */
-case class LogE(children: List[Expression]) extends Operation with UnaryExpression {
+case class LogE(children: List[Expression]) extends UnaryExpression {
   val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.tileOrScalar
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
-case class Log10(children: List[Expression]) extends Operation with UnaryExpression {
+case class Log10(children: List[Expression]) extends UnaryExpression {
   val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.tileOrScalar
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
-case class SquareRoot(children: List[Expression]) extends Operation with UnaryExpression {
+case class SquareRoot(children: List[Expression]) extends UnaryExpression {
   val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.tileOrScalar
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
-case class Abs(children: List[Expression]) extends Operation with UnaryExpression {
+case class Abs(children: List[Expression]) extends UnaryExpression {
   val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.tileOrScalar
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
-case class Defined(children: List[Expression]) extends Operation with UnaryExpression {
+case class Defined(children: List[Expression]) extends UnaryExpression {
   val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.tileOnly
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
-case class Undefined(children: List[Expression]) extends Operation with UnaryExpression {
+case class Undefined(children: List[Expression]) extends UnaryExpression {
   val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.tileOnly
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
-case class NumericNegation(children: List[Expression]) extends Operation with UnaryExpression {
+case class NumericNegation(children: List[Expression]) extends UnaryExpression {
   val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.tileOrScalar
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
-case class LogicalNegation(children: List[Expression]) extends Operation with UnaryExpression {
+case class LogicalNegation(children: List[Expression]) extends UnaryExpression {
   val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.tileOnly ++ UnaryExpression.boolOnly
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }

@@ -6,7 +6,7 @@ import geotrellis.spark._
 
 
 /** An Expression leaf node that contains a GeoTrellis layer of Tiles. */
-case class RDDLiteral(value: TileLayerRDD[SpatialKey]) extends BoundSource {
+case class RddLit(value: TileLayerRDD[SpatialKey]) extends Literal {
   val kind = MamlKind.Tile
 }
 

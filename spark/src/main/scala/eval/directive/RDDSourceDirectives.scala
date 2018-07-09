@@ -10,5 +10,5 @@ import cats.data.Validated._
 
 
 object RDDSourceDirectives {
-  val rddLiteral = Directive { case (RDDLiteral(rdd), _) => Valid(RDDResult(rdd)) }
+  val rddLiteral = Directive { case (RddLit(rdd), _) => Valid(RDDResult(rdd)) }
 }

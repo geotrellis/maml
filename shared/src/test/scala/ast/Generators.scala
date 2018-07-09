@@ -1,7 +1,6 @@
 package com.azavea.maml.ast
 
 import com.azavea.maml.util._
-import TestUtilities._
 
 import org.scalacheck._
 import org.scalacheck.Gen._
@@ -18,7 +17,7 @@ object Generators {
     int <- arbitrary[Int]
     dbl <- arbitrary[Double]
     str <- arbitrary[String]
-    src <- Gen.oneOf(IntLiteral(int), DoubleLiteral(dbl))
+    src <- Gen.oneOf(IntLit(int), DblLit(dbl), RasterVar(str))
   } yield src
 
   def genBinaryOpAST(depth: Int) = for {

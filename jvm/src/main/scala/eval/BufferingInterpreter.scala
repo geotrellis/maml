@@ -9,7 +9,7 @@ import cats._
 import cats.implicits._
 import cats.data.Validated._
 import cats.data.{NonEmptyList => NEL, _}
-import geotrellis.raster.GridBounds
+import geotrellis.raster.{Tile, Raster, GridBounds}
 import geotrellis.raster.mapalgebra.focal
 
 import scala.reflect.ClassTag
@@ -50,11 +50,11 @@ object BufferingInterpreter {
 
   def DEFAULT = BufferingInterpreter(
     List(
-      ScopedDirective.pure[TileLiteral](SourceDirectives.tileLiteral),
-      ScopedDirective.pure[IntLiteral](SourceDirectives.intLiteral),
-      ScopedDirective.pure[DoubleLiteral](SourceDirectives.dblLiteral),
-      ScopedDirective.pure[BoolLiteral](SourceDirectives.boolLiteral),
-      ScopedDirective.pure[GeoJson](SourceDirectives.geoJson),
+      ScopedDirective.pure[RasterLit[_]](SourceDirectives.rasterLiteral),
+      ScopedDirective.pure[IntLit](SourceDirectives.intLiteral),
+      ScopedDirective.pure[DblLit](SourceDirectives.dblLiteral),
+      ScopedDirective.pure[BoolLit](SourceDirectives.boolLiteral),
+      ScopedDirective.pure[GeomLit](SourceDirectives.geoJson),
       ScopedDirective.pure[Addition](OpDirectives.additionTile orElse OpDirectives.additionInt orElse OpDirectives.additionDouble),
       ScopedDirective.pure[Subtraction](OpDirectives.subtraction),
       ScopedDirective.pure[Multiplication](OpDirectives.multiplicationTile orElse OpDirectives.multiplicationInt orElse OpDirectives.multiplicationDouble),
