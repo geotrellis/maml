@@ -25,19 +25,24 @@ object Expression {
     varsWithBuffer(expr).map { case (name, (kind, _)) => name -> kind }
 
   def varsWithBuffer(expr: Expression): Map[String, (MamlKind, Int)] = {
-    def eval(subExp: Expression, buffer: Int): Map[String, (MamlKind, Int)] = subExp match {
+    def eval(subExp: Expression, buffer: Int): List[(String, MamlKind, Int)] = subExp match {
       case v: Variable =>
-        Map(v.name -> (v.kind, buffer))
+        List((v.name, v.kind, buffer))
+      case s: Source =>
+        List()
       case f: FocalExpression =>
         subExp.children
-          .map(eval(_, buffer + NeighborhoodConversion(f.neighborhood).extent))
-          .foldLeft(Map[String, (MamlKind, Int)]())(_ ++ _)
+          .flatMap(eval(_, buffer + NeighborhoodConversion(f.neighborhood).extent))
       case _ =>
         subExp.children
-          .map(varsWithBuffer)
-          .foldLeft(Map[String, (MamlKind, Int)]())(_ ++ _)
+          .flatMap(eval(_, buffer))
     }
+    // max by the buffer to ensure that we have enough data for all operations
     eval(expr, 0)
+      .groupBy(_._1)
+      .mapValues({ values => values.maxBy(_._3) })
+      .map({ case (name, (_, kind, buffer)) => name -> (kind, buffer) })
+      .toMap
   }
 
   def bindParams(expr: Expression, params: Map[String, Literal]): Interpreted[Expression] = {
