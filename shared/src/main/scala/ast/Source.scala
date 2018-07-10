@@ -19,14 +19,6 @@ trait Source extends Expression {
 trait Literal extends Source
 trait Variable extends Source {
   def name: String
-  override def varMap: Map[String, MamlKind] = Map(name -> kind)
-
-  override def bind(args: Map[String, Literal]): ValidatedNel[MamlError, Expression] =
-    args.get(name) match {
-      case Some(literal) if literal.kind == kind => Valid(literal)
-      case Some(literal) => Invalid(NEL.of(DivergingTypes(literal.kind.toString, List(kind.toString))))
-      case None => Invalid(NEL.of(NoVariableBinding(this, args)))
-    }
 }
 
 case class IntLit(value: Int) extends Literal {
