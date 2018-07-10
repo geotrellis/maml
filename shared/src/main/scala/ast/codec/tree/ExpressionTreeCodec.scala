@@ -5,6 +5,7 @@ import com.azavea.maml.ast.codec._
 
 import io.circe._
 import io.circe.syntax._
+import io.circe.generic.extras.semiauto._
 import io.circe.generic.extras.Configuration
 
 import java.security.InvalidParameterException
@@ -16,7 +17,7 @@ trait ExpressionTreeCodec
        with MamlUtilityCodecs {
 
   implicit def conf: Configuration =
-    Configuration.default.withDefaults.withDiscriminator("type")
+    Configuration.default.withDiscriminator("type")
 
   /** TODO: Add codec paths besides `raster source` and `operation` when supported */
   implicit def mamlDecoder = Decoder.instance[Expression] { ma =>

@@ -1,5 +1,7 @@
 package com.azavea.maml.eval
 
+import io.circe.generic.extras.Configuration
+import com.azavea.maml.util._
 import com.azavea.maml.ast._
 import com.azavea.maml.dsl._
 import com.azavea.maml.eval._
@@ -22,6 +24,7 @@ import scala.reflect._
 
 class VariableSpec extends FunSpec with Matchers with ExpressionTreeCodec {
 
+  println(s"DISCRIMINATOR ${implicitly[Configuration].discriminator}")
   implicit class TypeRefinement(self: Interpreted[Result]) {
     def as[T: ClassTag]: Interpreted[T] = self match {
       case Valid(r) => r.as[T]
@@ -32,10 +35,33 @@ class VariableSpec extends FunSpec with Matchers with ExpressionTreeCodec {
   val interpreter = NaiveInterpreter.DEFAULT
 
   it("should produce an accurate variable map in a simple case") {
-    BoolVar("predicate1").varMap should be (Map("predicate1" -> MamlKind.Bool))
+    Expression.vars(BoolVar("predicate1")) should be (Map("predicate1" -> MamlKind.Bool))
   }
 
   it("should produce an accurate variable map in a complex case") {
-    Addition(List(IntVar("arg1"), IntVar("arg2"))).varMap should be (Map("arg1" -> MamlKind.Int, "arg2" -> MamlKind.Int))
+    Expression.vars(Addition(List(IntVar("arg1"), IntVar("arg2")))) should be (Map("arg1" -> MamlKind.Int, "arg2" -> MamlKind.Int))
+  }
+
+  it("should produce an accurate variable map with buffer in a simple case") {
+    Expression.varsWithBuffer(FocalMax(List(RasterVar("someRaster")), Square(1))) should be (Map("someRaster" -> (MamlKind.Tile, 1)))
+  }
+
+  it("should produce an accurate variable map with buffer in an ambiguous case") {
+    val ast = Addition(List(
+        FocalMax(List(
+          FocalMax(List(RasterVar("someRaster")), Square(1))
+        ), Square(1)),
+        RasterVar("someRaster")
+    ))
+    println(ast.asJson.noSpaces)
+    println(ast.asJson.as[Expression])
+
+    Expression.varsWithBuffer(
+      Addition(List(
+        FocalMax(List(
+          FocalMax(List(RasterVar("someRaster")), Square(1))
+        ), Square(1)),
+        RasterVar("someRaster")
+    ))) should be (Map("someRaster" -> (MamlKind.Tile, 2)))
   }
 }

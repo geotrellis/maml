@@ -13,7 +13,7 @@ import java.util.UUID
 
 object Generators {
 
-  lazy val genScalarSourceAST: Gen[Source] = for {
+  lazy val genScalarSourceAST: Gen[Expression] = for {
     int <- arbitrary[Int]
     dbl <- arbitrary[Double]
     str <- arbitrary[String]
