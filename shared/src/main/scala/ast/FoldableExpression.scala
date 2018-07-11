@@ -8,7 +8,7 @@ import Validated._
 import java.security.InvalidParameterException
 
 trait FoldableExpression { expression: Expression =>
-  require(children.length > 1, s"Incorrect number of arguments to a foldable expression. Expected >1, found ${children.length}")
+  require(expression.children.length > 1, s"Incorrect number of arguments to a foldable expression. Expected >1, found ${expression.children.length}")
   val kindDerivation: (MamlKind, MamlKind) => MamlKind
   lazy val kind = this.children.map({ _.kind }).reduce({ kindDerivation(_, _) })
 }

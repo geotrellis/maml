@@ -1,17 +1,15 @@
 package com.azavea.maml.eval
 
-import io.circe.generic.extras.Configuration
 import com.azavea.maml.util._
 import com.azavea.maml.ast._
 import com.azavea.maml.dsl._
 import com.azavea.maml.eval._
 import com.azavea.maml.eval.tile._
-import com.azavea.maml.eval.directive.SourceDirectives._
-import com.azavea.maml.eval.directive.OpDirectives._
-import com.azavea.maml.ast.codec.tree.ExpressionTreeCodec
+import com.azavea.maml.ast.codec.tree._
 
 import io.circe._
 import io.circe.syntax._
+import io.circe.generic.extras.auto._
 import geotrellis.raster._
 import geotrellis.vector._
 import cats._
@@ -22,9 +20,8 @@ import org.scalatest._
 import scala.reflect._
 
 
-class VariableSpec extends FunSpec with Matchers with ExpressionTreeCodec {
+class VariableSpec extends FunSpec with Matchers {
 
-  println(s"DISCRIMINATOR ${implicitly[Configuration].discriminator}")
   implicit class TypeRefinement(self: Interpreted[Result]) {
     def as[T: ClassTag]: Interpreted[T] = self match {
       case Valid(r) => r.as[T]
@@ -53,15 +50,7 @@ class VariableSpec extends FunSpec with Matchers with ExpressionTreeCodec {
         ), Square(1)),
         RasterVar("someRaster")
     ))
-    println(ast.asJson.noSpaces)
-    println(ast.asJson.as[Expression])
 
-    Expression.varsWithBuffer(
-      Addition(List(
-        FocalMax(List(
-          FocalMax(List(RasterVar("someRaster")), Square(1))
-        ), Square(1)),
-        RasterVar("someRaster")
-    ))) should be (Map("someRaster" -> (MamlKind.Tile, 2)))
+    Expression.varsWithBuffer(ast) should be (Map("someRaster" -> (MamlKind.Tile, 2)))
   }
 }

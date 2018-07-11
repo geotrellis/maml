@@ -68,8 +68,8 @@ val commonSettings = Seq(
   organization := "com.azavea",
   licenses += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0.txt")),
   version := mamlVersion,
-  scalaVersion := "2.11.11",
-  crossScalaVersions := Seq("2.11.11", "2.12.3"),
+  scalaVersion := "2.11.12",
+  crossScalaVersions := Seq("2.11.12", "2.12.3"),
   resolvers ++= Seq(
     Resolver.sonatypeRepo("releases"),
     "locationtech-releases" at "https://repo.locationtech.org/content/groups/releases"
