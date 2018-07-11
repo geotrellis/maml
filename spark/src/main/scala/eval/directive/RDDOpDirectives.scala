@@ -1,6 +1,6 @@
 package com.azavea.maml.spark.eval.directive
 
-import com.azavea.maml._
+import com.azavea.maml.error._
 import com.azavea.maml.ast._
 import com.azavea.maml.eval._
 import com.azavea.maml.spark.eval._

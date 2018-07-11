@@ -1,6 +1,7 @@
 package com.azavea.maml.eval
 
 import com.azavea.maml.ast._
+import com.azavea.maml.error._
 
 import cats._
 import cats.implicits._

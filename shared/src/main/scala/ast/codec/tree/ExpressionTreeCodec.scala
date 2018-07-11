@@ -137,4 +137,3 @@ trait ExpressionTreeCodec extends MamlCodecInstances {
   }
 }
 
-object ExpressionTreeCodec extends ExpressionTreeCodec

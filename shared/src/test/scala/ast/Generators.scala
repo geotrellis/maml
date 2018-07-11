@@ -2,7 +2,6 @@ package com.azavea.maml.ast
 
 import com.azavea.maml.util._
 
-import geotrellis.vector._
 import org.scalacheck._
 import org.scalacheck.Gen._
 import org.scalacheck.Arbitrary.arbitrary
@@ -44,11 +43,7 @@ object Generators {
 
   def genMaskingAST(depth: Int) = for {
     args <- containerOfN[List, Expression](1, genExpression(depth))
-  } yield {
-    val mp = MultiPolygon(Array(Polygon(Array(Point(0, 0), Point(0, 10), Point(10, 10), Point(10, 0), Point(0, 0)))))
-
-    Masking(args)
-  }
+  } yield Masking(args)
 
   def genFocalOpAST(depth: Int) = for {
     constructor  <- Gen.lzy(Gen.oneOf(
@@ -70,10 +65,9 @@ object Generators {
                     )
   } yield constructor(args, neighborhood)
 
-  // TODO: If `genMaskingAST` is included, AST generation diverges!
   def genOpAST(depth: Int) = Gen.frequency(
     (5 -> genBinaryOpAST(depth)),
-    //(2 -> genMaskingAST(depth)),
+    (2 -> genMaskingAST(depth)),
     (1 -> genClassificationAST(depth)),
     (2 -> genFocalOpAST(depth))
   )

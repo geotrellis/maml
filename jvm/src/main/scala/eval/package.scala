@@ -14,7 +14,6 @@ import cats.implicits._
 
 
 package object eval {
-  type Interpreted[A] = ValidatedNel[MamlError, A]
   type Directive = PartialFunction[(Expression, Seq[Result]), Interpreted[Result]]
   type ScopedDirective[Scope] = PartialFunction[(Expression, Seq[Result], Scope), Interpreted[Result]]
 }

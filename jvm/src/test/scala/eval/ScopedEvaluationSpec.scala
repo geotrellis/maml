@@ -1,5 +1,6 @@
 package com.azavea.maml.eval
 
+import com.azavea.maml.error._
 import com.azavea.maml.ast._
 import com.azavea.maml.util.Square
 import com.azavea.maml.dsl._

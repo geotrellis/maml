@@ -11,14 +11,15 @@ import org.scalacheck.Prop.forAll
 import org.scalatest._
 import org.scalatest.prop._
 
-// TODO uncomment generator code later...
+
 class ExpressionTreeCodecSpec extends PropSpec with Checkers with LazyLogging {
   property("bijective serialization on whole tree") {
     check(forAll(Generators.genExpression()) { (ast: Expression) =>
+      logger.debug(s"Attempting to encode AST: $ast")
       val encoded = ast.asJson.noSpaces
-      logger.info(s"Encoded AST: $encoded")
+      logger.debug(s"Encoded AST: $encoded")
       val decoded = decode[Expression](encoded)
-      logger.info(s"Decoded AST: $decoded")
+      logger.debug(s"Decoded AST: $decoded")
       decoded match {
         case Right(exp) =>
           exp == ast
