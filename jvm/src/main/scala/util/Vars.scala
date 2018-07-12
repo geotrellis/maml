@@ -1,9 +1,7 @@
-package com.azavea.maml.eval
+package com.azavea.maml.util
 
 import com.azavea.maml.ast._
-import com.azavea.maml.util._
 import com.azavea.maml.error._
-import com.azavea.maml.util.NeighborhoodConversion
 
 import cats._
 import cats.data.{NonEmptyList => NEL, _}; import Validated._
@@ -12,7 +10,7 @@ import cats.implicits._
 import java.security.InvalidParameterException
 
 
-object Expression {
+object Vars {
   def vars(expr: Expression): Map[String, MamlKind] =
     varsWithBuffer(expr).map { case (name, (kind, _)) => name -> kind }
 

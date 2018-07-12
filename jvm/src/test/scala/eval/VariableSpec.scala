@@ -33,15 +33,15 @@ class VariableSpec extends FunSpec with Matchers {
   val interpreter = NaiveInterpreter.DEFAULT
 
   it("should produce an accurate variable map in a simple case") {
-    Expression.vars(BoolVar("predicate1")) should be (Map("predicate1" -> MamlKind.Bool))
+    Vars.vars(BoolVar("predicate1")) should be (Map("predicate1" -> MamlKind.Bool))
   }
 
   it("should produce an accurate variable map in a complex case") {
-    Expression.vars(Addition(List(IntVar("arg1"), IntVar("arg2")))) should be (Map("arg1" -> MamlKind.Int, "arg2" -> MamlKind.Int))
+    Vars.vars(Addition(List(IntVar("arg1"), IntVar("arg2")))) should be (Map("arg1" -> MamlKind.Int, "arg2" -> MamlKind.Int))
   }
 
   it("should produce an accurate variable map with buffer in a simple case") {
-    Expression.varsWithBuffer(FocalMax(List(RasterVar("someRaster")), Square(1))) should be (Map("someRaster" -> (MamlKind.Tile, 1)))
+    Vars.varsWithBuffer(FocalMax(List(RasterVar("someRaster")), Square(1))) should be (Map("someRaster" -> (MamlKind.Tile, 1)))
   }
 
   it("should produce an accurate variable map with buffer in an ambiguous case") {
@@ -52,6 +52,6 @@ class VariableSpec extends FunSpec with Matchers {
         RasterVar("someRaster")
     ))
 
-    Expression.varsWithBuffer(ast) should be (Map("someRaster" -> (MamlKind.Tile, 2)))
+    Vars.varsWithBuffer(ast) should be (Map("someRaster" -> (MamlKind.Tile, 2)))
   }
 }
