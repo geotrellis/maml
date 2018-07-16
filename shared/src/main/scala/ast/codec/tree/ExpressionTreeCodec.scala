@@ -14,15 +14,18 @@ import java.security.InvalidParameterException
 
 
 trait ExpressionTreeCodec extends MamlCodecInstances {
-
   implicit lazy val totalEncoder: Encoder[Expression] = Encoder.instance {
     case il @ IntLit(_) => il.asJson
     case iv @ IntVar(_) => iv.asJson
+    case gv @ GeomVar(_) => gv.asJson
+    case gl @ GeomLit(_) => gl.asJson
     case dl @ DblLit(_) => dl.asJson
     case dv @ DblVar(_) => dv.asJson
     case bl @ BoolLit(_) => bl.asJson
-    case bv @ BoolVar(_) => bv.asJson //case rl @ RasterLit(_) => dl.asJson
+    case bv @ BoolVar(_) => bv.asJson
     case rv @ RasterVar(_) => rv.asJson
+    case rl @ RasterLit(_) =>
+      throw new InvalidParameterException("Can't encode raster literal as JSON")
     case add @ Addition(_) => add.asJson
     case sub @ Subtraction(_) => sub.asJson
     case mul @ Multiplication(_) => mul.asJson

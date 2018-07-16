@@ -27,7 +27,7 @@ object Expression {
 }
 
 /** The ur-type for a recursive representation of MapAlgebra operations */
-abstract class Expression(val sym: String) extends Product with Serializable {
+sealed abstract class Expression(val sym: String) extends Product with Serializable {
   def symbol: String = sym
   def children: List[Expression]
   def kind: MamlKind
