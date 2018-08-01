@@ -17,7 +17,8 @@ import geotrellis.raster.mapalgebra.{local => gt}
 import geotrellis.spark._
 import geotrellis.spark.render._
 import geotrellis.vector._
-import org.apache.spark.rdd._
+import org.apache.spark._
+import rdd._
 
 
 object RDDOpDirectives {

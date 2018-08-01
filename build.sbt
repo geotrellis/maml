@@ -2,7 +2,7 @@ import com.scalapenos.sbt.prompt.SbtPrompt.autoImport._
 
 promptTheme := com.scalapenos.sbt.prompt.PromptThemes.ScalapenosTheme
 
-val mamlVersion = "0.0.4" + scala.util.Properties.envOrElse("MAML_VERSION_SUFFIX", "")
+val mamlVersion = "0.0.5" + scala.util.Properties.envOrElse("MAML_VERSION_SUFFIX", "")
 
 /** Project configurations */
 lazy val root = project.in(file("."))
@@ -29,17 +29,10 @@ lazy val maml = crossProject.in(file("."))
   ).jvmSettings(
     name := "maml-jvm",
     libraryDependencies ++= Seq(
-      "org.locationtech.geotrellis" %% "geotrellis-raster"    % "1.1.1",
-      "org.locationtech.geotrellis" %% "geotrellis-spark"     % "1.1.1",
-      "org.locationtech.geotrellis" %% "geotrellis-s3"        % "1.1.1",
-      "org.apache.spark"            %% "spark-core"           % "2.2.0",
-      "com.typesafe.akka"           %% "akka-actor"           % "2.4.9",
-      "com.typesafe.akka"           %% "akka-stream"          % "2.4.9",
-      "com.typesafe.akka"           %% "akka-testkit"         % "2.4.9",
-      "com.typesafe.akka"           %% "akka-http"            % "10.0.10",
-      "com.typesafe.akka"           %% "akka-http-spray-json" % "10.0.10",
-      "com.typesafe.akka"           %% "akka-http-testkit"    % "10.0.10",
-      "de.heikoseeberger"           %% "akka-http-circe"      % "1.17.0"
+      "org.locationtech.geotrellis" %% "geotrellis-raster"    % "2.0.0-RC2",
+      "org.locationtech.geotrellis" %% "geotrellis-spark"     % "2.0.0-RC2",
+      "org.locationtech.geotrellis" %% "geotrellis-s3"        % "2.0.0-RC2",
+      "org.apache.spark"            %% "spark-core"           % "2.2.0" % "provided"
     )
   ).jvmSettings(commonSettings:_*)
   .jsSettings(
@@ -50,7 +43,11 @@ lazy val mamlJvm = maml.jvm
 lazy val mamlJs = maml.js
 lazy val mamlSpark = project.in(file("spark"))
   .dependsOn(mamlJvm)
-  .settings(publishSettings:_*)
+  .settings(
+    libraryDependencies ++= Seq(
+      "org.apache.spark" %% "spark-core" % "2.2.0" % "provided"
+    )
+  ).settings(publishSettings:_*)
   .settings(commonSettings:_*)
 
 
