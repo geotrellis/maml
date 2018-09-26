@@ -1,8 +1,9 @@
 package com.azavea.maml.eval
 
 import com.azavea.maml.eval.tile._
-import com.azavea.maml.ast._
 import com.azavea.maml.eval._
+import com.azavea.maml.error._
+import com.azavea.maml.ast._
 
 import cats.data.{NonEmptyList => NEL, _}
 import cats.data.Validated._
@@ -18,7 +19,7 @@ case class RDDResult(res: TileLayerRDD[SpatialKey]) extends Result {
     if (classOf[ContextRDD[SpatialKey, Tile, TileLayerMetadata[SpatialKey]]] isAssignableFrom cls)
       Valid(res.asInstanceOf[T])
     else
-      Invalid(NEL.of(EvalTypeError(cls.getName, List("SpatialRDD"))))
+      Invalid(NEL.of(DivergingTypes(cls.getName, List("SpatialRDD"))))
   }
   def kind: MamlKind = MamlKind.Tile
 }

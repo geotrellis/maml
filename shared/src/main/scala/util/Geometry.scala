@@ -4,11 +4,11 @@ import io.circe.generic.JsonCodec
 
 
 @JsonCodec
-case class Point(x: Double, y: Double)
+case class MamlPoint(x: Double, y: Double)
 
 @JsonCodec
-case class Polygon(points: Array[Point])
+case class MamlPolygon(points: Array[MamlPoint])
 
 @JsonCodec
-case class MultiPolygon(polygons: Array[Polygon])
+case class MamlMultiPolygon(polygons: Array[MamlPolygon])
 

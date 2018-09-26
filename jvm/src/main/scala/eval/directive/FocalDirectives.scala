@@ -1,6 +1,7 @@
 package com.azavea.maml.eval.directive
 
 import com.azavea.maml.eval._
+import com.azavea.maml.error._
 import com.azavea.maml.ast._
 import com.azavea.maml.eval.tile._
 import com.azavea.maml.util._

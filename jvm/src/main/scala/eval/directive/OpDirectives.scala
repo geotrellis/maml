@@ -1,5 +1,6 @@
 package com.azavea.maml.eval.directive
 
+import com.azavea.maml.error._
 import com.azavea.maml.eval._
 import com.azavea.maml.eval.tile._
 import com.azavea.maml.ast._
@@ -238,7 +239,7 @@ object OpDirectives {
   }
 
   /** Numeric Comparison Operations */
-  val lessThan = Directive { case (a@Less(_), childResults) =>
+  val lessThan = Directive { case (a@Lesser(_), childResults) =>
     val results = childResults.reduce({ (res1: Result, res2: Result) =>
       tileOrBoolReduction(
         {_ < _}, { (i, t) => t < i }, {_ < _}, { (d, t) => t < d }, {_ < _},
@@ -249,7 +250,7 @@ object OpDirectives {
     Valid(results)
   }
 
-  val lessThanOrEqualTo = Directive { case (a@LessOrEqual(_), childResults) =>
+  val lessThanOrEqualTo = Directive { case (a@LesserOrEqual(_), childResults) =>
     val results = childResults.reduce({ (res1: Result, res2: Result) =>
       tileOrBoolReduction(
         {_ <= _}, { (i, t) => t <= i }, {_ <= _}, { (d, t) => t <= d }, {_ <= _},

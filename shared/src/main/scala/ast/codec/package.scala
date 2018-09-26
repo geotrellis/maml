@@ -10,7 +10,7 @@ package object codec extends MamlUtilityCodecs {
   implicit class CirceMapAlgebraJsonMethods(val self: Json) {
     def _type: Option[String] = root._type.string.getOption(self)
     def _label: Option[String] = root.metadata.label.string.getOption(self)
-    def _symbol: Option[String] = root.selectDynamic("apply").string.getOption(self)
+    def _symbol: Option[String] = root.selectDynamic("symbol").string.getOption(self)
 
     def _keys: Option[Seq[String]] = root.obj.getOption(self).map(_.keys.toSeq)
   }

@@ -1,6 +1,6 @@
 package com.azavea.maml.spark.eval.directive
 
-import com.azavea.maml._
+import com.azavea.maml.error._
 import com.azavea.maml.ast._
 import com.azavea.maml.eval._
 import com.azavea.maml.spark.eval._
@@ -174,11 +174,11 @@ object RDDOpDirectives {
     Valid(results)
   }
 
-  val lessThan = Directive { case (Less(_), res1 :: res2 :: Nil) =>
+  val lessThan = Directive { case (Lesser(_), res1 :: res2 :: Nil) =>
     Valid(reduce({_ < _}, {_ <<: _}, {_ < _}, {_ <<: _}, {_ < _}, res1, res2))
   }
 
-  val lessThanOrEqualTo = Directive { case (LessOrEqual(_), res1 :: res2 :: Nil) =>
+  val lessThanOrEqualTo = Directive { case (LesserOrEqual(_), res1 :: res2 :: Nil) =>
     Valid(reduce({_ <= _}, {_ <=: _}, {_ <= _}, {_ <=: _}, {_ <= _}, res1, res2))
   }
 

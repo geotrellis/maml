@@ -1,6 +1,7 @@
 package com.azavea.maml.eval
 
 import com.azavea.maml.ast._
+import com.azavea.maml.error._
 import com.azavea.maml.eval.directive._
 
 import cats._
@@ -30,11 +31,11 @@ object NaiveInterpreter {
 
   def DEFAULT = NaiveInterpreter(
     List(
-      SourceDirectives.tileLiteral,
+      SourceDirectives.rasterLiteral,
       SourceDirectives.intLiteral,
       SourceDirectives.dblLiteral,
       SourceDirectives.boolLiteral,
-      SourceDirectives.geomJson,
+      SourceDirectives.geoJson,
       OpDirectives.additionTile orElse OpDirectives.additionInt orElse OpDirectives.additionDouble,
       OpDirectives.subtraction,
       OpDirectives.multiplicationTile orElse OpDirectives.multiplicationInt orElse OpDirectives.multiplicationDouble,

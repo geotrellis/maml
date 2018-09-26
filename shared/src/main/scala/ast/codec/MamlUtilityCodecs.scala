@@ -7,7 +7,9 @@ import io.circe._
 import io.circe.syntax._
 import io.circe.parser._
 import io.circe.optics.JsonPath._
+import cats._
 import cats.syntax.functor._
+import cats.syntax.either._
 
 import java.security.InvalidParameterException
 import java.util.UUID
@@ -70,14 +72,14 @@ trait MamlUtilityCodecs {
     Encoder.forProduct1("counts")(hist => (hist.counts))
 
   // This won't actually work - NESW neighborhoods will *always* succeed in decoding to Square
-  implicit val neighborhoodDecoder: Decoder[Neighborhood] = Decoder.instance[Neighborhood] { n =>
-    n._type match {
-      case Some("square") => n.as[Square]
-      case Some("circle") => n.as[Circle]
-      case Some("nesw") => n.as[Nesw]
-      case Some("wedge") => n.as[Wedge]
-      case Some("annulus") => n.as[Annulus]
-    }
+  implicit val neighborhoodDecoder: Decoder[Neighborhood] = Decoder.instance[Neighborhood] { cursor =>
+    cursor.get[String]("type") map {
+      case "square" => Decoder[Square]
+      case "circle" => Decoder[Circle]
+      case "nesw" => Decoder[Nesw]
+      case "wedge" => Decoder[Wedge]
+      case "annulus" => Decoder[Annulus]
+    } flatMap { _.widen(cursor) }
   }
   implicit val neighborhoodEncoder: Encoder[Neighborhood] = new Encoder[Neighborhood] {
     final def apply(n: Neighborhood): Json = n match {

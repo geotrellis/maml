@@ -1,5 +1,6 @@
 package com.azavea.maml.eval
 
+import com.azavea.maml.error._
 import com.azavea.maml.ast._
 import com.azavea.maml.eval._
 import com.azavea.maml.eval.tile._
@@ -25,7 +26,7 @@ class ResultSpec extends FunSpec with Matchers {
   }
 
   it("Evaluate to desired output (tile)") {
-    TileResult(LazyTile(IntArrayTile(1 to 4 toArray, 2, 2), Extent(0,0,0,0))).as[Int] should be (Invalid(NEL.of(EvalTypeError("int", List("Tile")))))
+    TileResult(LazyTile(IntArrayTile(1 to 4 toArray, 2, 2), Extent(0,0,0,0))).as[Int] should be (Invalid(NEL.of(DivergingTypes("int", List("Tile")))))
     IntResult(1).as[Tile] should matchPattern { case Invalid(_) => }
 
     TileResult(LazyTile(IntArrayTile(1 to 4 toArray, 2, 2), Extent(0,0,0,0))).as[Tile] should matchPattern { case Valid(_) => }

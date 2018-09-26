@@ -14,14 +14,14 @@ import Validated._
 
 class KindSpec extends FunSpec with Matchers {
   it("Typecheck a valid focal tree") {
-    FocalMax(List(TileSource("test")), Square(1))
+    FocalMax(List(RasterVar("test")), Square(1))
   }
 
   it("Should correctly determine the output type for a foldable operation (tile)") {
-    Max(List(IntLiteral(42), TileSource("test"), IntLiteral(51))).kind should be (MamlKind.Tile)
+    Max(List(IntLit(42), RasterVar("test"), IntLit(51))).kind should be (MamlKind.Tile)
   }
 
   it("Should correctly determine the output type for a foldable operation (scalar)") {
-    Max(List(IntLiteral(42), IntLiteral(51))).kind should be (MamlKind.Int)
+    Max(List(IntLit(42), IntLit(51))).kind should be (MamlKind.Int)
   }
 }

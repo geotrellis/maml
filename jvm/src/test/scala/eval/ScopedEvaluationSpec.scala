@@ -1,7 +1,7 @@
 package com.azavea.maml.eval
 
+import com.azavea.maml.error._
 import com.azavea.maml.ast._
-import com.azavea.maml.ast.TileLiteral
 import com.azavea.maml.util.Square
 import com.azavea.maml.dsl._
 import com.azavea.maml.eval._
@@ -19,7 +19,7 @@ import scala.reflect._
 
 class ScopedEvaluationSpec extends FunSpec with Matchers {
 
-  implicit def tileIsTileLiteral(tile: Tile): TileLiteral = TileLiteral(tile, RasterExtent(tile, Extent(0, 0, 0, 0)))
+  def tileToLit(tile: Tile): RasterLit[Raster[Tile]] = RasterLit(Raster(tile, Extent(0, 0, 0, 0)))
 
   implicit class TypeRefinement(self: Interpreted[Result]) {
     def as[T](implicit ct: ClassTag[T]): Interpreted[T] = self match {
@@ -31,14 +31,14 @@ class ScopedEvaluationSpec extends FunSpec with Matchers {
   val interpreter = BufferingInterpreter.DEFAULT
 
   it("Should interpret and evaluate focal operation") {
-    interpreter(FocalMax(List(IntArrayTile(1 to 4 toArray, 2, 2)), Square(1))).as[Tile] match {
+    interpreter(FocalMax(List(tileToLit(IntArrayTile(1 to 4 toArray, 2, 2))), Square(1))).as[Tile] match {
       case Valid(tile) => tile.get(0, 0) should be (4)
       case i@Invalid(_) => fail(s"$i")
     }
   }
 
   it("Should interpret and evaluate Int literals") {
-    interpreter(IntLiteral(42)).as[Int] should be (Valid(42))
-    interpreter(IntLiteral(4200)).as[Int] should be (Valid(4200))
+    interpreter(IntLit(42)).as[Int] should be (Valid(42))
+    interpreter(IntLit(4200)).as[Int] should be (Valid(4200))
   }
 }

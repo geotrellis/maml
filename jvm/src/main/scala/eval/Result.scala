@@ -1,6 +1,7 @@
 package com.azavea.maml.eval
 
 import com.azavea.maml.ast._
+import com.azavea.maml.error._
 import com.azavea.maml.eval._
 import com.azavea.maml.eval.tile._
 
@@ -25,7 +26,7 @@ case class DoubleResult(res: Double) extends Result {
     else if (classOf[Double] isAssignableFrom cls)
       Valid(res.asInstanceOf[T])
     else
-      Invalid(NEL.of(EvalTypeError(cls.getName, List("int", "double"))))
+      Invalid(NEL.of(DivergingTypes(cls.getName, List("int", "double"))))
   }
   def kind: MamlKind = MamlKind.Double
 }
@@ -38,7 +39,7 @@ case class IntResult(res: Int) extends Result {
     else if (classOf[Double] isAssignableFrom cls)
       Valid(res.toDouble.asInstanceOf[T])
     else
-      Invalid(NEL.of(EvalTypeError(cls.getName, List("int", "double"))))
+      Invalid(NEL.of(DivergingTypes(cls.getName, List("int", "double"))))
   }
   def kind: MamlKind = MamlKind.Int
 }
@@ -49,7 +50,7 @@ case class GeomResult(res: Geometry) extends Result {
     if (classOf[Geometry] isAssignableFrom cls)
       Valid(res.asInstanceOf[T])
     else
-      Invalid(NEL.of(EvalTypeError(cls.getName, List("geom"))))
+      Invalid(NEL.of(DivergingTypes(cls.getName, List("geom"))))
   }
   def kind: MamlKind = MamlKind.Geom
 }
@@ -62,7 +63,7 @@ case class TileResult(res: LazyTile) extends Result {
     else if (classOf[LazyTile] isAssignableFrom cls)
       Valid(res.asInstanceOf[T])
     else
-      Invalid(NEL.of(EvalTypeError(cls.getName, List("Tile"))))
+      Invalid(NEL.of(DivergingTypes(cls.getName, List("Tile"))))
   }
   def kind: MamlKind = MamlKind.Tile
 }
@@ -73,7 +74,7 @@ case class BoolResult(res: Boolean) extends Result {
     if (classOf[Boolean] isAssignableFrom cls)
       Valid(res.asInstanceOf[T])
     else
-      Invalid(NEL.of(EvalTypeError(cls.getName, List("bool"))))
+      Invalid(NEL.of(DivergingTypes(cls.getName, List("bool"))))
   }
   def kind: MamlKind = MamlKind.Bool
 }
