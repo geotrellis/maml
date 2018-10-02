@@ -7,7 +7,6 @@ import cats.data.{NonEmptyList => NEL, _}
 import Validated._
 import io.circe.Json
 import io.circe.generic.JsonCodec
-import cats.effect.IO
 
 import java.lang.IllegalArgumentException
 
