@@ -23,7 +23,6 @@ lazy val maml = crossProject.in(file("."))
       "org.scalacheck"             %% "scalacheck"           % "1.13.4" % "test",
       "org.scalatest"              %% "scalatest"            % "3.0.1"  % "test",
       "com.typesafe.scala-logging" %% "scala-logging"        % "3.9.0",
-      "org.typelevel"              %% "cats-effect"          % "0.10.1",
       "io.circe"                   %% "circe-core"           % circeVer,
       "io.circe"                   %% "circe-generic"        % circeVer,
       "io.circe"                   %% "circe-generic-extras" % circeVer,
