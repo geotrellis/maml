@@ -2,7 +2,7 @@ import com.scalapenos.sbt.prompt.SbtPrompt.autoImport._
 
 promptTheme := com.scalapenos.sbt.prompt.PromptThemes.ScalapenosTheme
 
-val mamlVersion = "0.0.15" + scala.util.Properties.envOrElse("MAML_VERSION_SUFFIX", "")
+val mamlVersion = "0.0.17" + scala.util.Properties.envOrElse("MAML_VERSION_SUFFIX", "")
 
 /** Project configurations */
 lazy val root = project.in(file("."))
@@ -12,8 +12,8 @@ lazy val root = project.in(file("."))
     licenses += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0.txt"))
   ).enablePlugins(ScalaJSPlugin)
 
-val circeVer = "0.10.0-M1"
-val gtVer    = "2.0.0-RC2"
+val circeVer = "0.10.0"
+val gtVer    = "2.0.0"
 
 lazy val maml = crossProject.in(file("."))
   .settings(publishSettings:_*)
