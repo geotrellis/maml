@@ -5,11 +5,11 @@ import com.azavea.maml.eval._
 import com.azavea.maml.eval.tile._
 import com.azavea.maml.ast._
 
-import geotrellis.vector.io._
-import geotrellis.vector.Geometry
-import geotrellis.raster.{Raster, Tile}
 import io.circe._
 import io.circe.parser._
+import geotrellis.vector.io._
+import geotrellis.vector.Geometry
+import geotrellis.raster._
 import cats.data.{NonEmptyList => NEL, _}
 import Validated._
 
@@ -23,9 +23,9 @@ object SourceDirectives {
   val boolLiteral = Directive { case (BoolLit(bool), _) => Valid(BoolResult(bool)) }
 
   val rasterLiteral = Directive {
-    case (RasterLit(r), _) if r.isInstanceOf[Raster[_]] =>
-      val raster = r.asInstanceOf[Raster[Tile]]
-      Valid(TileResult(LazyTile(raster.tile, raster.extent)))
+    case (RasterLit(r), _) if r.isInstanceOf[Raster[MultibandTile]] =>
+      val mbRaster = r.asInstanceOf[Raster[MultibandTile]]
+      Valid(ImageResult(LazyMultibandRaster(mbRaster)))
     case (rl@RasterLit(r), _) =>
       Invalid(NEL.of(NonEvaluableNode(rl, Some("Unable to treat raster literal contents as type Raster"))))
   }

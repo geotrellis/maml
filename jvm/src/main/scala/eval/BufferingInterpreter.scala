@@ -111,8 +111,8 @@ object BufferingInterpreter {
       GridBounds(n.extent, n.extent, scope.tileSize - 1 + scope.buffer * 2 + n.extent, scope.tileSize - 1 + scope.buffer * 2 + n.extent)
 
     childResults.head match {
-      case TileResult(lzTile) =>
-        Valid(TileResult(LazyTile.Focal(List(lzTile), n, Some(gridbounds), focal.Max.apply _)))
+      case ImageResult(lzTile) =>
+        Valid(ImageResult(lzTile.focal(n, Some(gridbounds), focal.Max.apply _)))
     }
   }
 
@@ -122,8 +122,8 @@ object BufferingInterpreter {
       GridBounds(n.extent, n.extent, scope.tileSize - 1 + scope.buffer * 2 + n.extent, scope.tileSize - 1 + scope.buffer * 2 + n.extent)
 
     childResults.head match {
-      case TileResult(lzTile) =>
-        Valid(TileResult(LazyTile.Focal(List(lzTile), n, Some(gridbounds), focal.Min.apply _)))
+      case ImageResult(lzTile) =>
+        Valid(ImageResult(lzTile.focal(n, Some(gridbounds), focal.Min.apply _)))
     }
   }
 
@@ -133,8 +133,8 @@ object BufferingInterpreter {
       GridBounds(n.extent, n.extent, scope.tileSize - 1 + scope.buffer * 2 + n.extent, scope.tileSize - 1 + scope.buffer * 2 + n.extent)
 
     childResults.head match {
-      case TileResult(lzTile) =>
-        Valid(TileResult(LazyTile.Focal(List(lzTile), n, Some(gridbounds), focal.Mean.apply _)))
+      case ImageResult(lzTile) =>
+        Valid(ImageResult(lzTile.focal(n, Some(gridbounds), focal.Mean.apply _)))
     }
   }
 
@@ -144,8 +144,8 @@ object BufferingInterpreter {
       GridBounds(n.extent, n.extent, scope.tileSize - 1 + scope.buffer * 2 + n.extent, scope.tileSize - 1 + scope.buffer * 2 + n.extent)
 
     childResults.head match {
-      case TileResult(lzTile) =>
-        Valid(TileResult(LazyTile.Focal(List(lzTile), n, Some(gridbounds), focal.Median.apply _)))
+      case ImageResult(lzTile) =>
+        Valid(ImageResult(lzTile.focal(n, Some(gridbounds), focal.Median.apply _)))
     }
   }
 
@@ -155,8 +155,8 @@ object BufferingInterpreter {
       GridBounds(n.extent, n.extent, scope.tileSize - 1 + scope.buffer * 2 + n.extent, scope.tileSize - 1 + scope.buffer * 2 + n.extent)
 
     childResults.head match {
-      case TileResult(lzTile) =>
-        Valid(TileResult(LazyTile.Focal(List(lzTile), n, Some(gridbounds), focal.Mode.apply _)))
+      case ImageResult(lzTile) =>
+        Valid(ImageResult(lzTile.focal(n, Some(gridbounds), focal.Mode.apply _)))
     }
   }
 
@@ -166,8 +166,8 @@ object BufferingInterpreter {
       GridBounds(n.extent, n.extent, scope.tileSize - 1 + scope.buffer * 2 + n.extent, scope.tileSize - 1 + scope.buffer * 2 + n.extent)
 
     childResults.head match {
-      case TileResult(lzTile) =>
-        Valid(TileResult(LazyTile.Focal(List(lzTile), n, Some(gridbounds), focal.Sum.apply _)))
+      case ImageResult(lzTile) =>
+        Valid(ImageResult(lzTile.focal(n, Some(gridbounds), focal.Sum.apply _)))
     }
   }
 
@@ -177,8 +177,8 @@ object BufferingInterpreter {
       GridBounds(n.extent, n.extent, scope.tileSize - 1 + scope.buffer * 2 + n.extent, scope.tileSize - 1 + scope.buffer * 2 + n.extent)
 
     childResults.head match {
-      case TileResult(lzTile) =>
-        Valid(TileResult(LazyTile.Focal(List(lzTile), n, Some(gridbounds), focal.StandardDeviation.apply _)))
+      case ImageResult(lzTile) =>
+        Valid(ImageResult(lzTile.focal(n, Some(gridbounds), focal.StandardDeviation.apply _)))
     }
   }
 }

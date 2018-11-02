@@ -94,7 +94,7 @@ trait MamlUtilityCodecs {
   }
 
   implicit val mamlKindDecoder: Decoder[MamlKind] = Decoder[String].emap({
-    case "tile" => Right(MamlKind.Tile)
+    case "img" => Right(MamlKind.Image)
     case "int" => Right(MamlKind.Int)
     case "double" => Right(MamlKind.Double)
     case "geom" => Right(MamlKind.Geom)
@@ -104,7 +104,7 @@ trait MamlUtilityCodecs {
   implicit val mamlKindEncoder: Encoder[MamlKind] =
     Encoder.encodeString.contramap[MamlKind]({ mk =>
       mk match {
-        case MamlKind.Tile => "tile"
+        case MamlKind.Image => "img"
         case MamlKind.Int => "int"
         case MamlKind.Double => "double"
         case MamlKind.Geom => "geom"

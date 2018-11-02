@@ -23,7 +23,7 @@ import scala.reflect._
 
 class EvaluationSpec extends FunSpec with Matchers with ExpressionTreeCodec {
 
-  implicit def tileIsTileLiteral(tile: Tile): Expression = RasterLit(Raster(tile, Extent(0, 0, 0, 0)))
+  implicit def tileIsTileLiteral(tile: Tile): Expression = RasterLit(Raster(MultibandTile(tile), Extent(0, 0, 0, 0)))
 
   implicit class TypeRefinement(self: Interpreted[Result]) {
     def as[T: ClassTag]: Interpreted[T] = self match {
@@ -93,96 +93,96 @@ class EvaluationSpec extends FunSpec with Matchers with ExpressionTreeCodec {
   }
 
   it("Should interpret and evaluate tile addition") {
-    interpreter(IntArrayTile(1 to 4 toArray, 2, 2) + IntArrayTile(1 to 4 toArray, 2, 2)).as[Tile] match {
-      case Valid(t) => t.get(0, 0) should be (2)
+    interpreter(IntArrayTile(1 to 4 toArray, 2, 2) + IntArrayTile(1 to 4 toArray, 2, 2)).as[MultibandTile] match {
+      case Valid(t) => t.bands.head.get(0, 0) should be (2)
       case i@Invalid(_) => fail(s"$i")
     }
   }
 
   it("Should interpret and evaluate tile subtraction") {
-    interpreter(IntArrayTile(1 to 4 toArray, 2, 2) - IntArrayTile(1 to 4 toArray, 2, 2)).as[Tile] match {
-      case Valid(t) => t.get(0, 0) should be (0)
+    interpreter(IntArrayTile(1 to 4 toArray, 2, 2) - IntArrayTile(1 to 4 toArray, 2, 2)).as[MultibandTile] match {
+      case Valid(t) => t.bands.head.get(0, 0) should be (0)
       case i@Invalid(_) => fail(s"$i")
     }
   }
 
   it("Should interpret and evaluate tile multiplication") {
-    interpreter(IntArrayTile(1 to 4 toArray, 2, 2) * IntArrayTile(1 to 4 toArray, 2, 2)).as[Tile] match {
-      case Valid(t) => t.get(1, 0) should be (4)
+    interpreter(IntArrayTile(1 to 4 toArray, 2, 2) * IntArrayTile(1 to 4 toArray, 2, 2)).as[MultibandTile] match {
+      case Valid(t) => t.bands.head.get(1, 0) should be (4)
       case i@Invalid(_) => fail(s"$i")
     }
   }
 
   it("Should interpret and evaluate tile division") {
-    interpreter(IntArrayTile(1 to 4 toArray, 2, 2) / IntArrayTile(1 to 4 toArray, 2, 2)).as[Tile] match {
-      case Valid(t) => t.get(1, 0) should be (1)
+    interpreter(IntArrayTile(1 to 4 toArray, 2, 2) / IntArrayTile(1 to 4 toArray, 2, 2)).as[MultibandTile] match {
+      case Valid(t) => t.bands.head.get(1, 0) should be (1)
       case i@Invalid(_) => fail(s"$i")
     }
   }
 
   it("should interpret and evaluate tile comparison") {
-    interpreter(IntArrayTile(1 to 4 toArray, 2, 2) < IntArrayTile(2 to 5 toArray, 2, 2)).as[Tile] match {
-      case Valid(t) => t.get(0, 0) should be (1)
+    interpreter(IntArrayTile(1 to 4 toArray, 2, 2) < IntArrayTile(2 to 5 toArray, 2, 2)).as[MultibandTile] match {
+      case Valid(t) => t.bands.head.get(0, 0) should be (1)
       case i@Invalid(_) => fail(s"$i")
     }
-    interpreter(IntArrayTile(1 to 4 toArray, 2, 2) < IntArrayTile(1 to 4 toArray, 2, 2)).as[Tile] match {
-      case Valid(t) => t.get(0, 0) should be (0)
+    interpreter(IntArrayTile(1 to 4 toArray, 2, 2) < IntArrayTile(1 to 4 toArray, 2, 2)).as[MultibandTile] match {
+      case Valid(t) => t.bands.head.get(0, 0) should be (0)
       case i@Invalid(_) => fail(s"$i")
     }
-    interpreter(IntArrayTile(1 to 4 toArray, 2, 2) < IntArrayTile(0 to 3 toArray, 2, 2)).as[Tile] match {
-      case Valid(t) => t.get(0, 0) should be (0)
-      case i@Invalid(_) => fail(s"$i")
-    }
-
-    interpreter(IntArrayTile(1 to 4 toArray, 2, 2) <= IntArrayTile(2 to 5 toArray, 2, 2)).as[Tile] match {
-      case Valid(t) => t.get(0, 0) should be (1)
-      case i@Invalid(_) => fail(s"$i")
-    }
-    interpreter(IntArrayTile(1 to 4 toArray, 2, 2) <= IntArrayTile(1 to 4 toArray, 2, 2)).as[Tile] match {
-      case Valid(t) => t.get(0, 0) should be (1)
-      case i@Invalid(_) => fail(s"$i")
-    }
-    interpreter(IntArrayTile(1 to 4 toArray, 2, 2) <= IntArrayTile(0 to 3 toArray, 2, 2)).as[Tile] match {
-      case Valid(t) => t.get(0, 0) should be (0)
+    interpreter(IntArrayTile(1 to 4 toArray, 2, 2) < IntArrayTile(0 to 3 toArray, 2, 2)).as[MultibandTile] match {
+      case Valid(t) => t.bands.head.get(0, 0) should be (0)
       case i@Invalid(_) => fail(s"$i")
     }
 
-    interpreter(Equal(List(IntArrayTile(1 to 4 toArray, 2, 2), IntArrayTile(2 to 5 toArray, 2, 2)))).as[Tile] match {
-      case Valid(t) => t.get(0, 0) should be (0)
+    interpreter(IntArrayTile(1 to 4 toArray, 2, 2) <= IntArrayTile(2 to 5 toArray, 2, 2)).as[MultibandTile] match {
+      case Valid(t) => t.bands.head.get(0, 0) should be (1)
       case i@Invalid(_) => fail(s"$i")
     }
-    interpreter(Equal(List(IntArrayTile(1 to 4 toArray, 2, 2), IntArrayTile(1 to 4 toArray, 2, 2)))).as[Tile] match {
-      case Valid(t) => t.get(0, 0) should be (1)
+    interpreter(IntArrayTile(1 to 4 toArray, 2, 2) <= IntArrayTile(1 to 4 toArray, 2, 2)).as[MultibandTile] match {
+      case Valid(t) => t.bands.head.get(0, 0) should be (1)
       case i@Invalid(_) => fail(s"$i")
     }
-    interpreter(Equal(List(IntArrayTile(1 to 4 toArray, 2, 2), IntArrayTile(0 to 3 toArray, 2, 2)))).as[Tile] match {
-      case Valid(t) => t.get(0, 0) should be (0)
-      case i@Invalid(_) => fail(s"$i")
-    }
-
-    interpreter(IntArrayTile(1 to 4 toArray, 2, 2) >= IntArrayTile(2 to 5 toArray, 2, 2)).as[Tile] match {
-      case Valid(t) => t.get(0, 0) should be (0)
-      case i@Invalid(_) => fail(s"$i")
-    }
-    interpreter(IntArrayTile(1 to 4 toArray, 2, 2) >= IntArrayTile(1 to 4 toArray, 2, 2)).as[Tile] match {
-      case Valid(t) => t.get(0, 0) should be (1)
-      case i@Invalid(_) => fail(s"$i")
-    }
-    interpreter(IntArrayTile(1 to 4 toArray, 2, 2) >= IntArrayTile(0 to 3 toArray, 2, 2)).as[Tile] match {
-      case Valid(t) => t.get(0, 0) should be (1)
+    interpreter(IntArrayTile(1 to 4 toArray, 2, 2) <= IntArrayTile(0 to 3 toArray, 2, 2)).as[MultibandTile] match {
+      case Valid(t) => t.bands.head.get(0, 0) should be (0)
       case i@Invalid(_) => fail(s"$i")
     }
 
-    interpreter(IntArrayTile(1 to 4 toArray, 2, 2) > IntArrayTile(2 to 5 toArray, 2, 2)).as[Tile] match {
-      case Valid(t) => t.get(0, 0) should be (0)
+    interpreter(Equal(List(IntArrayTile(1 to 4 toArray, 2, 2), IntArrayTile(2 to 5 toArray, 2, 2)))).as[MultibandTile] match {
+      case Valid(t) => t.bands.head.get(0, 0) should be (0)
       case i@Invalid(_) => fail(s"$i")
     }
-    interpreter(IntArrayTile(1 to 4 toArray, 2, 2) > IntArrayTile(1 to 4 toArray, 2, 2)).as[Tile] match {
-      case Valid(t) => t.get(0, 0) should be (0)
+    interpreter(Equal(List(IntArrayTile(1 to 4 toArray, 2, 2), IntArrayTile(1 to 4 toArray, 2, 2)))).as[MultibandTile] match {
+      case Valid(t) => t.bands.head.get(0, 0) should be (1)
       case i@Invalid(_) => fail(s"$i")
     }
-    interpreter(IntArrayTile(1 to 4 toArray, 2, 2) > IntArrayTile(0 to 3 toArray, 2, 2)).as[Tile] match {
-      case Valid(t) => t.get(0, 0) should be (1)
+    interpreter(Equal(List(IntArrayTile(1 to 4 toArray, 2, 2), IntArrayTile(0 to 3 toArray, 2, 2)))).as[MultibandTile] match {
+      case Valid(t) => t.bands.head.get(0, 0) should be (0)
+      case i@Invalid(_) => fail(s"$i")
+    }
+
+    interpreter(IntArrayTile(1 to 4 toArray, 2, 2) >= IntArrayTile(2 to 5 toArray, 2, 2)).as[MultibandTile] match {
+      case Valid(t) => t.bands.head.get(0, 0) should be (0)
+      case i@Invalid(_) => fail(s"$i")
+    }
+    interpreter(IntArrayTile(1 to 4 toArray, 2, 2) >= IntArrayTile(1 to 4 toArray, 2, 2)).as[MultibandTile] match {
+      case Valid(t) => t.bands.head.get(0, 0) should be (1)
+      case i@Invalid(_) => fail(s"$i")
+    }
+    interpreter(IntArrayTile(1 to 4 toArray, 2, 2) >= IntArrayTile(0 to 3 toArray, 2, 2)).as[MultibandTile] match {
+      case Valid(t) => t.bands.head.get(0, 0) should be (1)
+      case i@Invalid(_) => fail(s"$i")
+    }
+
+    interpreter(IntArrayTile(1 to 4 toArray, 2, 2) > IntArrayTile(2 to 5 toArray, 2, 2)).as[MultibandTile] match {
+      case Valid(t) => t.bands.head.get(0, 0) should be (0)
+      case i@Invalid(_) => fail(s"$i")
+    }
+    interpreter(IntArrayTile(1 to 4 toArray, 2, 2) > IntArrayTile(1 to 4 toArray, 2, 2)).as[MultibandTile] match {
+      case Valid(t) => t.bands.head.get(0, 0) should be (0)
+      case i@Invalid(_) => fail(s"$i")
+    }
+    interpreter(IntArrayTile(1 to 4 toArray, 2, 2) > IntArrayTile(0 to 3 toArray, 2, 2)).as[MultibandTile] match {
+      case Valid(t) => t.bands.head.get(0, 0) should be (1)
       case i@Invalid(_) => fail(s"$i")
     }
   }

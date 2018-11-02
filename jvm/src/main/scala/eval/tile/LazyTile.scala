@@ -13,11 +13,11 @@ import cats.data.Validated._
 import cats.data.{NonEmptyList => NEL, _}
 import cats.implicits._
 import spire.syntax.cfor._
-import com.typesafe.scalalogging.LazyLogging
 
 import scala.reflect.ClassTag
 
-sealed trait LazyTile extends LazyLogging {
+
+sealed trait LazyTile {
   // TODO: We need to find a way to rip RasterExtent out of LazyTile
   //       while still being able to provide it to Masking operations.
   //       Is this a use case for futo or paramorphisms?

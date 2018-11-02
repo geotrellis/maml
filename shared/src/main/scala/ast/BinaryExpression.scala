@@ -12,14 +12,14 @@ trait BinaryExpression { expression: Expression =>
 
 object BinaryExpression {
   def scalarCompareDerivation(k1: MamlKind, k2: MamlKind): MamlKind = (k1, k2) match {
-    case (MamlKind.Tile, MamlKind.Tile) => MamlKind.Tile
-    case (MamlKind.Tile, MamlKind.Int) => MamlKind.Tile
-    case (MamlKind.Tile, MamlKind.Double) => MamlKind.Tile
-    case (MamlKind.Int, MamlKind.Tile) => MamlKind.Tile
-    case (MamlKind.Double, MamlKind.Tile) => MamlKind.Tile
+    case (MamlKind.Image, MamlKind.Image) => MamlKind.Image
+    case (MamlKind.Image, MamlKind.Int) => MamlKind.Image
+    case (MamlKind.Image, MamlKind.Double) => MamlKind.Image
+    case (MamlKind.Int, MamlKind.Image) => MamlKind.Image
+    case (MamlKind.Double, MamlKind.Image) => MamlKind.Image
     case (MamlKind.Int, MamlKind.Int) => MamlKind.Bool
     case (MamlKind.Double, MamlKind.Double) => MamlKind.Bool
-    case (x1, x2) => throw new InvalidParameterException(s"Expected tile or scalar kinds. Found $x1 and $x2")
+    case (x1, x2) => throw new InvalidParameterException(s"Expected image or scalar kinds. Found $x1 and $x2")
   }
 }
 

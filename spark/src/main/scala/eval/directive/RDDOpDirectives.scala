@@ -28,7 +28,7 @@ object RDDOpDirectives {
     grouped.getOrElse(MamlKind.Int, List.empty).map(_.as[Int]).toList.sequence
 
   private def spatialRDDResults(grouped: Map[MamlKind, Seq[Result]]): Interpreted[List[TileLayerRDD[SpatialKey]]] =
-    grouped(MamlKind.Tile).map(_.as[TileLayerRDD[SpatialKey]]).toList.sequence
+    grouped(MamlKind.Image).map(_.as[TileLayerRDD[SpatialKey]]).toList.sequence
 
   /** Some sugar to wrap a common pattern. */
   def unary(f: RDD[(SpatialKey,Tile)] => RDD[(SpatialKey,Tile)], r: TileLayerRDD[SpatialKey]): Interpreted[Result] =

@@ -17,64 +17,64 @@ import Validated._
 object FocalDirectives {
   val max = Directive { case (fm@FocalMax(_, neighborhood), childResults) =>
     childResults
-      .map({ _.as[LazyTile] })
+      .map({ _.as[LazyMultibandRaster] })
       .toList.sequence
       .map({ lt =>
-        TileResult(LazyTile.Focal(lt, NeighborhoodConversion(neighborhood), None, focal.Max.apply _))
+        ImageResult(lt.head.focal(NeighborhoodConversion(neighborhood), None, focal.Max.apply _))
       })
   }
 
   val min = Directive { case (fm@FocalMin(_, neighborhood), childResults) =>
     childResults
-      .map({ _.as[LazyTile] })
+      .map({ _.as[LazyMultibandRaster] })
       .toList.sequence
       .map({ lt =>
-        TileResult(LazyTile.Focal(lt, NeighborhoodConversion(neighborhood), None, focal.Min.apply _))
+        ImageResult(lt.head.focal(NeighborhoodConversion(neighborhood), None, focal.Min.apply _))
       })
   }
 
   val mean = Directive { case (fm@FocalMean(_, neighborhood), childResults) =>
     childResults
-      .map({ _.as[LazyTile] })
+      .map({ _.as[LazyMultibandRaster] })
       .toList.sequence
       .map({ lt =>
-        TileResult(LazyTile.Focal(lt, NeighborhoodConversion(neighborhood), None, focal.Mean.apply _))
+        ImageResult(lt.head.focal(NeighborhoodConversion(neighborhood), None, focal.Mean.apply _))
       })
   }
 
   val median = Directive { case (fm@FocalMedian(_, neighborhood), childResults) =>
     childResults
-      .map({ _.as[LazyTile] })
+      .map({ _.as[LazyMultibandRaster] })
       .toList.sequence
       .map({ lt =>
-        TileResult(LazyTile.Focal(lt, NeighborhoodConversion(neighborhood), None, focal.Median.apply _))
+        ImageResult(lt.head.focal(NeighborhoodConversion(neighborhood), None, focal.Median.apply _))
       })
   }
 
   val mode = Directive { case (fm@FocalMode(_, neighborhood), childResults) =>
     childResults
-      .map({ _.as[LazyTile] })
+      .map({ _.as[LazyMultibandRaster] })
       .toList.sequence
       .map({ lt =>
-        TileResult(LazyTile.Focal(lt, NeighborhoodConversion(neighborhood), None, focal.Mode.apply _))
+        ImageResult(lt.head.focal(NeighborhoodConversion(neighborhood), None, focal.Mode.apply _))
       })
   }
 
   val sum = Directive { case (fm@FocalSum(_, neighborhood), childResults) =>
     childResults
-      .map({ _.as[LazyTile] })
+      .map({ _.as[LazyMultibandRaster] })
       .toList.sequence
       .map({ lt =>
-        TileResult(LazyTile.Focal(lt, NeighborhoodConversion(neighborhood), None, focal.Sum.apply _))
+        ImageResult(lt.head.focal(NeighborhoodConversion(neighborhood), None, focal.Sum.apply _))
       })
   }
 
   val standardDeviation = Directive { case (fm@FocalStdDev(_, neighborhood), childResults) =>
     childResults
-      .map({ _.as[LazyTile] })
+      .map({ _.as[LazyMultibandRaster] })
       .toList.sequence
       .map({ lt =>
-        TileResult(LazyTile.Focal(lt, NeighborhoodConversion(neighborhood), None, focal.StandardDeviation.apply _))
+        ImageResult(lt.head.focal(NeighborhoodConversion(neighborhood), None, focal.StandardDeviation.apply _))
       })
   }
 }
