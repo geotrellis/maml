@@ -13,7 +13,7 @@ addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "0.14.5")
 
 addSbtPlugin("net.virtual-void" % "sbt-dependency-graph" % "0.8.2")
 
-addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.24")
+addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.25")
 
 addSbtPlugin("com.typesafe.sbteclipse" % "sbteclipse-plugin" % "5.1.0")
 
