@@ -39,13 +39,6 @@ case class DivergingTypes(found: String, expected: List[String]) extends MamlErr
   def repr: String = s"Expected to evaluate tree as one of $expected; instead found $found"
 }
 
-case class UnknownTileBinding(exp: Expression, coords: Option[(Int, Int, Int)]) extends MamlError {
-  def repr: String = coords match {
-    case Some((z, x, y)) => s"Unknown retrieval error for ${exp} at SpatialKey $z, $x, $y}"
-    case None => s"Unkown retrieval error for ${exp}"
-  }
-}
-
 case class NoVariableBinding(variable: Variable, bindings: Map[String, Literal]) extends MamlError {
   def repr: String = s"No binding for ${variable.name} found in ${bindings.keys.toList}"
 }

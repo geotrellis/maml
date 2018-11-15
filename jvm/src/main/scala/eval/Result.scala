@@ -5,7 +5,8 @@ import com.azavea.maml.error._
 import com.azavea.maml.eval._
 import com.azavea.maml.eval.tile._
 
-import geotrellis.raster.Tile
+import geotrellis.raster.MultibandTile
+import geotrellis.raster.io.geotiff.MultibandGeoTiff
 import geotrellis.vector.Geometry
 import cats.data.{NonEmptyList => NEL, _}
 import Validated._
@@ -55,17 +56,19 @@ case class GeomResult(res: Geometry) extends Result {
   def kind: MamlKind = MamlKind.Geom
 }
 
-case class TileResult(res: LazyTile) extends Result {
+case class ImageResult(res: LazyMultibandRaster) extends Result {
   def as[T](implicit ct: ClassTag[T]): Interpreted[T] = {
     val cls = ct.runtimeClass
-    if (classOf[Tile] isAssignableFrom cls)
+    if (classOf[MultibandTile] isAssignableFrom cls)
       Valid(res.evaluateDouble.asInstanceOf[T])
-    else if (classOf[LazyTile] isAssignableFrom cls)
+    else if (classOf[MultibandGeoTiff] isAssignableFrom cls)
+      Valid(res.evaluateDouble.asInstanceOf[T])
+    else if (classOf[LazyMultibandRaster] isAssignableFrom cls)
       Valid(res.asInstanceOf[T])
     else
-      Invalid(NEL.of(DivergingTypes(cls.getName, List("Tile"))))
+      Invalid(NEL.of(DivergingTypes(cls.getName, List("img"))))
   }
-  def kind: MamlKind = MamlKind.Tile
+  def kind: MamlKind = MamlKind.Image
 }
 
 case class BoolResult(res: Boolean) extends Result {

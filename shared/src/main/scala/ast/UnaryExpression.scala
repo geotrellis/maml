@@ -12,11 +12,11 @@ trait UnaryExpression { expression: Expression =>
 }
 
 object UnaryExpression {
-  val tileOnly: Map[MamlKind, MamlKind] = Map(MamlKind.Tile -> MamlKind.Tile)
+  val imageOnly: Map[MamlKind, MamlKind] = Map(MamlKind.Image -> MamlKind.Image)
   val intOnly: Map[MamlKind, MamlKind] = Map(MamlKind.Int -> MamlKind.Int)
   val dblOnly: Map[MamlKind, MamlKind] = Map(MamlKind.Double -> MamlKind.Double)
   val boolOnly: Map[MamlKind, MamlKind] = Map(MamlKind.Bool -> MamlKind.Bool)
   val scalar = intOnly ++ dblOnly
-  val tileOrScalar = tileOnly ++ intOnly ++ dblOnly
+  val imageOrScalar = imageOnly ++ intOnly ++ dblOnly
 }
 

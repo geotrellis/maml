@@ -24,17 +24,17 @@ object OpDirectives {
   private def intResults(grouped: Map[MamlKind, Seq[Result]]): Interpreted[List[Int]] =
     grouped.getOrElse(MamlKind.Int, List.empty).map(_.as[Int]).toList.sequence
 
-  private def lazytileResults(grouped: Map[MamlKind, Seq[Result]]): Interpreted[List[LazyTile]] =
-    grouped(MamlKind.Tile).map(_.as[LazyTile]).toList.sequence
+  private def imageResults(grouped: Map[MamlKind, Seq[Result]]): Interpreted[List[LazyMultibandRaster]] =
+    grouped(MamlKind.Image).map(_.as[LazyMultibandRaster]).toList.sequence
 
   private def not[A, B](f: (A, B) => Boolean): (A, B) => Boolean = !f(_, _)
 
   private def tileOrBoolReduction(
-   ti: (LazyTile, Int) => LazyTile,
-   it: (Int, LazyTile) => LazyTile,
-   td: (LazyTile, Double) => LazyTile,
-   dt: (Double, LazyTile) => LazyTile,
-   tt: (LazyTile, LazyTile) => LazyTile,
+   ti: (LazyMultibandRaster, Int) => LazyMultibandRaster,
+   it: (Int, LazyMultibandRaster) => LazyMultibandRaster,
+   td: (LazyMultibandRaster, Double) => LazyMultibandRaster,
+   dt: (Double, LazyMultibandRaster) => LazyMultibandRaster,
+   tt: (LazyMultibandRaster, LazyMultibandRaster) => LazyMultibandRaster,
    ii: (Int, Int) => Boolean,
    di: (Double, Int) => Boolean,
    dd: (Double, Double) => Boolean,
@@ -42,11 +42,11 @@ object OpDirectives {
    res1: Result,
    res2: Result
   ): Result = (res1, res2) match {
-   case (TileResult(lt1), TileResult(lt2)) => TileResult(tt(lt1, lt2))
-   case (TileResult(lt), IntResult(int)) => TileResult((ti(lt, int)))
-   case (IntResult(int), TileResult(lt)) => TileResult((it(int, lt)))
-   case (TileResult(lt), DoubleResult(double)) => TileResult(td(lt, double))
-   case (DoubleResult(double), TileResult(lt)) => TileResult(dt(double, lt))
+   case (ImageResult(lt1), ImageResult(lt2)) => ImageResult(tt(lt1, lt2))
+   case (ImageResult(lt), IntResult(int)) => ImageResult((ti(lt, int)))
+   case (IntResult(int), ImageResult(lt)) => ImageResult((it(int, lt)))
+   case (ImageResult(lt), DoubleResult(double)) => ImageResult(td(lt, double))
+   case (DoubleResult(double), ImageResult(lt)) => ImageResult(dt(double, lt))
    case (IntResult(int1), IntResult(int2)) => BoolResult(ii(int1, int2))
    case (DoubleResult(dbl), IntResult(int)) => BoolResult(di(dbl, int))
    case (DoubleResult(dbl1), DoubleResult(dbl2)) => BoolResult(dd(dbl1, dbl2))
@@ -54,11 +54,11 @@ object OpDirectives {
   }
 
   private def tileOrScalarReduction(
-   ti: (LazyTile, Int) => LazyTile,
-   it: (Int, LazyTile) => LazyTile,
-   td: (LazyTile, Double) => LazyTile,
-   dt: (Double, LazyTile) => LazyTile,
-   tt: (LazyTile, LazyTile) => LazyTile,
+   ti: (LazyMultibandRaster, Int) => LazyMultibandRaster,
+   it: (Int, LazyMultibandRaster) => LazyMultibandRaster,
+   td: (LazyMultibandRaster, Double) => LazyMultibandRaster,
+   dt: (Double, LazyMultibandRaster) => LazyMultibandRaster,
+   tt: (LazyMultibandRaster, LazyMultibandRaster) => LazyMultibandRaster,
    ii: (Int, Int) => Int,
    di: (Double, Int) => Double,
    dd: (Double, Double) => Double,
@@ -66,11 +66,11 @@ object OpDirectives {
    res1: Result,
    res2: Result
   ): Result = (res1, res2) match {
-   case (TileResult(lt1), TileResult(lt2)) => TileResult(tt(lt1, lt2))
-   case (TileResult(lt), IntResult(int)) => TileResult((ti(lt, int)))
-   case (IntResult(int), TileResult(lt)) => TileResult((it(int, lt)))
-   case (TileResult(lt), DoubleResult(double)) => TileResult(td(lt, double))
-   case (DoubleResult(double), TileResult(lt)) => TileResult(dt(double, lt))
+   case (ImageResult(lt1), ImageResult(lt2)) => ImageResult(tt(lt1, lt2))
+   case (ImageResult(lt), IntResult(int)) => ImageResult((ti(lt, int)))
+   case (IntResult(int), ImageResult(lt)) => ImageResult((it(int, lt)))
+   case (ImageResult(lt), DoubleResult(double)) => ImageResult(td(lt, double))
+   case (DoubleResult(double), ImageResult(lt)) => ImageResult(dt(double, lt))
    case (IntResult(int1), IntResult(int2)) => IntResult(ii(int1, int2))
    case (DoubleResult(dbl), IntResult(int)) => DoubleResult(di(dbl, int))
    case (DoubleResult(dbl1), DoubleResult(dbl2)) => DoubleResult(dd(dbl1, dbl2))
@@ -92,15 +92,15 @@ object OpDirectives {
       .andThen({ results => Valid(IntResult(results.reduce(_ + _))) })
   }
 
-  val additionTile = Directive { case (a@Addition(_), childResults) if (a.kind == MamlKind.Tile) =>
+  val additionTile = Directive { case (a@Addition(_), childResults) if (a.kind == MamlKind.Image) =>
     val grouped = childResults.groupBy(_.kind)
 
     val scalarSums =
       (doubleResults(grouped), intResults(grouped)).mapN { case (dbls, ints) => dbls.sum + ints.sum }
 
-    (lazytileResults(grouped), scalarSums).mapN { case (tiles, sums) =>
-      val tileSum = tiles.reduce({ (lt1: LazyTile, lt2: LazyTile) => LazyTile.DualCombine(List(lt1, lt2), {_ + _}, {_ + _}) })
-      TileResult(LazyTile.DualMap(List(tileSum), { i: Int => i + sums.toInt }, { i: Double => i + sums }))
+    (imageResults(grouped), scalarSums).mapN { case (tiles, sums) =>
+      val tileSum = tiles.reduce({ (lt1: LazyMultibandRaster, lt2: LazyMultibandRaster) => lt1.dualCombine(lt2, {_ + _}, {_ + _}) })
+      ImageResult(tileSum.dualMap({ i: Int => i + sums.toInt }, { i: Double => i + sums }))
     }
   }
 
@@ -138,15 +138,15 @@ object OpDirectives {
       .andThen({ results => Valid(DoubleResult(results.reduce(_ * _))) })
   }
 
-  val multiplicationTile = Directive { case (a@Multiplication(_), childResults) if (a.kind == MamlKind.Tile) =>
+  val multiplicationTile = Directive { case (a@Multiplication(_), childResults) if (a.kind == MamlKind.Image) =>
     val grouped = childResults.groupBy(_.kind)
 
     val scalarProduct =
       (doubleResults(grouped), intResults(grouped)).mapN { case (dbls, ints) => dbls.product * ints.product }
 
-    (lazytileResults(grouped), scalarProduct).mapN { case (tiles, product) =>
-      val tileProduct = tiles.reduce({ (lt1: LazyTile, lt2: LazyTile) => LazyTile.DualCombine(List(lt1, lt2), {_ * _}, {_ * _}) })
-      TileResult(LazyTile.DualMap(List(tileProduct), { i: Int => i * product.toInt }, { i: Double => i * product }))
+    (imageResults(grouped), scalarProduct).mapN { case (tiles, product) =>
+      val tileProduct = tiles.reduce({ (lt1: LazyMultibandRaster, lt2: LazyMultibandRaster) => lt1.dualCombine(lt2, {_ * _}, {_ * _}) })
+      ImageResult(tileProduct.dualMap({ i: Int => i * product.toInt }, { i: Double => i * product }))
     }
   }
 
@@ -176,7 +176,7 @@ object OpDirectives {
       .andThen({ results => Valid(DoubleResult(results.reduce(_ max _))) })
   }
 
-  val maxTile = Directive { case (a@Max(_), childResults) if (a.kind == MamlKind.Tile) =>
+  val maxTile = Directive { case (a@Max(_), childResults) if (a.kind == MamlKind.Image) =>
   val grouped = childResults.groupBy(_.kind)
 
   val scalarMax: Interpreted[Option[Double]] =
@@ -189,13 +189,15 @@ object OpDirectives {
       }
     }
 
-  (lazytileResults(grouped), scalarMax).mapN({ case (tiles, maximum) =>
-    val tileMax = tiles.reduce({ (lt1: LazyTile, lt2: LazyTile) => LazyTile.DualCombine(List(lt1, lt2), {_ max _}, {_ max _}) })
+  (imageResults(grouped), scalarMax).mapN({ case (tiles, maximum) =>
+    val tileMax = tiles.reduce({ (lt1: LazyMultibandRaster, lt2: LazyMultibandRaster) =>
+      lt1.dualCombine(lt2, {_ max _}, {_ max _})
+    })
     maximum match {
       case Some(scalarMax) =>
-        TileResult(LazyTile.DualMap(List(tileMax), { i: Int => i max scalarMax.toInt }, { i: Double => i max scalarMax }))
+        ImageResult(tileMax.dualMap({ i: Int => i max scalarMax.toInt }, { i: Double => i max scalarMax }))
       case None =>
-        TileResult(tileMax)
+        ImageResult(tileMax)
     }
   })
   }
@@ -214,7 +216,7 @@ object OpDirectives {
     .andThen({ results => Valid(DoubleResult(results.reduce(_ min _))) })
   }
 
-  val minTile = Directive { case (a@Min(_), childResults) if (a.kind == MamlKind.Tile) =>
+  val minTile = Directive { case (a@Min(_), childResults) if (a.kind == MamlKind.Image) =>
   val grouped = childResults.groupBy(_.kind)
 
   val scalarMin: Interpreted[Option[Double]] =
@@ -227,13 +229,15 @@ object OpDirectives {
       }
     }
 
-  (lazytileResults(grouped), scalarMin).mapN({ case (tiles, minimum) =>
-    val tileMin = tiles.reduce({ (lt1: LazyTile, lt2: LazyTile) => LazyTile.DualCombine(List(lt1, lt2), {_ min _}, {_ min _}) })
+  (imageResults(grouped), scalarMin).mapN({ case (tiles, minimum) =>
+    val tileMin = tiles.reduce({ (lt1: LazyMultibandRaster, lt2: LazyMultibandRaster) =>
+      lt1.dualCombine(lt2, {_ min _}, {_ min _})
+    })
     minimum match {
       case Some(scalarMin) =>
-        TileResult(LazyTile.DualMap(List(tileMin), { i: Int => i min scalarMin.toInt }, { i: Double => i min scalarMin }))
+        ImageResult(tileMin.dualMap({ i: Int => i min scalarMin.toInt }, { i: Double => i min scalarMin }))
       case None =>
-        TileResult(tileMin)
+        ImageResult(tileMin)
     }
   })
   }
@@ -347,16 +351,16 @@ object OpDirectives {
   /** Tile-specific Operations */
   val masking = Directive { case (mask@Masking(_), childResults) =>
     ((childResults(0), childResults(1)) match {
-      case (TileResult(lzTile), GeomResult(geom)) =>
+      case (ImageResult(lzTile), GeomResult(geom)) =>
         Valid((lzTile, geom))
-      case (GeomResult(geom), TileResult(lzTile)) =>
+      case (GeomResult(geom), ImageResult(lzTile)) =>
         Valid((lzTile, geom))
       case _ =>
         Invalid(NEL.of(NonEvaluableNode(mask, Some("Masking operation requires both a tile and a vector argument"))))
     }).andThen({ case (lzTile, geom) =>
       geom.as[MultiPolygon] match {
         case Some(mp) =>
-          Valid(TileResult(MaskingNode(List(lzTile), mp)))
+          Valid(ImageResult(???))//MaskingNode(List(lzTile), mp)))
         case None =>
           Invalid(NEL.of(NonEvaluableNode(mask, Some("Masking operation requires its vector argument to be a multipolygon"))))
       }

@@ -14,17 +14,17 @@ trait FoldableExpression { expression: Expression =>
 }
 
 object FoldableExpression {
-  def tileOrScalarDerivation(exp: FoldableExpression)(k1: MamlKind, k2: MamlKind): MamlKind = (k1, k2) match {
-    case (MamlKind.Tile, MamlKind.Tile) => MamlKind.Tile
+  def imageOrScalarDerivation(exp: FoldableExpression)(k1: MamlKind, k2: MamlKind): MamlKind = (k1, k2) match {
+    case (MamlKind.Image, MamlKind.Image) => MamlKind.Image
     case (MamlKind.Int, MamlKind.Int) => MamlKind.Int
-    case (MamlKind.Tile, MamlKind.Int) => MamlKind.Tile
-    case (MamlKind.Int, MamlKind.Tile) => MamlKind.Tile
+    case (MamlKind.Image, MamlKind.Int) => MamlKind.Image
+    case (MamlKind.Int, MamlKind.Image) => MamlKind.Image
     case (MamlKind.Double, MamlKind.Double) => MamlKind.Double
-    case (MamlKind.Tile, MamlKind.Double) => MamlKind.Tile
-    case (MamlKind.Double, MamlKind.Tile) => MamlKind.Tile
+    case (MamlKind.Image, MamlKind.Double) => MamlKind.Image
+    case (MamlKind.Double, MamlKind.Image) => MamlKind.Image
     case (MamlKind.Double, MamlKind.Int) => MamlKind.Double
     case (MamlKind.Int, MamlKind.Double) => MamlKind.Double
-    case (x1, x2) => throw new InvalidParameterException(s"Expected tile, int, or double kind. Found $x1 $x2")
+    case (x1, x2) => throw new InvalidParameterException(s"Expected image, int, or double kind. Found $x1 $x2")
   }
 }
 

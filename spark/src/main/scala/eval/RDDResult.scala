@@ -21,5 +21,5 @@ case class RDDResult(res: TileLayerRDD[SpatialKey]) extends Result {
     else
       Invalid(NEL.of(DivergingTypes(cls.getName, List("SpatialRDD"))))
   }
-  def kind: MamlKind = MamlKind.Tile
+  def kind: MamlKind = MamlKind.Image
 }

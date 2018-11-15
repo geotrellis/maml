@@ -38,32 +38,32 @@ sealed abstract class Expression(val sym: String) extends Product with Serializa
 }
 
 case class Addition(children: List[Expression]) extends Expression("+") with FoldableExpression {
-  val kindDerivation = FoldableExpression.tileOrScalarDerivation(this)(_, _)
+  val kindDerivation = FoldableExpression.imageOrScalarDerivation(this)(_, _)
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
 case class Subtraction(children: List[Expression]) extends Expression("-") with FoldableExpression {
-  val kindDerivation = FoldableExpression.tileOrScalarDerivation(this)(_, _)
+  val kindDerivation = FoldableExpression.imageOrScalarDerivation(this)(_, _)
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
 case class Multiplication(children: List[Expression]) extends Expression("*") with FoldableExpression {
-  val kindDerivation = FoldableExpression.tileOrScalarDerivation(this)(_, _)
+  val kindDerivation = FoldableExpression.imageOrScalarDerivation(this)(_, _)
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
 case class Division(children: List[Expression]) extends Expression("/") with FoldableExpression {
-  val kindDerivation = FoldableExpression.tileOrScalarDerivation(this)(_, _)
+  val kindDerivation = FoldableExpression.imageOrScalarDerivation(this)(_, _)
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
 case class Max(children: List[Expression]) extends Expression("max") with FoldableExpression {
-  val kindDerivation = FoldableExpression.tileOrScalarDerivation(this)(_, _)
+  val kindDerivation = FoldableExpression.imageOrScalarDerivation(this)(_, _)
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
 case class Min(children: List[Expression]) extends Expression("min") with FoldableExpression {
-  val kindDerivation = FoldableExpression.tileOrScalarDerivation(this)(_, _)
+  val kindDerivation = FoldableExpression.imageOrScalarDerivation(this)(_, _)
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
@@ -71,9 +71,9 @@ case class Min(children: List[Expression]) extends Expression("min") with Foldab
 case class Masking(children: List[Expression]) extends Expression("mask") with BinaryExpression {
   val kindDerivation = { (k1: MamlKind, k2: MamlKind) =>
     (k1, k2) match {
-      case (MamlKind.Tile, MamlKind.Geom) => MamlKind.Tile
-      case (MamlKind.Geom, MamlKind.Tile) => MamlKind.Tile
-      case (x1, x2) => throw new InvalidParameterException(s"Expected tile and geometry kinds. Found $x1 and $x2")
+      case (MamlKind.Image, MamlKind.Geom) => MamlKind.Image
+      case (MamlKind.Geom, MamlKind.Image) => MamlKind.Image
+      case (x1, x2) => throw new InvalidParameterException(s"Expected image and geometry kinds. Found $x1 and $x2")
     }
   }
 
@@ -83,16 +83,16 @@ case class Masking(children: List[Expression]) extends Expression("mask") with B
 case class Pow(children: List[Expression]) extends Expression("**") with BinaryExpression {
   val kindDerivation = { (k1: MamlKind, k2: MamlKind) =>
     (k1, k2) match {
-      case (MamlKind.Tile, MamlKind.Tile) => MamlKind.Tile
-      case (MamlKind.Tile, MamlKind.Int) => MamlKind.Tile
-      case (MamlKind.Int, MamlKind.Tile) => MamlKind.Tile
-      case (MamlKind.Tile, MamlKind.Double) => MamlKind.Tile
-      case (MamlKind.Double, MamlKind.Tile) => MamlKind.Tile
+      case (MamlKind.Image, MamlKind.Image) => MamlKind.Image
+      case (MamlKind.Image, MamlKind.Int) => MamlKind.Image
+      case (MamlKind.Int, MamlKind.Image) => MamlKind.Image
+      case (MamlKind.Image, MamlKind.Double) => MamlKind.Image
+      case (MamlKind.Double, MamlKind.Image) => MamlKind.Image
       case (MamlKind.Double, MamlKind.Int) => MamlKind.Double
       case (MamlKind.Int, MamlKind.Double) => MamlKind.Double
       case (MamlKind.Int, MamlKind.Int) => MamlKind.Double
       case (MamlKind.Double, MamlKind.Double) => MamlKind.Double
-      case (x1, x2) => throw new InvalidParameterException(s"Expected tile and scalar kinds. Found $x1 and $x2")
+      case (x1, x2) => throw new InvalidParameterException(s"Expected image or scalar kinds. Found $x1 and $x2")
     }
   }
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
@@ -159,108 +159,108 @@ case class Branch(children: List[Expression]) extends Expression("ifelse") {
 
 /** Operations which should only have one argument. */
 case class Classification(children: List[Expression], classMap: ClassMap) extends Expression("classify") with UnaryExpression {
-  val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.tileOrScalar
+  val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.imageOrScalar
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
 case class Sin(children: List[Expression]) extends Expression("sin") with UnaryExpression {
-  val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.tileOrScalar
+  val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.imageOrScalar
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
 case class Cos(children: List[Expression]) extends Expression("cos") with UnaryExpression {
-  val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.tileOrScalar
+  val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.imageOrScalar
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
 case class Tan(children: List[Expression]) extends Expression("tan") with UnaryExpression {
-  val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.tileOrScalar
+  val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.imageOrScalar
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
 case class Sinh(children: List[Expression]) extends Expression("sinh") with UnaryExpression {
-  val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.tileOrScalar
+  val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.imageOrScalar
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
 case class Cosh(children: List[Expression]) extends Expression("cosh") with UnaryExpression {
-  val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.tileOrScalar
+  val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.imageOrScalar
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
 case class Tanh(children: List[Expression]) extends Expression("tanh") with UnaryExpression {
-  val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.tileOrScalar
+  val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.imageOrScalar
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
 case class Asin(children: List[Expression]) extends Expression("asin") with UnaryExpression {
-  val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.tileOrScalar
+  val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.imageOrScalar
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
 case class Acos(children: List[Expression]) extends Expression("acos") with UnaryExpression {
-  val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.tileOrScalar
+  val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.imageOrScalar
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
 case class Atan(children: List[Expression]) extends Expression("atan") with UnaryExpression {
-  val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.tileOrScalar
+  val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.imageOrScalar
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
 case class Round(children: List[Expression]) extends Expression("round") with UnaryExpression {
-  val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.tileOrScalar
+  val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.imageOrScalar
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
 case class Floor(children: List[Expression]) extends Expression("floor") with UnaryExpression {
-  val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.tileOrScalar
+  val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.imageOrScalar
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
 case class Ceil(children: List[Expression]) extends Expression("ceil") with UnaryExpression {
-  val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.tileOrScalar
+  val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.imageOrScalar
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
 /** Natural Log */
 case class LogE(children: List[Expression]) extends Expression("loge") with UnaryExpression {
-  val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.tileOrScalar
+  val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.imageOrScalar
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
 case class Log10(children: List[Expression]) extends Expression("log10") with UnaryExpression {
-  val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.tileOrScalar
+  val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.imageOrScalar
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
 case class SquareRoot(children: List[Expression]) extends Expression("sqrt") with UnaryExpression {
-  val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.tileOrScalar
+  val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.imageOrScalar
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
 case class Abs(children: List[Expression]) extends Expression("abs") with UnaryExpression {
-  val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.tileOrScalar
+  val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.imageOrScalar
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
 case class Defined(children: List[Expression]) extends Expression("def") with UnaryExpression {
-  val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.tileOnly
+  val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.imageOnly
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
 case class Undefined(children: List[Expression]) extends Expression("undef") with UnaryExpression {
-  val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.tileOnly
+  val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.imageOnly
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
 case class NumericNegation(children: List[Expression]) extends Expression("nneg") with UnaryExpression {
-  val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.tileOrScalar
+  val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.imageOrScalar
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
 case class LogicalNegation(children: List[Expression]) extends Expression("lneg") with UnaryExpression {
-  val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.tileOnly ++ UnaryExpression.boolOnly
+  val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.imageOnly ++ UnaryExpression.boolOnly
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
@@ -325,10 +325,10 @@ case class GeomVar(name: String) extends Expression("geomV") with Variable {
 }
 
 case class RasterLit[A](raster: A) extends Expression("raster") with Literal {
-  val kind = MamlKind.Tile
+  val kind = MamlKind.Image
 }
 
 case class RasterVar(name: String) extends Expression("rasterV") with Variable {
-  val kind = MamlKind.Tile
+  val kind = MamlKind.Image
 }
 

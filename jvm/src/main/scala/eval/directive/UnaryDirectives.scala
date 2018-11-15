@@ -21,23 +21,23 @@ object UnaryDirectives {
   private def not[A](f: A => Boolean): A => Boolean = !f(_)
 
   private def tileOrScalarResult(
-    t: LazyTile => LazyTile,
+    t: LazyMultibandRaster => LazyMultibandRaster,
     i: Int => Double,
     d: Double => Double,
     arg: Result
   ): Result = arg match {
-    case TileResult(lt) => TileResult(t(lt))
+    case ImageResult(lt) => ImageResult(t(lt))
     case IntResult(int) => DoubleResult(i(int))
     case DoubleResult(dbl) => DoubleResult(d(dbl))
   }
 
   private def tileOrBoolResult(
-    t: LazyTile => LazyTile,
+    t: LazyMultibandRaster => LazyMultibandRaster,
     i: Int => Boolean,
     d: Double => Boolean,
     arg: Result
   ): Result = arg match {
-    case TileResult(lt) => TileResult(t(lt))
+    case ImageResult(lt) => ImageResult(t(lt))
     case IntResult(int) => BoolResult(i(int))
     case DoubleResult(dbl) => BoolResult(d(dbl))
   }
@@ -147,7 +147,7 @@ object UnaryDirectives {
   /** Tile-specific Operations */
   val classification = Directive { case (classify@Classification(_, classMap), childResults) =>
     childResults.head match {
-      case TileResult(lzTile) => Valid(TileResult(lzTile.classify(BreakMap(classMap.classifications))))
+      case ImageResult(lzTile) => Valid(ImageResult(lzTile.classify(BreakMap(classMap.classifications))))
       case _ => Invalid(NEL.of(NonEvaluableNode(classify, Some("Classification node requires lazytile argument"))))
     }
   }
