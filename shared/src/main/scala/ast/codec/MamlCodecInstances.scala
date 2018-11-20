@@ -250,6 +250,11 @@ trait MamlCodecInstances extends MamlUtilityCodecs {
   implicit lazy val encodeLogicNeg: Encoder[LogicalNegation] =
     Encoder.forProduct2("args", "symbol")(u => (u.children, u.sym))
 
+  implicit lazy val decodeImageSelect: Decoder[ImageSelect] =
+    Decoder.forProduct2("args", "labels")(ImageSelect.apply)
+  implicit lazy val encodeImageSelect: Encoder[ImageSelect] =
+    Encoder.forProduct3("args", "labels", "symbol")(u => (u.children, u.labels, u.sym))
+
   implicit lazy val decodeIntLit: Decoder[IntLit] =
     Decoder.forProduct1("value")(IntLit.apply)
   implicit lazy val encodeIntLit: Encoder[IntLit] =

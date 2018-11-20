@@ -20,7 +20,7 @@ object UnaryDirectives {
 
   private def not[A](f: A => Boolean): A => Boolean = !f(_)
 
-  private def tileOrScalarResult(
+  private def imageOrScalarResult(
     t: LazyMultibandRaster => LazyMultibandRaster,
     i: Int => Double,
     d: Double => Double,
@@ -31,7 +31,7 @@ object UnaryDirectives {
     case DoubleResult(dbl) => DoubleResult(d(dbl))
   }
 
-  private def tileOrBoolResult(
+  private def imageOrBoolResult(
     t: LazyMultibandRaster => LazyMultibandRaster,
     i: Int => Boolean,
     d: Double => Boolean,
@@ -44,103 +44,103 @@ object UnaryDirectives {
 
   /** Trigonometric Operations */
   val sin = Directive { case (s@Sin(_), childResults) =>
-    val result = tileOrScalarResult({ _.sin }, { math.sin(_) }, { math.sin(_) }, childResults.head)
+    val result = imageOrScalarResult({ _.sin }, { math.sin(_) }, { math.sin(_) }, childResults.head)
     Valid(result)
   }
 
   val cos = Directive { case (s@Cos(_), childResults) =>
-    val result = tileOrScalarResult({ _.cos }, { math.cos(_) }, { math.cos(_) }, childResults.head)
+    val result = imageOrScalarResult({ _.cos }, { math.cos(_) }, { math.cos(_) }, childResults.head)
     Valid(result)
   }
 
   val tan = Directive { case (s@Tan(_), childResults) =>
-    val result = tileOrScalarResult({ _.tan }, { math.tan(_) }, { math.tan(_) }, childResults.head)
+    val result = imageOrScalarResult({ _.tan }, { math.tan(_) }, { math.tan(_) }, childResults.head)
     Valid(result)
   }
 
   val sinh = Directive { case (s@Sinh(_), childResults) =>
-    val result = tileOrScalarResult({ _.sinh }, { math.sinh(_) }, { math.sinh(_) }, childResults.head)
+    val result = imageOrScalarResult({ _.sinh }, { math.sinh(_) }, { math.sinh(_) }, childResults.head)
     Valid(result)
   }
 
   val cosh = Directive { case (s@Cosh(_), childResults) =>
-    val result = tileOrScalarResult({ _.cosh }, { math.cosh(_) }, { math.cosh(_) }, childResults.head)
+    val result = imageOrScalarResult({ _.cosh }, { math.cosh(_) }, { math.cosh(_) }, childResults.head)
     Valid(result)
   }
 
   val tanh = Directive { case (s@Tanh(_), childResults) =>
-    val result = tileOrScalarResult({ _.tanh }, { math.tanh(_) }, { math.tanh(_) }, childResults.head)
+    val result = imageOrScalarResult({ _.tanh }, { math.tanh(_) }, { math.tanh(_) }, childResults.head)
     Valid(result)
   }
 
   val asin = Directive { case (s@Asin(_), childResults) =>
-    val result = tileOrScalarResult({ _.asin }, { math.asin(_) }, { math.asin(_) }, childResults.head)
+    val result = imageOrScalarResult({ _.asin }, { math.asin(_) }, { math.asin(_) }, childResults.head)
     Valid(result)
   }
 
   val acos = Directive { case (s@Acos(_), childResults) =>
-    val result = tileOrScalarResult({ _.acos }, { math.acos(_) }, { math.acos(_) }, childResults.head)
+    val result = imageOrScalarResult({ _.acos }, { math.acos(_) }, { math.acos(_) }, childResults.head)
     Valid(result)
   }
 
   val atan = Directive { case (s@Atan(_), childResults) =>
-    val result = tileOrScalarResult({ _.atan }, { math.atan(_) }, { math.atan(_) }, childResults.head)
+    val result = imageOrScalarResult({ _.atan }, { math.atan(_) }, { math.atan(_) }, childResults.head)
     Valid(result)
   }
 
   /** Rounding Operations */
   val round = Directive { case (r@Round(_), childResults) =>
-    val result = tileOrScalarResult({ _.round }, identity, { math.round(_) }, childResults.head)
+    val result = imageOrScalarResult({ _.round }, identity, { math.round(_) }, childResults.head)
     Valid(result)
   }
   val floor = Directive { case (r@Floor(_), childResults) =>
-    val result = tileOrScalarResult({ _.floor }, identity, { math.floor(_) }, childResults.head)
+    val result = imageOrScalarResult({ _.floor }, identity, { math.floor(_) }, childResults.head)
     Valid(result)
   }
   val ceil = Directive { case (r@Ceil(_), childResults) =>
-    val result = tileOrScalarResult({ _.ceil }, identity, { math.ceil(_) }, childResults.head)
+    val result = imageOrScalarResult({ _.ceil }, identity, { math.ceil(_) }, childResults.head)
     Valid(result)
   }
 
   /** Arithmetic Operations */
   val naturalLog = Directive { case  (nl@LogE(_), childResults) =>
-    val result = tileOrScalarResult({ _.logE }, { i: Int => math.log(i2d(i)) }, { math.log(_) }, childResults.head)
+    val result = imageOrScalarResult({ _.logE }, { i: Int => math.log(i2d(i)) }, { math.log(_) }, childResults.head)
     Valid(result)
   }
 
   val log10 = Directive { case  (nl@Log10(_), childResults) =>
-    val result = tileOrScalarResult({ _.log10 }, { i: Int => math.log10(i2d(i)) }, { math.log10(_) }, childResults.head)
+    val result = imageOrScalarResult({ _.log10 }, { i: Int => math.log10(i2d(i)) }, { math.log10(_) }, childResults.head)
     Valid(result)
   }
 
   val sqrt = Directive { case  (sqrt@SquareRoot(_), childResults) =>
-    val result = tileOrScalarResult({ _.sqrt }, { i: Int => math.sqrt(i2d(i)) }, { math.sqrt(_) }, childResults.head)
+    val result = imageOrScalarResult({ _.sqrt }, { i: Int => math.sqrt(i2d(i)) }, { math.sqrt(_) }, childResults.head)
     Valid(result)
   }
 
   val abs = Directive { case  (sqrt@SquareRoot(_), childResults) =>
-    val result = tileOrScalarResult({ _.abs }, { i: Int => math.abs(i) }, { math.abs(_) }, childResults.head)
+    val result = imageOrScalarResult({ _.abs }, { i: Int => math.abs(i) }, { math.abs(_) }, childResults.head)
     Valid(result)
   }
 
   val isDefined = Directive { case (d@Defined(_), childResults) =>
-    val result = tileOrBoolResult({ _.isDefined }, { i: Int => isData(i) }, { isData(_) }, childResults.head)
+    val result = imageOrBoolResult({ _.isDefined }, { i: Int => isData(i) }, { isData(_) }, childResults.head)
     Valid(result)
   }
 
   val isUndefined = Directive { case (d@Undefined(_), childResults) =>
-    val result = tileOrBoolResult({ _.isUndefined }, { i: Int => isNoData(i) }, { isNoData(_) }, childResults.head)
+    val result = imageOrBoolResult({ _.isUndefined }, { i: Int => isNoData(i) }, { isNoData(_) }, childResults.head)
     Valid(result)
   }
 
   val numericNegation = Directive { case (nn@NumericNegation(_), childResults) =>
-    val result = tileOrScalarResult({ _.changeSign }, { _ * -1 }, {_ * -1}, childResults.head)
+    val result = imageOrScalarResult({ _.changeSign }, { _ * -1 }, {_ * -1}, childResults.head)
     Valid(result)
   }
 
   /** Logical Operations */
   val logicalNegation = Directive { case (ln@LogicalNegation(_), childResults) =>
-    val result = tileOrBoolResult({ _.not }, {not(isData(_))}, {not(isData(_))}, childResults.head)
+    val result = imageOrBoolResult({ _.not }, {not(isData(_))}, {not(isData(_))}, childResults.head)
     Valid(result)
   }
 
@@ -148,7 +148,14 @@ object UnaryDirectives {
   val classification = Directive { case (classify@Classification(_, classMap), childResults) =>
     childResults.head match {
       case ImageResult(lzTile) => Valid(ImageResult(lzTile.classify(BreakMap(classMap.classifications))))
-      case _ => Invalid(NEL.of(NonEvaluableNode(classify, Some("Classification node requires lazytile argument"))))
+      case _ => Invalid(NEL.of(NonEvaluableNode(classify, Some("Classification node requires multiband lazytile argument"))))
+    }
+  }
+
+  val imageSelection = Directive { case (imgSel@ImageSelect(_, labels), childResults) =>
+    childResults.head match {
+      case ImageResult(mbLzTile) => Valid(ImageResult(mbLzTile.select(labels)))
+      case _ => Invalid(NEL.of(NonEvaluableNode(imgSel, Some("ImageSelect node requires multiband lazytile argument"))))
     }
   }
 }

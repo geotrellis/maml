@@ -26,6 +26,9 @@ object SourceDirectives {
     case (RasterLit(r), _) if r.isInstanceOf[Raster[MultibandTile]] =>
       val mbRaster = r.asInstanceOf[Raster[MultibandTile]]
       Valid(ImageResult(LazyMultibandRaster(mbRaster)))
+    case (RasterLit(r), _) if r.isInstanceOf[LazyMultibandRaster] =>
+      val mbRaster = r.asInstanceOf[LazyMultibandRaster]
+      Valid(ImageResult(mbRaster))
     case (rl@RasterLit(r), _) =>
       Invalid(NEL.of(NonEvaluableNode(rl, Some("Unable to treat raster literal contents as type Raster"))))
   }
