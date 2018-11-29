@@ -2,7 +2,7 @@ import com.scalapenos.sbt.prompt.SbtPrompt.autoImport._
 
 promptTheme := com.scalapenos.sbt.prompt.PromptThemes.ScalapenosTheme
 
-val mamlVersion = "0.0.17" + scala.util.Properties.envOrElse("MAML_VERSION_SUFFIX", "")
+val mamlVersion = "0.1.0" + scala.util.Properties.envOrElse("MAML_VERSION_SUFFIX", "")
 
 /** Project configurations */
 lazy val root = project.in(file("."))
@@ -69,7 +69,7 @@ val commonSettings = Seq(
   licenses += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0.txt")),
   version := mamlVersion,
   scalaVersion := "2.11.12",
-  crossScalaVersions := Seq("2.11.12", "2.12.3"),
+  crossScalaVersions := Seq("2.11.12", "2.12.7"),
   resolvers ++= Seq(
     Resolver.sonatypeRepo("releases"),
     "locationtech-releases" at "https://repo.locationtech.org/content/groups/releases",
