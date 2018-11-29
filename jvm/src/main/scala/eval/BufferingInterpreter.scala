@@ -95,6 +95,7 @@ object BufferingInterpreter {
       ScopedDirective.pure[NumericNegation](UnaryDirectives.numericNegation),
       ScopedDirective.pure[LogicalNegation](UnaryDirectives.logicalNegation),
       ScopedDirective.pure[Classification](UnaryDirectives.classification),
+      ScopedDirective.pure[ImageSelect](UnaryDirectives.imageSelection),
       focalMax,
       focalMin,
       focalMean,

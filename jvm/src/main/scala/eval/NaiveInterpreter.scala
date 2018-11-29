@@ -75,6 +75,7 @@ object NaiveInterpreter {
       UnaryDirectives.numericNegation,
       UnaryDirectives.logicalNegation,
       UnaryDirectives.classification,
+      UnaryDirectives.imageSelection,
       FocalDirectives.max,
       FocalDirectives.min,
       FocalDirectives.mean,

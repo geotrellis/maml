@@ -292,6 +292,11 @@ case class FocalStdDev(children: List[Expression], neighborhood: Neighborhood) e
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
+case class ImageSelect(children: List[Expression], labels: List[String]) extends Expression("sel") with UnaryExpression {
+  val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.imageOnly
+  def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
+}
+
 case class IntLit(value: Int) extends Expression("int") with Literal {
   val kind = MamlKind.Int
 }

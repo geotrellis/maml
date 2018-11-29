@@ -14,12 +14,14 @@ import cats.data.{NonEmptyList => NEL, _}
 import cats.implicits._
 import spire.syntax.cfor._
 
+import scala.reflect.ClassTag
+
 
 case class LazyMultibandRaster(val bands: Map[String, LazyTile]) {
-  def select(labels: Seq[String]) = {
-    val selected = bands.filterKeys { labels contains _ }
+  def select(labels: List[String]): LazyMultibandRaster = {
     val keyOrder = labels.zipWithIndex.toMap
-    val reordered = bands.toArray.sortWith { case ((k1, _), (k2, _)) =>
+    val selected = bands.filterKeys { labels contains _ }
+    val reordered = selected.toArray.sortWith { case ((k1, _), (k2, _)) =>
       keyOrder(k1) < keyOrder(k2)
     }.toMap
     LazyMultibandRaster(reordered)
@@ -39,9 +41,9 @@ case class LazyMultibandRaster(val bands: Map[String, LazyTile]) {
     f: (Int, Int) => Int,
     g: (Double, Double) => Double
   ): LazyMultibandRaster = {
-    val newBands = bands.keys.map { key =>
-      (key -> LazyTile.DualCombine(List(bands(key), other.bands(key)), f, g))
-    }.toMap
+    val newBands = bands.values.zip(other.bands.values).map { case (v1, v2) =>
+      LazyTile.DualCombine(List(v1, v2), f, g)
+    }.toList
     LazyMultibandRaster(newBands)
   }
 
@@ -59,10 +61,10 @@ case class LazyMultibandRaster(val bands: Map[String, LazyTile]) {
 }
 
 object LazyMultibandRaster {
-  def apply(lazytiles: Seq[LazyTile]): LazyMultibandRaster = {
+  def apply(lazytiles: List[LazyTile]): LazyMultibandRaster = {
     val defaultLabels = lazytiles.zipWithIndex.map(lt => lt._2.toString -> lt._1).toMap
     LazyMultibandRaster(defaultLabels)
   }
   def apply(mbRaster: Raster[MultibandTile]): LazyMultibandRaster =
-    LazyMultibandRaster(mbRaster.tile.bands.map(LazyTile(_, mbRaster.extent)))
+    LazyMultibandRaster(mbRaster.tile.bands.map(LazyTile(_, mbRaster.extent)).toList)
 }

@@ -59,12 +59,10 @@ case class GeomResult(res: Geometry) extends Result {
 case class ImageResult(res: LazyMultibandRaster) extends Result {
   def as[T](implicit ct: ClassTag[T]): Interpreted[T] = {
     val cls = ct.runtimeClass
-    if (classOf[MultibandTile] isAssignableFrom cls)
-      Valid(res.evaluateDouble.asInstanceOf[T])
-    else if (classOf[MultibandGeoTiff] isAssignableFrom cls)
-      Valid(res.evaluateDouble.asInstanceOf[T])
-    else if (classOf[LazyMultibandRaster] isAssignableFrom cls)
+    if (classOf[LazyMultibandRaster] isAssignableFrom cls)
       Valid(res.asInstanceOf[T])
+    else if (classOf[MultibandTile] isAssignableFrom cls)
+      Valid(res.evaluateDouble.asInstanceOf[T])
     else
       Invalid(NEL.of(DivergingTypes(cls.getName, List("img"))))
   }
