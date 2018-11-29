@@ -34,8 +34,7 @@ lazy val maml = crossProject.in(file("."))
     libraryDependencies ++= Seq(
       "org.locationtech.geotrellis" %% "geotrellis-raster"    % gtVer,
       "org.locationtech.geotrellis" %% "geotrellis-spark"     % gtVer,
-      "org.locationtech.geotrellis" %% "geotrellis-s3"        % gtVer,
-      "org.apache.spark"            %% "spark-core"           % "2.2.0"
+      "org.locationtech.geotrellis" %% "geotrellis-s3"        % gtVer
     )
   ).jsSettings(name := "maml-js")
 
@@ -45,7 +44,9 @@ lazy val mamlSpark = project.in(file("spark"))
   .dependsOn(mamlJvm)
   .settings(
     libraryDependencies ++= Seq(
-      "org.locationtech.geotrellis" %% "geotrellis-spark-testkit" % gtVer % "test"
+      "org.locationtech.geotrellis" %% "geotrellis-spark-testkit" % gtVer % "test",
+      "org.apache.spark"            %% "spark-core"               % "2.4.0" % "provided",
+      "org.apache.spark"            %% "spark-sql"                % "2.4.0" % "provided"
     )
   ).settings(publishSettings:_*)
   .settings(commonSettings:_*)
