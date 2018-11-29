@@ -13,7 +13,7 @@ lazy val root = project.in(file("."))
   ).enablePlugins(ScalaJSPlugin)
 
 val circeVer = "0.10.0"
-val gtVer    = "2.0.0"
+val gtVer    = "3.0.0-SNAPSHOT"
 
 lazy val maml = crossProject.in(file("."))
   .settings(publishSettings:_*)
@@ -71,7 +71,8 @@ val commonSettings = Seq(
   crossScalaVersions := Seq("2.11.12", "2.12.3"),
   resolvers ++= Seq(
     Resolver.sonatypeRepo("releases"),
-    "locationtech-releases" at "https://repo.locationtech.org/content/groups/releases"
+    "locationtech-releases" at "https://repo.locationtech.org/content/groups/releases",
+    "locationtech-snapshots" at "https://repo.locationtech.org/content/groups/snapshots"
   ),
   addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full),
   scalacOptions := Seq(

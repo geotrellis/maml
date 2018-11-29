@@ -41,11 +41,6 @@ case class LazyMultibandRaster(val bands: Map[String, LazyTile]) {
     f: (Int, Int) => Int,
     g: (Double, Double) => Double
   ): LazyMultibandRaster = {
-    // This evaluation mechanism probably doesn't make sense (only combine values whose keys are the same)
-    //val newBands = bands.keys.map { key =>
-    //  (key -> LazyTile.DualCombine(List(bands(key), other.bands(key)), f, g))
-    //}.toMap
-    //LazyMultibandRaster(newBands)
     val newBands = bands.values.zip(other.bands.values).map { case (v1, v2) =>
       LazyTile.DualCombine(List(v1, v2), f, g)
     }.toList
