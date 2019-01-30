@@ -2,6 +2,8 @@ import com.scalapenos.sbt.prompt.SbtPrompt.autoImport._
 
 promptTheme := com.scalapenos.sbt.prompt.PromptThemes.ScalapenosTheme
 
+import sbtcrossproject.CrossPlugin.autoImport.{crossProject, CrossType}
+
 val mamlVersion = "0.1.0" + scala.util.Properties.envOrElse("MAML_VERSION_SUFFIX", "")
 
 /** Project configurations */
@@ -15,7 +17,8 @@ lazy val root = project.in(file("."))
 val circeVer = "0.10.0"
 val gtVer    = "3.0.0-SNAPSHOT"
 
-lazy val maml = crossProject.in(file("."))
+lazy val maml = crossProject(JSPlatform, JVMPlatform)
+  .crossType(CrossType.Pure)
   .settings(publishSettings:_*)
   .settings(commonSettings:_*)
   .settings(
