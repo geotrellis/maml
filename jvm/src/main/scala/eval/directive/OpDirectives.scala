@@ -360,7 +360,7 @@ object OpDirectives {
     }).andThen({ case (lzTile, geom) =>
       geom.as[MultiPolygon] match {
         case Some(mp) =>
-          Valid(ImageResult(???))//MaskingNode(List(lzTile), mp)))
+          Valid(ImageResult(MaskingNode(List(lzTile), mp)))
         case None =>
           Invalid(NEL.of(NonEvaluableNode(mask, Some("Masking operation requires its vector argument to be a multipolygon"))))
       }
