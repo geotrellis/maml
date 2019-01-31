@@ -1,8 +1,7 @@
 import com.scalapenos.sbt.prompt.SbtPrompt.autoImport._
+import sbtcrossproject.CrossPlugin.autoImport.crossProject
 
 promptTheme := com.scalapenos.sbt.prompt.PromptThemes.ScalapenosTheme
-
-import sbtcrossproject.CrossPlugin.autoImport.{crossProject, CrossType}
 
 val mamlVersion = "0.1.0" + scala.util.Properties.envOrElse("MAML_VERSION_SUFFIX", "")
 
@@ -12,13 +11,12 @@ lazy val root = project.in(file("."))
   .settings(commonSettings:_*)
   .settings(
     licenses += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0.txt"))
-  ).enablePlugins(ScalaJSPlugin)
+  )
 
 val circeVer = "0.10.0"
 val gtVer    = "3.0.0-SNAPSHOT"
 
 lazy val maml = crossProject(JSPlatform, JVMPlatform)
-  .crossType(CrossType.Pure)
   .settings(publishSettings:_*)
   .settings(commonSettings:_*)
   .settings(
@@ -42,7 +40,9 @@ lazy val maml = crossProject(JSPlatform, JVMPlatform)
   ).jsSettings(name := "maml-js")
 
 lazy val mamlJvm = maml.jvm
+
 lazy val mamlJs = maml.js
+
 lazy val mamlSpark = project.in(file("spark"))
   .dependsOn(mamlJvm)
   .settings(
