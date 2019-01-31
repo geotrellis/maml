@@ -55,4 +55,13 @@ class ResultSpec extends FunSpec with Matchers {
     tr.res.bands.head._2.cols should be (tile.cols)
     tr.res.bands.head._2.rows should be (tile.rows)
   }
+
+  it("Evaluate mask out data according to a mask") {
+    val rasterOnes = LazyTile(Raster(IntArrayTile(1 to 16 toArray, 4, 4), Extent(0, 0, 3, 3)))
+    val mask = Extent(0, 0, 1, 1).as[Polygon].map(MultiPolygon(_)).get
+    val maskResult = ImageResult(MaskingNode(List(rasterOnes), mask))
+
+    isData(maskResult.res.bands.head.get(3, 3)) should be false
+    isData(maskResult.res.bands.head.get(0, 0)) should be true
+  }
 }
