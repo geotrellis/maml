@@ -61,7 +61,7 @@ class ResultSpec extends FunSpec with Matchers {
     val mask = Extent(0, 0, 1, 1).as[Polygon].map(MultiPolygon(_)).get
     val maskResult = ImageResult(MaskingNode(List(rasterOnes), mask))
 
-    isData(maskResult.res.bands.head.get(3, 3)) should be false
-    isData(maskResult.res.bands.head.get(0, 0)) should be true
+    isData(maskResult.res.bands.head._2.get(3, 3)) should be false
+    isData(maskResult.res.bands.head._2.get(0, 0)) should be true
   }
 }
