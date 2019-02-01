@@ -1,5 +1,4 @@
 import com.scalapenos.sbt.prompt.SbtPrompt.autoImport._
-import sbtcrossproject.CrossPlugin.autoImport.crossProject
 
 promptTheme := com.scalapenos.sbt.prompt.PromptThemes.ScalapenosTheme
 
