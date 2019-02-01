@@ -17,4 +17,3 @@ addSbtPlugin("com.47deg"  % "sbt-microsites" % "0.8.0")
 
 addSbtPlugin("com.scalapenos" % "sbt-prompt" % "1.0.2")
 
-addSbtPlugin("org.portable-scala" % "sbt-scalajs-crossproject" % "0.6.0")

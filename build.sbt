@@ -16,7 +16,7 @@ lazy val root = project.in(file("."))
 val circeVer = "0.10.0"
 val gtVer    = "3.0.0-SNAPSHOT"
 
-lazy val maml = crossProject(JSPlatform, JVMPlatform)
+lazy val maml = crossProject.in(file("."))
   .settings(publishSettings:_*)
   .settings(commonSettings:_*)
   .settings(
