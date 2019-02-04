@@ -65,10 +65,12 @@ class ResultSpec extends FunSpec with Matchers {
       x <- (0 to 3 toArray)
       y <- (0 to 3 toArray)
     } yield {
-      println(s"$x, $y: ${isData(maskResult.res.bands.head._2.get(x, y))}")
+      val fetched = maskResult.res.bands.head._2.get(x, y)
+      if ((x, y) == (0, 3)) {
+        isData(fetched) should be (true)
+      } else {
+        isData(fetched) should be (false)
+      }
     }
-
-    isData(maskResult.res.bands.head._2.get(3, 3)) should be (false)
-    isData(maskResult.res.bands.head._2.get(0, 0)) should be (true)
   }
 }
