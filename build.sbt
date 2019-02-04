@@ -2,8 +2,6 @@ import com.scalapenos.sbt.prompt.SbtPrompt.autoImport._
 
 promptTheme := com.scalapenos.sbt.prompt.PromptThemes.ScalapenosTheme
 
-import sbtcrossproject.CrossPlugin.autoImport.{crossProject, CrossType}
-
 val mamlVersion = "0.1.0" + scala.util.Properties.envOrElse("MAML_VERSION_SUFFIX", "")
 
 /** Project configurations */
