@@ -8,7 +8,7 @@ import com.azavea.maml.eval.directive.SourceDirectives._
 import com.azavea.maml.eval.directive.OpDirectives._
 
 import geotrellis.raster._
-import geotrellis.vector.Extent
+import geotrellis.vector._
 import cats._
 import cats.data.{NonEmptyList => NEL, _}
 import Validated._
@@ -54,5 +54,23 @@ class ResultSpec extends FunSpec with Matchers {
 
     tr.res.bands.head._2.cols should be (tile.cols)
     tr.res.bands.head._2.rows should be (tile.rows)
+  }
+
+  it("Evaluate mask out data according to a mask") {
+    val rasterOnes = LazyTile(Raster(IntArrayTile(1 to 16 toArray, 4, 4), Extent(0, 0, 3, 3)))
+    val mask = Extent(0, 0, 1, 1).as[Polygon].map(MultiPolygon(_)).get
+    val maskResult = ImageResult(LazyMultibandRaster(List(MaskingNode(List(rasterOnes), mask))))
+
+    for {
+      x <- (0 to 3 toArray)
+      y <- (0 to 3 toArray)
+    } yield {
+      val fetched = maskResult.res.bands.head._2.get(x, y)
+      if ((x, y) == (0, 3)) {
+        isData(fetched) should be (true)
+      } else {
+        isData(fetched) should be (false)
+      }
+    }
   }
 }

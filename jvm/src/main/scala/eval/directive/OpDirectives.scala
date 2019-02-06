@@ -351,16 +351,16 @@ object OpDirectives {
   /** Tile-specific Operations */
   val masking = Directive { case (mask@Masking(_), childResults) =>
     ((childResults(0), childResults(1)) match {
-      case (ImageResult(lzTile), GeomResult(geom)) =>
-        Valid((lzTile, geom))
-      case (GeomResult(geom), ImageResult(lzTile)) =>
-        Valid((lzTile, geom))
+      case (ImageResult(lzRaster), GeomResult(geom)) =>
+        Valid((lzRaster, geom))
+      case (GeomResult(geom), ImageResult(lzRaster)) =>
+        Valid((lzRaster, geom))
       case _ =>
         Invalid(NEL.of(NonEvaluableNode(mask, Some("Masking operation requires both a tile and a vector argument"))))
-    }).andThen({ case (lzTile, geom) =>
+    }).andThen({ case (lzRaster, geom) =>
       geom.as[MultiPolygon] match {
         case Some(mp) =>
-          Valid(ImageResult(???))//MaskingNode(List(lzTile), mp)))
+          Valid(ImageResult(LazyMultibandRaster(List(MaskingNode(lzRaster.bands.values.toList, mp)))))
         case None =>
           Invalid(NEL.of(NonEvaluableNode(mask, Some("Masking operation requires its vector argument to be a multipolygon"))))
       }
