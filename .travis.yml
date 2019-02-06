@@ -9,19 +9,19 @@ cache:
   directories:
   - "$HOME/.ivy2"
   - "$HOME/.sbt"
-script:
-  - ".travis/build-and-test.sh"
-before_deploy:
-  - export MAML_VERSION_SUFFIX="-${TRAVIS_COMMIT:0:7}"
-deploy:
-  provider: script
-  script: ".travis/deploy.sh"
-  skip_cleanup: true
-  on:
-    repo: geotrellis/maml
-    branch: master
-    jdk: oraclejdk8
-    scala: "2.11.8"
-after_deploy:
-  - rm -f "${HOME}/.bintray/.credentials"
+#script:
+#  - ".travis/build-and-test.sh"
+#before_deploy:
+#  - export MAML_VERSION_SUFFIX="-${TRAVIS_COMMIT:0:7}"
+#deploy:
+#  provider: script
+#  script: ".travis/deploy.sh"
+#  skip_cleanup: true
+#  on:
+#    repo: geotrellis/maml
+#    branch: master
+#    jdk: oraclejdk8
+#    scala: "2.11.8"
+#after_deploy:
+#  - rm -f "${HOME}/.bintray/.credentials"
 
