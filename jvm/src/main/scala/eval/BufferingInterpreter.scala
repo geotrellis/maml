@@ -102,7 +102,8 @@ object BufferingInterpreter {
       focalMode,
       focalMedian,
       focalSum,
-      focalStandardDeviation
+      focalStandardDeviation,
+      ScopedDirective.pure[FocalSlope](FocalDirectives.slope)
     ), Options(256)
   )
 

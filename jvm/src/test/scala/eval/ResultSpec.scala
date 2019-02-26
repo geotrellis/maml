@@ -9,6 +9,7 @@ import com.azavea.maml.eval.directive.OpDirectives._
 
 import geotrellis.raster._
 import geotrellis.vector._
+import geotrellis.proj4.WebMercator
 import cats._
 import cats.data.{NonEmptyList => NEL, _}
 import Validated._
@@ -27,7 +28,7 @@ class ResultSpec extends FunSpec with Matchers {
 
   it("Evaluate to desired output (tile)") {
     val anImage = ImageResult(LazyMultibandRaster(List(
-      LazyTile(IntArrayTile(1 to 4 toArray, 2, 2), Extent(0,0,0,0)))
+      LazyRaster(IntArrayTile(1 to 4 toArray, 2, 2), Extent(0,0,0,0), WebMercator))
     ))
     val anInt = IntResult(1)
 
@@ -36,16 +37,16 @@ class ResultSpec extends FunSpec with Matchers {
     anInt.as[MultibandTile] should matchPattern { case Invalid(_) => }
 
     val complexImage = ImageResult(LazyMultibandRaster(List(
-      LazyTile.MapInt(List(LazyTile(IntArrayTile(1 to 4 toArray, 2, 2), Extent(0,0,0,0))), { i: Int => i + 4 })
+      LazyRaster.MapInt(List(LazyRaster(IntArrayTile(1 to 4 toArray, 2, 2), Extent(0,0,0,0), WebMercator)), { i: Int => i + 4 })
     )))
     complexImage.as[MultibandTile] should matchPattern { case Valid(_) => }
   }
 
   it("Evaluate float tile with different cols / rows") {
-    val zero = LazyTile(Raster(FloatArrayTile.fill(0, 52, 36), Extent(0, 0, 4, 4)))
-    val one = LazyTile(Raster(FloatArrayTile.fill(1, 52, 36), Extent(0, 0, 4, 4)))
+    val zero = LazyRaster(FloatArrayTile.fill(0, 52, 36), Extent(0, 0, 4, 4), WebMercator)
+    val one = LazyRaster(FloatArrayTile.fill(1, 52, 36), Extent(0, 0, 4, 4), WebMercator)
     val tr = ImageResult(LazyMultibandRaster(List(
-      LazyTile.DualCombine(List(zero, one), _ - _, _ - _))
+      LazyRaster.DualCombine(List(zero, one), _ - _, _ - _))
     ))
     val tile = tr.as[MultibandTile].valueOr(r => throw new Exception(r.toString))
 
@@ -57,7 +58,7 @@ class ResultSpec extends FunSpec with Matchers {
   }
 
   it("Evaluate mask out data according to a mask") {
-    val rasterOnes = LazyTile(Raster(IntArrayTile(1 to 16 toArray, 4, 4), Extent(0, 0, 3, 3)))
+    val rasterOnes = LazyRaster(IntArrayTile(1 to 16 toArray, 4, 4), Extent(0, 0, 3, 3), WebMercator)
     val mask = Extent(0, 0, 1, 1).as[Polygon].map(MultiPolygon(_)).get
     val maskResult = ImageResult(LazyMultibandRaster(List(MaskingNode(List(rasterOnes), mask))))
 

@@ -23,8 +23,8 @@ object SourceDirectives {
   val boolLiteral = Directive { case (BoolLit(bool), _) => Valid(BoolResult(bool)) }
 
   val rasterLiteral = Directive {
-    case (RasterLit(r), _) if r.isInstanceOf[Raster[MultibandTile]] =>
-      val mbRaster = r.asInstanceOf[Raster[MultibandTile]]
+    case (RasterLit(r), _) if r.isInstanceOf[ProjectedRaster[MultibandTile]] =>
+      val mbRaster = r.asInstanceOf[ProjectedRaster[MultibandTile]]
       Valid(ImageResult(LazyMultibandRaster(mbRaster)))
     case (RasterLit(r), _) if r.isInstanceOf[LazyMultibandRaster] =>
       val mbRaster = r.asInstanceOf[LazyMultibandRaster]

@@ -8,6 +8,8 @@ import com.azavea.maml.util._
 
 import geotrellis.raster.Tile
 import geotrellis.raster.mapalgebra.focal
+import geotrellis.vector.Point
+import geotrellis.proj4.{CRS, LatLng}
 import cats._
 import cats.implicits._
 import cats.data.{NonEmptyList => NEL, _}
@@ -19,8 +21,8 @@ object FocalDirectives {
     childResults
       .map({ _.as[LazyMultibandRaster] })
       .toList.sequence
-      .map({ lt =>
-        ImageResult(lt.head.focal(NeighborhoodConversion(neighborhood), None, focal.Max.apply _))
+      .map({ lr =>
+        ImageResult(lr.head.focal(NeighborhoodConversion(neighborhood), None, focal.Max.apply _))
       })
   }
 
@@ -28,8 +30,8 @@ object FocalDirectives {
     childResults
       .map({ _.as[LazyMultibandRaster] })
       .toList.sequence
-      .map({ lt =>
-        ImageResult(lt.head.focal(NeighborhoodConversion(neighborhood), None, focal.Min.apply _))
+      .map({ lr =>
+        ImageResult(lr.head.focal(NeighborhoodConversion(neighborhood), None, focal.Min.apply _))
       })
   }
 
@@ -37,8 +39,8 @@ object FocalDirectives {
     childResults
       .map({ _.as[LazyMultibandRaster] })
       .toList.sequence
-      .map({ lt =>
-        ImageResult(lt.head.focal(NeighborhoodConversion(neighborhood), None, focal.Mean.apply _))
+      .map({ lr =>
+        ImageResult(lr.head.focal(NeighborhoodConversion(neighborhood), None, focal.Mean.apply _))
       })
   }
 
@@ -46,8 +48,8 @@ object FocalDirectives {
     childResults
       .map({ _.as[LazyMultibandRaster] })
       .toList.sequence
-      .map({ lt =>
-        ImageResult(lt.head.focal(NeighborhoodConversion(neighborhood), None, focal.Median.apply _))
+      .map({ lr =>
+        ImageResult(lr.head.focal(NeighborhoodConversion(neighborhood), None, focal.Median.apply _))
       })
   }
 
@@ -55,8 +57,8 @@ object FocalDirectives {
     childResults
       .map({ _.as[LazyMultibandRaster] })
       .toList.sequence
-      .map({ lt =>
-        ImageResult(lt.head.focal(NeighborhoodConversion(neighborhood), None, focal.Mode.apply _))
+      .map({ lr =>
+        ImageResult(lr.head.focal(NeighborhoodConversion(neighborhood), None, focal.Mode.apply _))
       })
   }
 
@@ -64,8 +66,8 @@ object FocalDirectives {
     childResults
       .map({ _.as[LazyMultibandRaster] })
       .toList.sequence
-      .map({ lt =>
-        ImageResult(lt.head.focal(NeighborhoodConversion(neighborhood), None, focal.Sum.apply _))
+      .map({ lr =>
+        ImageResult(lr.head.focal(NeighborhoodConversion(neighborhood), None, focal.Sum.apply _))
       })
   }
 
@@ -73,8 +75,25 @@ object FocalDirectives {
     childResults
       .map({ _.as[LazyMultibandRaster] })
       .toList.sequence
-      .map({ lt =>
-        ImageResult(lt.head.focal(NeighborhoodConversion(neighborhood), None, focal.StandardDeviation.apply _))
+      .map({ lr =>
+        ImageResult(lr.head.focal(NeighborhoodConversion(neighborhood), None, focal.StandardDeviation.apply _))
+      })
+  }
+
+  val slope = Directive { case (fm@FocalSlope(_, neighborhood), childResults) =>
+    childResults
+      .map({ _.as[LazyMultibandRaster] })
+      .toList.sequence
+      .map({ lr =>
+        val image = lr.head
+        val re = image.rasterExtent
+        val zfactor = {
+          val llExtent = re.extent.reproject(image.crs, LatLng)
+          val middleY = llExtent.ymax - (llExtent.ymax - llExtent.ymin)
+          val EQUATOR_METERS = 11320
+          1 / (EQUATOR_METERS * math.cos(math.toRadians(middleY)))
+        }
+        ImageResult(image.slope(NeighborhoodConversion(neighborhood), None, zfactor, re.cellSize))
       })
   }
 }

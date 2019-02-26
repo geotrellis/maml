@@ -95,6 +95,11 @@ trait MamlCodecInstances extends MamlUtilityCodecs {
   implicit lazy val encodeFocalStdDev: Encoder[FocalStdDev] =
     Encoder.forProduct3("args", "neighborhood", "symbol")(u => (u.children, u.neighborhood, u.sym))
 
+  implicit lazy val decodeFocalSlope: Decoder[FocalSlope] =
+    Decoder.forProduct2("args", "neighborhood")(FocalSlope.apply)
+  implicit lazy val encodeFocalSlope: Encoder[FocalSlope] =
+    Encoder.forProduct3("args", "neighborhood", "symbol")(u => (u.children, u.neighborhood, u.sym))
+
   implicit lazy val decodeGreater: Decoder[Greater] =
     Decoder.forProduct1("args"){ args: List[Expression] => Greater(args) }
   implicit lazy val encodeGreater: Encoder[Greater] =

@@ -5,7 +5,7 @@ import com.azavea.maml.error._
 import com.azavea.maml.eval._
 import com.azavea.maml.eval.tile._
 
-import geotrellis.raster.MultibandTile
+import geotrellis.raster._
 import geotrellis.raster.io.geotiff.MultibandGeoTiff
 import geotrellis.vector.Geometry
 import cats.data.{NonEmptyList => NEL, _}
@@ -61,8 +61,10 @@ case class ImageResult(res: LazyMultibandRaster) extends Result {
     val cls = ct.runtimeClass
     if (classOf[LazyMultibandRaster] isAssignableFrom cls)
       Valid(res.asInstanceOf[T])
-    else if (classOf[MultibandTile] isAssignableFrom cls)
+    else if (classOf[ProjectedRaster[MultibandTile]] isAssignableFrom cls)
       Valid(res.evaluateDouble.asInstanceOf[T])
+    else if (classOf[MultibandTile] isAssignableFrom cls)
+      Valid(res.evaluateDouble.tile.asInstanceOf[T])
     else
       Invalid(NEL.of(DivergingTypes(cls.getName, List("img"))))
   }
