@@ -148,14 +148,14 @@ object UnaryDirectives {
   val classification = Directive { case (classify@Classification(_, classMap), childResults) =>
     childResults.head match {
       case ImageResult(lzTile) => Valid(ImageResult(lzTile.classify(BreakMap(classMap.classifications))))
-      case _ => Invalid(NEL.of(NonEvaluableNode(classify, Some("Classification node requires multiband lazytile argument"))))
+      case _ => Invalid(NEL.of(NonEvaluableNode(classify, Some("Classification node requires multiband lazyraster argument"))))
     }
   }
 
   val imageSelection = Directive { case (imgSel@ImageSelect(_, labels), childResults) =>
     childResults.head match {
       case ImageResult(mbLzTile) => Valid(ImageResult(mbLzTile.select(labels)))
-      case _ => Invalid(NEL.of(NonEvaluableNode(imgSel, Some("ImageSelect node requires multiband lazytile argument"))))
+      case _ => Invalid(NEL.of(NonEvaluableNode(imgSel, Some("ImageSelect node requires multiband lazyraster argument"))))
     }
   }
 }

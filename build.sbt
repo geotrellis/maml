@@ -2,7 +2,7 @@ import com.scalapenos.sbt.prompt.SbtPrompt.autoImport._
 
 promptTheme := com.scalapenos.sbt.prompt.PromptThemes.ScalapenosTheme
 
-val mamlVersion = "0.1.10" + scala.util.Properties.envOrElse("MAML_VERSION_SUFFIX", "")
+val mamlVersion = "0.2.0-LOCAL"
 
 /** Project configurations */
 lazy val root = project.in(file("."))

@@ -4,6 +4,7 @@ import com.azavea.maml.ast._
 import com.azavea.maml.eval.tile._
 import geotrellis.raster._
 import geotrellis.vector._
+import geotrellis.proj4.WebMercator
 
 import org.scalatest._
 
@@ -13,7 +14,7 @@ class MultibandSelectionSpec extends FunSpec with Matchers {
   def someRaster(v: Int) = {
     val someTile = ArrayTile(Array(v, v, v, v), 2, 2)
     val someExtent = Extent(0, 0, 1, 1)
-    LazyTile(someTile, someExtent)
+    LazyRaster(someTile, someExtent, WebMercator)
   }
 
   it("Should allow for the selection of bands by idx") {

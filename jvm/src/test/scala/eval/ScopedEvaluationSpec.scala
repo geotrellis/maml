@@ -10,6 +10,7 @@ import com.azavea.maml.eval.directive._
 
 import geotrellis.raster._
 import geotrellis.vector._
+import geotrellis.proj4.WebMercator
 import cats._
 import cats.data.{NonEmptyList => NEL, _}
 import Validated._
@@ -19,8 +20,8 @@ import scala.reflect._
 
 class ScopedEvaluationSpec extends FunSpec with Matchers {
 
-  def tileToLit(tile: Tile): RasterLit[Raster[MultibandTile]] =
-    RasterLit(Raster(MultibandTile(tile), Extent(0, 0, 0, 0)))
+  def tileToLit(tile: Tile): RasterLit[ProjectedRaster[MultibandTile]] =
+    RasterLit(ProjectedRaster(MultibandTile(tile), Extent(0, 0, 0, 0), WebMercator))
 
   implicit class TypeRefinement(self: Interpreted[Result]) {
     def as[T](implicit ct: ClassTag[T]): Interpreted[T] = self match {
