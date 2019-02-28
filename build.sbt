@@ -2,8 +2,6 @@ import com.scalapenos.sbt.prompt.SbtPrompt.autoImport._
 
 promptTheme := com.scalapenos.sbt.prompt.PromptThemes.ScalapenosTheme
 
-val mamlVersion = "0.2.0-LOCAL"
-
 /** Project configurations */
 lazy val root = project.in(file("."))
   .aggregate(mamlJs, mamlJvm, mamlSpark)
@@ -67,7 +65,6 @@ lazy val publishSettings =
 val commonSettings = Seq(
   organization := "com.azavea",
   licenses += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0.txt")),
-  version := mamlVersion,
   scalaVersion := "2.11.12",
   crossScalaVersions := Seq("2.11.12", "2.12.7"),
   resolvers ++= Seq(
