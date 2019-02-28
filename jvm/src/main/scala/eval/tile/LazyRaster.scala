@@ -4,7 +4,7 @@ import com.azavea.maml.eval._
 
 import geotrellis.raster._
 import geotrellis.raster.mapalgebra.local._
-import geotrellis.raster.mapalgebra.focal.{Neighborhood, TargetCell, Slope => FocalSlope}
+import geotrellis.raster.mapalgebra.focal.{Square, Neighborhood, TargetCell, Slope => GTFocalSlope}
 import geotrellis.raster.render._
 import geotrellis.vector.{Extent, MultiPolygon, Point}
 import geotrellis.proj4.CRS
@@ -169,15 +169,14 @@ object LazyRaster {
 
   case class Slope(
     children: List[LazyRaster],
-    neighborhood: Neighborhood,
     gridbounds: Option[GridBounds],
     zFactor: Double,
     cs: CellSize
   ) extends UnaryBranch {
     override lazy val cols: Int = gridbounds.map(_.width).getOrElse(fst.cols)
     override lazy val rows: Int = gridbounds.map(_.height).getOrElse(fst.rows)
-    lazy val intTile = FocalSlope(fst.evaluate, neighborhood, gridbounds, cs, zFactor, TargetCell.All)
-    lazy val dblTile = FocalSlope(fst.evaluateDouble, neighborhood, gridbounds, cs, zFactor, TargetCell.All)
+    lazy val intTile = GTFocalSlope(fst.evaluate, Square(1), gridbounds, cs, zFactor, TargetCell.All)
+    lazy val dblTile = GTFocalSlope(fst.evaluateDouble, Square(1),  gridbounds, cs, zFactor, TargetCell.All)
 
     def get(col: Int, row: Int) = intTile.get(col, row)
     def getDouble(col: Int, row: Int) = dblTile.get(col, row)

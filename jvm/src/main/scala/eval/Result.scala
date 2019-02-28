@@ -64,7 +64,7 @@ case class ImageResult(res: LazyMultibandRaster) extends Result {
     else if (classOf[ProjectedRaster[MultibandTile]] isAssignableFrom cls)
       Valid(res.evaluateDouble.asInstanceOf[T])
     else if (classOf[MultibandTile] isAssignableFrom cls)
-      Valid(res.evaluateDouble.tile.asInstanceOf[T])
+      Valid(res.evaluateDouble.raster.tile.asInstanceOf[T])
     else
       Invalid(NEL.of(DivergingTypes(cls.getName, List("img"))))
   }

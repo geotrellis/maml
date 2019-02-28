@@ -80,7 +80,7 @@ object FocalDirectives {
       })
   }
 
-  val slope = Directive { case (fm@FocalSlope(_, neighborhood), childResults) =>
+  val slope = Directive { case (fm@FocalSlope(_), childResults) =>
     childResults
       .map({ _.as[LazyMultibandRaster] })
       .toList.sequence
@@ -93,7 +93,8 @@ object FocalDirectives {
           val EQUATOR_METERS = 11320
           1 / (EQUATOR_METERS * math.cos(math.toRadians(middleY)))
         }
-        ImageResult(image.slope(NeighborhoodConversion(neighborhood), None, zfactor, re.cellSize))
+        println(image.slope(None, zfactor, re.cellSize))
+        ImageResult(image.slope(None, zfactor, re.cellSize))
       })
   }
 }

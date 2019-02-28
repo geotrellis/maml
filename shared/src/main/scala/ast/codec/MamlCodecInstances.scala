@@ -96,9 +96,9 @@ trait MamlCodecInstances extends MamlUtilityCodecs {
     Encoder.forProduct3("args", "neighborhood", "symbol")(u => (u.children, u.neighborhood, u.sym))
 
   implicit lazy val decodeFocalSlope: Decoder[FocalSlope] =
-    Decoder.forProduct2("args", "neighborhood")(FocalSlope.apply)
+    Decoder.forProduct1("args")(FocalSlope.apply)
   implicit lazy val encodeFocalSlope: Encoder[FocalSlope] =
-    Encoder.forProduct3("args", "neighborhood", "symbol")(u => (u.children, u.neighborhood, u.sym))
+    Encoder.forProduct2("args", "symbol")(u => (u.children, u.sym))
 
   implicit lazy val decodeGreater: Decoder[Greater] =
     Decoder.forProduct1("args"){ args: List[Expression] => Greater(args) }

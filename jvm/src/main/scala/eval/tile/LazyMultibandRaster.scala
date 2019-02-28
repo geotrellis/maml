@@ -69,12 +69,11 @@ case class LazyMultibandRaster(val bands: Map[String, LazyRaster]) {
   }
 
   def slope(
-    neighborhood: Neighborhood,
     gridbounds: Option[GridBounds],
     zFactor: Double,
     cs: CellSize
   ): LazyMultibandRaster = {
-    val lztiles = bands.mapValues({ lt => LazyRaster.Slope(List(lt), neighborhood, gridbounds, zFactor, cs) })
+    val lztiles = bands.mapValues({ lt => LazyRaster.Slope(List(lt), gridbounds, zFactor, cs) })
     LazyMultibandRaster(lztiles)
   }
 }
