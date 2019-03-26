@@ -93,8 +93,24 @@ object FocalDirectives {
           val EQUATOR_METERS = 11320
           1 / (EQUATOR_METERS * math.cos(math.toRadians(middleY)))
         }
-        println(image.slope(None, zfactor, re.cellSize))
         ImageResult(image.slope(None, zfactor, re.cellSize))
+      })
+  }
+
+  val hillshade = Directive { case (fm@FocalHillshade(_, azimuth, altitude), childResults) =>
+    childResults
+      .map({ _.as[LazyMultibandRaster] })
+      .toList.sequence
+      .map({ lr =>
+        val image = lr.head
+        val re = image.rasterExtent
+        val zfactor = {
+          val llExtent = re.extent.reproject(image.crs, LatLng)
+          val middleY = llExtent.ymax - (llExtent.ymax - llExtent.ymin)
+          val EQUATOR_METERS = 11320
+          1 / (EQUATOR_METERS * math.cos(math.toRadians(middleY)))
+        }
+        ImageResult(image.hillshade(None, zfactor, re.cellSize, azimuth, altitude))
       })
   }
 }

@@ -192,5 +192,27 @@ class EvaluationSpec extends FunSpec with Matchers with ExpressionTreeCodec {
       case Valid(t) => t.bands.head.get(5, 5) should be (10)
       case i@Invalid(_) => fail(s"$i")
     }
+
+    /** The hillshade test is a bit more involved than some of the above
+     *  See http://bit.ly/Qj0YPg for more information about the proper interpretation
+     *   of hillshade values
+     **/
+    val hillshadeTile =
+      IntArrayTile(
+        Array(0, 0,    0,    0,    0,
+              0, 2450, 2461, 2483, 0,
+              0, 2452, 2461, 2483, 0,
+              0, 2447, 2455, 2477, 0,
+              0, 0,    0,    0,    0),
+      5, 5)
+    val hillshadeE =
+      Extent(0, 0, 25, 25)
+    val hillshadeProjectedRaster =
+      ProjectedRaster(Raster(MultibandTile(hillshadeTile), hillshadeE), WebMercator)
+
+    interpreter(FocalHillshade(List(RasterLit(hillshadeProjectedRaster)), 315, 45)).as[MultibandTile] match {
+      case Valid(t) => t.bands.head.get(2, 2) should be (77)
+      case i@Invalid(_) => fail(s"$i")
+    }
   }
 }

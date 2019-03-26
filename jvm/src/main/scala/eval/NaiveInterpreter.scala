@@ -88,7 +88,8 @@ object NaiveInterpreter {
       FocalDirectives.median,
       FocalDirectives.sum,
       FocalDirectives.standardDeviation,
-      FocalDirectives.slope
+      FocalDirectives.slope,
+      FocalDirectives.hillshade
     )
   )
 }

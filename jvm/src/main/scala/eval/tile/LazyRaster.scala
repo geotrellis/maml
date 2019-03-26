@@ -5,6 +5,7 @@ import com.azavea.maml.eval._
 import geotrellis.raster._
 import geotrellis.raster.mapalgebra.local._
 import geotrellis.raster.mapalgebra.focal.{Square, Neighborhood, TargetCell, Slope => GTFocalSlope}
+import geotrellis.raster.mapalgebra.focal.hillshade.{Hillshade => GTHillshade}
 import geotrellis.raster.render._
 import geotrellis.vector.{Extent, MultiPolygon, Point}
 import geotrellis.proj4.CRS
@@ -177,6 +178,26 @@ object LazyRaster {
     override lazy val rows: Int = gridbounds.map(_.height).getOrElse(fst.rows)
     lazy val intTile = GTFocalSlope(fst.evaluate, Square(1), gridbounds, cs, zFactor, TargetCell.All)
     lazy val dblTile = GTFocalSlope(fst.evaluateDouble, Square(1),  gridbounds, cs, zFactor, TargetCell.All)
+
+    def get(col: Int, row: Int) = intTile.get(col, row)
+    def getDouble(col: Int, row: Int) = dblTile.get(col, row)
+  }
+
+  case class Hillshade(
+    children: List[LazyRaster],
+    gridbounds: Option[GridBounds],
+    zFactor: Double,
+    cs: CellSize,
+    azimuth: Double,
+    altitude: Double
+  ) extends UnaryBranch {
+    override lazy val cols: Int = gridbounds.map(_.width).getOrElse(fst.cols)
+    override lazy val rows: Int = gridbounds.map(_.height).getOrElse(fst.rows)
+
+    lazy val intTile =
+      GTHillshade(fst.evaluate, Square(1), gridbounds, cs, azimuth, altitude, zFactor, TargetCell.All)
+    lazy val dblTile =
+      GTHillshade(fst.evaluateDouble, Square(1), gridbounds, cs, azimuth, altitude, zFactor, TargetCell.All)
 
     def get(col: Int, row: Int) = intTile.get(col, row)
     def getDouble(col: Int, row: Int) = dblTile.get(col, row)
