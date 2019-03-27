@@ -10,8 +10,9 @@ lazy val root = project.in(file("."))
     licenses += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0.txt"))
   ).enablePlugins(ScalaJSPlugin)
 
-val circeVer = "0.10.0"
-val gtVer    = "2.2.0"
+val circeVer       = "0.11.1"
+val circeOpticsVer = "0.11.0"
+val gtVer          = "2.2.0"
 
 lazy val maml = crossProject.in(file("."))
   .settings(publishSettings:_*)
@@ -25,7 +26,7 @@ lazy val maml = crossProject.in(file("."))
       "io.circe"                   %% "circe-generic"        % circeVer,
       "io.circe"                   %% "circe-generic-extras" % circeVer,
       "io.circe"                   %% "circe-parser"         % circeVer,
-      "io.circe"                   %% "circe-optics"         % circeVer
+      "io.circe"                   %% "circe-optics"         % circeOpticsVer
     )
   ).jvmSettings(
     name := "maml-jvm",
