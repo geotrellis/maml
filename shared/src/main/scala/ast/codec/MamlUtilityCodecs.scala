@@ -17,18 +17,18 @@ import scala.util.Try
 
 
 trait MamlUtilityCodecs {
-  implicit val decodeKeyDouble: KeyDecoder[Double] = new KeyDecoder[Double] {
-    final def apply(key: String): Option[Double] = Try(key.toDouble).toOption
+  implicit val decodeKeyDouble: KeyDecoder[Double] = KeyDecoder.instance[Double] {
+    (key: String) => Try(key.toDouble).toOption
   }
-  implicit val encodeKeyDouble: KeyEncoder[Double] = new KeyEncoder[Double] {
-    final def apply(key: Double): String = key.toString
+  implicit val encodeKeyDouble: KeyEncoder[Double] = KeyEncoder.instance[Double] {
+    (key: Double) => key.toString
   }
 
-  implicit val decodeKeyUUID: KeyDecoder[UUID] = new KeyDecoder[UUID] {
-    final def apply(key: String): Option[UUID] = Try(UUID.fromString(key)).toOption
+  implicit val decodeKeyUUID: KeyDecoder[UUID] = KeyDecoder.instance[UUID] {
+    (key: String) => Try(UUID.fromString(key)).toOption
   }
-  implicit val encodeKeyUUID: KeyEncoder[UUID] = new KeyEncoder[UUID] {
-    final def apply(key: UUID): String = key.toString
+  implicit val encodeKeyUUID: KeyEncoder[UUID] = KeyEncoder.instance[UUID] {
+    (key: UUID) => key.toString
   }
 
   implicit lazy val classBoundaryDecoder: Decoder[ClassBoundaryType] =
