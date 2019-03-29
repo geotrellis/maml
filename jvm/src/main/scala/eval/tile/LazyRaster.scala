@@ -99,6 +99,27 @@ object LazyRaster {
     def crs = fst.crs
   }
 
+  trait TernaryBranch extends Branch {
+    val arity = 3
+    require(children.length == arity, s"Incorrect arity: $arity argument(s) expected, ${children.length} found")
+    def fst = children(0)
+    def snd = children(1)
+    def thd = children(2)
+    def rasterExtent: RasterExtent = fst.rasterExtent combine snd.rasterExtent combine thd.rasterExtent
+    def crs = fst.crs
+  }
+
+  trait QuaternaryBranch extends Branch {
+    val arity = 4
+    require(children.length == arity, s"Incorrect arity: $arity argument(s) expected, ${children.length} found")
+    def fst = children(0)
+    def snd = children(1)
+    def thd = children(2)
+    def fth = children(3)
+    def rasterExtent: RasterExtent = fst.rasterExtent combine snd.rasterExtent combine thd.rasterExtent combine fth.rasterExtent
+    def crs = fst.crs
+  }
+
   trait Terminal extends LazyRaster {
     def children: List[LazyRaster] = List.empty
   }

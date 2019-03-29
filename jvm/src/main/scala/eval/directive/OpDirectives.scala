@@ -358,10 +358,21 @@ object OpDirectives {
       case _ =>
         Invalid(NEL.of(NonEvaluableNode(mask, Some("Masking operation requires both a tile and a vector argument"))))
     }).andThen({ case (lzRaster, geom) =>
-      geom.as[MultiPolygon] match {
-        case Some(mp) =>
-          Valid(ImageResult(LazyMultibandRaster(List(MaskingNode(lzRaster.bands.values.toList, mp)))))
-        case None =>
+      val bandList = lzRaster.bands.values.toList
+      (geom.as[MultiPolygon], bandList.length) match {
+        case (Some(mp), 1) =>
+          Valid(ImageResult(LazyMultibandRaster(List(SingleBandMaskingNode(bandList, mp)))))
+        case (Some(mp), 3) =>
+          Valid(ImageResult(LazyMultibandRaster(List(RGBMaskingNode(bandList, mp)))))
+        case (Some(mp), 4) =>
+          Valid(ImageResult(LazyMultibandRaster(List(RGBAMaskingNode(bandList, mp)))))
+        case (Some(_), n) =>
+              Invalid(
+                NEL.of(
+                  NonEvaluableNode(
+                    mask,
+                    Some(s"Cannot mask multiband tile with arity of $n"))))
+        case (None, _) =>
           Invalid(NEL.of(NonEvaluableNode(mask, Some("Masking operation requires its vector argument to be a multipolygon"))))
       }
     })

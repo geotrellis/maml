@@ -8,8 +8,13 @@ import geotrellis.raster.render._
 import geotrellis.vector.{ Extent, MultiPolygon, Point }
 import spire.syntax.cfor._
 
+sealed trait MaskingNode extends LazyRaster.Branch {
 
-case class MaskingNode(children: List[LazyRaster], mask: MultiPolygon) extends LazyRaster.UnaryBranch {
+  val children: List[LazyRaster]
+  val mask: MultiPolygon
+
+  def fst: LazyRaster
+
   lazy val cellMask: Tile = {
     val masky = ArrayTile.empty(BitCellType, this.cols, this.rows)
 
@@ -35,3 +40,11 @@ case class MaskingNode(children: List[LazyRaster], mask: MultiPolygon) extends L
   }
 }
 
+case class SingleBandMaskingNode(children: List[LazyRaster], mask: MultiPolygon)
+    extends MaskingNode with LazyRaster.UnaryBranch
+
+case class RGBMaskingNode(children: List[LazyRaster], mask: MultiPolygon)
+    extends MaskingNode with LazyRaster.TernaryBranch
+
+case class RGBAMaskingNode(children: List[LazyRaster], mask: MultiPolygon)
+    extends MaskingNode with LazyRaster.QuaternaryBranch

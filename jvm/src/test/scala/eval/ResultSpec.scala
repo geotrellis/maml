@@ -60,17 +60,21 @@ class ResultSpec extends FunSpec with Matchers {
   it("Evaluate mask out data according to a mask") {
     val rasterOnes = LazyRaster(IntArrayTile(1 to 16 toArray, 4, 4), Extent(0, 0, 3, 3), WebMercator)
     val mask = Extent(0, 0, 1, 1).as[Polygon].map(MultiPolygon(_)).get
-    val maskResult = ImageResult(LazyMultibandRaster(List(MaskingNode(List(rasterOnes), mask))))
+    val maskResultSB = ImageResult(LazyMultibandRaster(List(SingleBandMaskingNode(List(rasterOnes), mask))))
+    val maskResultRGB = ImageResult(LazyMultibandRaster(List(RGBMaskingNode(List(rasterOnes, rasterOnes, rasterOnes), mask))))
 
     for {
       x <- (0 to 3 toArray)
       y <- (0 to 3 toArray)
     } yield {
-      val fetched = maskResult.res.bands.head._2.get(x, y)
+      val fetchedSB = maskResultSB.res.bands.head._2.get(x, y)
+      val fetchedRGB = maskResultRGB.res.bands map { _._2.get(x, y) }
       if ((x, y) == (0, 3)) {
-        isData(fetched) should be (true)
+        isData(fetchedSB) should be (true)
+        fetchedRGB map { isData(_) } should be (List(true, true, true))
       } else {
-        isData(fetched) should be (false)
+        isData(fetchedSB) should be (false)
+        fetchedRGB map { isData(_) } should be (List(false, false, false))
       }
     }
   }
