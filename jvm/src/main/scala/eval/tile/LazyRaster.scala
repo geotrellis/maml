@@ -156,8 +156,8 @@ object LazyRaster {
   case class Focal(
     children: List[LazyRaster],
     neighborhood: Neighborhood,
-    gridbounds: Option[GridBounds],
-    focalFn: (Tile, Neighborhood, Option[GridBounds], TargetCell) => Tile
+    gridbounds: Option[GridBounds[Int]],
+    focalFn: (Tile, Neighborhood, Option[GridBounds[Int]], TargetCell) => Tile
   ) extends UnaryBranch {
     override lazy val cols: Int = gridbounds.map(_.width).getOrElse(fst.cols)
     override lazy val rows: Int = gridbounds.map(_.height).getOrElse(fst.rows)
@@ -170,7 +170,7 @@ object LazyRaster {
 
   case class Slope(
     children: List[LazyRaster],
-    gridbounds: Option[GridBounds],
+    gridbounds: Option[GridBounds[Int]],
     zFactor: Double,
     cs: CellSize
   ) extends UnaryBranch {
@@ -185,7 +185,7 @@ object LazyRaster {
 
   case class Hillshade(
     children: List[LazyRaster],
-    gridbounds: Option[GridBounds],
+    gridbounds: Option[GridBounds[Int]],
     zFactor: Double,
     cs: CellSize,
     azimuth: Double,
@@ -203,4 +203,3 @@ object LazyRaster {
     def getDouble(col: Int, row: Int) = dblTile.get(col, row)
   }
 }
-
