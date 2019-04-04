@@ -38,6 +38,12 @@ sealed trait MaskingNode extends LazyRaster.Branch {
 
     if (isNoData(v)) v else if (cellMask.get(col, row) == 1) v else Double.NaN
   }
+
+  def bands: List[LazyRaster] = children map {(lzRaster: LazyRaster) =>
+    LazyRaster(lzRaster.evaluateAs(DoubleConstantNoDataCellType).localMask(cellMask, 0, NODATA),
+               rasterExtent,
+               fst.crs)
+  }
 }
 
 case class SingleBandMaskingNode(children: List[LazyRaster], mask: MultiPolygon)

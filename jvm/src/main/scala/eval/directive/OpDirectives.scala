@@ -361,11 +361,11 @@ object OpDirectives {
       val bandList = lzRaster.bands.values.toList
       (geom.as[MultiPolygon], bandList.length) match {
         case (Some(mp), 1) =>
-          Valid(ImageResult(LazyMultibandRaster(List(SingleBandMaskingNode(bandList, mp)))))
+          Valid(ImageResult(LazyMultibandRaster(SingleBandMaskingNode(bandList, mp).bands)))
         case (Some(mp), 3) =>
-          Valid(ImageResult(LazyMultibandRaster(List(RGBMaskingNode(bandList, mp)))))
+          Valid(ImageResult(LazyMultibandRaster(RGBMaskingNode(bandList, mp).bands)))
         case (Some(mp), 4) =>
-          Valid(ImageResult(LazyMultibandRaster(List(RGBAMaskingNode(bandList, mp)))))
+          Valid(ImageResult(LazyMultibandRaster(RGBAMaskingNode(bandList, mp).bands)))
         case (Some(_), n) =>
               Invalid(
                 NEL.of(
