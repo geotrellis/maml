@@ -95,7 +95,11 @@ object LazyRaster {
     require(children.length == arity, s"Incorrect arity: $arity argument(s) expected, ${children.length} found")
     def fst = children(0)
     def snd = children(1)
-    def rasterExtent: RasterExtent = fst.rasterExtent combine snd.rasterExtent
+
+    /** rasterExtent.combine(rasterExtent) was formerly used to derive this value. It sometimes has
+     *   issues with floating point arithmetic. Using the first rasterExtent *should* be fine
+    **/
+    def rasterExtent: RasterExtent = fst.rasterExtent
     def crs = fst.crs
   }
 
