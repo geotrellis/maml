@@ -61,15 +61,15 @@ case class LazyMultibandRaster(val bands: Map[String, LazyRaster]) {
 
   def focal(
     neighborhood: Neighborhood,
-    gridbounds: Option[GridBounds],
-    focalFn: (Tile, Neighborhood, Option[GridBounds], TargetCell) => Tile
+    gridbounds: Option[GridBounds[Int]],
+    focalFn: (Tile, Neighborhood, Option[GridBounds[Int]], TargetCell) => Tile
   ): LazyMultibandRaster = {
     val lztiles = bands.mapValues({ lt => LazyRaster.Focal(List(lt), neighborhood, gridbounds, focalFn) })
     LazyMultibandRaster(lztiles)
   }
 
   def slope(
-    gridbounds: Option[GridBounds],
+    gridbounds: Option[GridBounds[Int]],
     zFactor: Double,
     cs: CellSize
   ): LazyMultibandRaster = {
@@ -78,7 +78,7 @@ case class LazyMultibandRaster(val bands: Map[String, LazyRaster]) {
   }
 
   def hillshade(
-    gridbounds: Option[GridBounds],
+    gridbounds: Option[GridBounds[Int]],
     zFactor: Double,
     cs: CellSize,
     azimuth: Double,

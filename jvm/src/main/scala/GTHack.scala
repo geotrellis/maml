@@ -5,7 +5,7 @@ import geotrellis.raster.io.geotiff._
 import geotrellis.raster.io.geotiff.OverviewStrategy
 
 object GTHack {
-  def closestTiffOverview[T <: CellGrid](
+  def closestTiffOverview[T <: CellGrid[Int]](
     tiff: GeoTiff[T],
     cs: CellSize,
     strategy: OverviewStrategy
