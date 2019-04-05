@@ -12,7 +12,7 @@ lazy val root = project.in(file("."))
 
 val circeVer       = "0.11.1"
 val circeOpticsVer = "0.11.0"
-val gtVer          = "3.0.1-SNAPSHOT"
+val gtVer          = "3.0.0-M1"
 
 lazy val maml = crossProject.in(file("."))
   .settings(publishSettings:_*)
