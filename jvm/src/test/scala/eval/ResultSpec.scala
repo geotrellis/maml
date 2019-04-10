@@ -28,7 +28,7 @@ class ResultSpec extends FunSpec with Matchers {
 
   it("Evaluate to desired output (tile)") {
     val anImage = ImageResult(LazyMultibandRaster(List(
-      LazyRaster(IntArrayTile(1 to 4 toArray, 2, 2), Extent(0,0,0,0), WebMercator))
+      LazyRaster(IntArrayTile(1 to 4 toArray, 2, 2), Extent(0,0,1,1), WebMercator))
     ))
     val anInt = IntResult(1)
 
@@ -37,7 +37,7 @@ class ResultSpec extends FunSpec with Matchers {
     anInt.as[MultibandTile] should matchPattern { case Invalid(_) => }
 
     val complexImage = ImageResult(LazyMultibandRaster(List(
-      LazyRaster.MapInt(List(LazyRaster(IntArrayTile(1 to 4 toArray, 2, 2), Extent(0,0,0,0), WebMercator)), { i: Int => i + 4 })
+      LazyRaster.MapInt(List(LazyRaster(IntArrayTile(1 to 4 toArray, 2, 2), Extent(0,0,1,1), WebMercator)), { i: Int => i + 4 })
     )))
     complexImage.as[MultibandTile] should matchPattern { case Valid(_) => }
   }
