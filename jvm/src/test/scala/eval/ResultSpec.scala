@@ -28,7 +28,7 @@ class ResultSpec extends FunSpec with Matchers {
 
   it("Evaluate to desired output (tile)") {
     val anImage = ImageResult(LazyMultibandRaster(List(
-      LazyRaster(IntArrayTile(1 to 4 toArray, 2, 2), Extent(0,0,0,0), WebMercator))
+      LazyRaster(IntArrayTile(1 to 4 toArray, 2, 2), Extent(0,0,1,1), WebMercator))
     ))
     val anInt = IntResult(1)
 
@@ -37,7 +37,7 @@ class ResultSpec extends FunSpec with Matchers {
     anInt.as[MultibandTile] should matchPattern { case Invalid(_) => }
 
     val complexImage = ImageResult(LazyMultibandRaster(List(
-      LazyRaster.MapInt(List(LazyRaster(IntArrayTile(1 to 4 toArray, 2, 2), Extent(0,0,0,0), WebMercator)), { i: Int => i + 4 })
+      LazyRaster.MapInt(List(LazyRaster(IntArrayTile(1 to 4 toArray, 2, 2), Extent(0,0,1,1), WebMercator)), { i: Int => i + 4 })
     )))
     complexImage.as[MultibandTile] should matchPattern { case Valid(_) => }
   }
@@ -62,15 +62,23 @@ class ResultSpec extends FunSpec with Matchers {
     val mask = Extent(0, 0, 1, 1).as[Polygon].map(MultiPolygon(_)).get
     val maskResult = ImageResult(LazyMultibandRaster(List(MaskingNode(List(rasterOnes), mask))))
 
+
+    val maskResultSB = ImageResult(LazyMultibandRaster(List(MaskingNode(List(rasterOnes), mask))))
+    val maskResultRGB = ImageResult(LazyMultibandRaster(
+                                      List(rasterOnes, rasterOnes, rasterOnes)).mask(mask))
+
     for {
       x <- (0 to 3 toArray)
       y <- (0 to 3 toArray)
     } yield {
-      val fetched = maskResult.res.bands.head._2.get(x, y)
+      val fetchedSB = maskResultSB.res.bands.head._2.get(x, y)
+      val fetchedRGB = maskResultRGB.res.bands.toList map { _._2.get(x, y) }
       if ((x, y) == (0, 3)) {
-        isData(fetched) should be (true)
+        isData(fetchedSB) should be (true)
+        fetchedRGB map { isData(_) } should be (List(true, true, true))
       } else {
-        isData(fetched) should be (false)
+        isData(fetchedSB) should be (false)
+        fetchedRGB map { isData(_) } should be (List(false, false, false))
       }
     }
   }
