@@ -21,7 +21,7 @@ import scala.reflect._
 class ScopedEvaluationSpec extends FunSpec with Matchers {
 
   def tileToLit(tile: Tile): RasterLit[ProjectedRaster[MultibandTile]] =
-    RasterLit(ProjectedRaster(MultibandTile(tile), Extent(0, 0, 0, 0), WebMercator))
+    RasterLit(ProjectedRaster(MultibandTile(tile), Extent(0, 0, 1, 1), WebMercator))
 
   implicit class TypeRefinement(self: Interpreted[Result]) {
     def as[T](implicit ct: ClassTag[T]): Interpreted[T] = self match {
