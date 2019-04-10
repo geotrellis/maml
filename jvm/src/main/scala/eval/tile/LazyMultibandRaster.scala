@@ -76,6 +76,24 @@ case class LazyMultibandRaster(val bands: Map[String, LazyRaster]) {
     val lztiles = bands.mapValues({ lt => LazyRaster.Slope(List(lt), gridbounds, zFactor, cs) })
     LazyMultibandRaster(lztiles)
   }
+
+  def hillshade(
+    gridbounds: Option[GridBounds[Int]],
+    zFactor: Double,
+    cs: CellSize,
+    azimuth: Double,
+    altitude: Double
+  ): LazyMultibandRaster = {
+    val lztiles = bands.mapValues({ lt => LazyRaster.Hillshade(List(lt), gridbounds, zFactor, cs, azimuth, altitude) })
+    LazyMultibandRaster(lztiles)
+  }
+
+  def mask(
+    maskPoly: MultiPolygon
+  ): LazyMultibandRaster = {
+    val lztiles = bands.mapValues({ lt => MaskingNode(List(lt), maskPoly) })
+    LazyMultibandRaster(lztiles)
+  }
 }
 
 object LazyMultibandRaster {
