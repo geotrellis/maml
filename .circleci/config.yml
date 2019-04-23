@@ -1,0 +1,137 @@
+aliases:
+  - &restore_sbt_cache
+    restore_cache:
+      key: sbt-{{ checksum "/tmp/scala_version" }}-cache
+
+  - &save_sbt_cache
+    save_cache:
+      key: sbt-{{ checksum "/tmp/scala_version" }}-cache-{{ epoch }}
+      paths:
+        - "~/.ivy2/cache"
+        - "~/.sbt"
+        - "~/.m2"
+        - "~/.coursier"
+
+  - &attach_workspace
+    attach_workspace:
+      at: "~"
+
+  - &persist_to_workspace
+    persist_to_workspace:
+      root: "~/"
+      paths:
+        - ".ivy2/cache"
+        - ".sbt"
+        - ".m2"
+        - ".coursier"
+        - "project/*/target/*"
+
+  - &dependencies
+    - checkout
+    - *attach_workspace
+    - run: 
+        name: "(workaround for cache key by Scala version)"
+        command: echo "${SCALA_VERSION}" > /tmp/scala_version
+    - *restore_sbt_cache
+    - run:
+        name: Updating Scala dependencies
+        command: ./sbt "++${SCALA_VERSION}" test:compile
+    - *save_sbt_cache
+    - *persist_to_workspace
+
+  - &mamlJVM_steps
+    - checkout
+    - *attach_workspace
+    - run:
+        name: Executing cibuild
+        command: ./scripts/cibuild mamlJVM
+
+  - &mamlJS_steps
+    - checkout
+    - *attach_workspace
+    - run:
+        name: Executing cibuild
+        command: ./scripts/cibuild mamlJS
+
+  - &mamlSpark_steps
+    - checkout
+    - *attach_workspace
+    - run:
+        name: Executing cibuild
+        command: ./scripts/cibuild mamlSpark
+
+  # Requirement groups
+  - &deps_2-11-12
+    - "scala2.11.12-dependencies"
+  - &deps_2-12-8
+    - "scala2.12.8-dependencies"
+
+  # Build environments
+  - &openjdk8-scala2-11-12_environment
+    docker:
+      - image: circleci/openjdk:8-stretch
+    environment:
+      SCALA_VERSION: 2.11.12
+
+  - &openjdk8-scala2-12-8_environment
+    docker:
+      - image: circleci/openjdk:8-stretch
+    environment:
+      SCALA_VERSION: 2.12.8
+
+version: 2
+workflows:
+  version: 2
+  build:
+    jobs:
+      - "scala2.11.12-dependencies"
+      - "scala2.12.8-dependencies"
+      - "mamlJVM-openjdk8-scala2-11-12":
+          requires: *deps_2-11-12
+      - "mamlJVM-openjdk8-scala2-12-8":
+          requires: *deps_2-12-8
+      - "mamlJS-openjdk8-scala2-11-12":
+          requires: *deps_2-11-12
+      - "mamlJS-openjdk8-scala2-12-8":
+          requires: *deps_2-12-8
+      - "mamlSpark-openjdk8-scala2-11-12":
+          requires: *deps_2-11-12
+      - "mamlSpark-openjdk8-scala2-12-8":
+          requires: *deps_2-12-8
+
+jobs:
+  "scala2.11.12-dependencies":
+    <<: *openjdk8-scala2-11-12_environment
+    steps: *dependencies
+
+  "scala2.12.8-dependencies":
+    <<: *openjdk8-scala2-12-8_environment
+    steps: *dependencies
+
+  "mamlJVM-openjdk8-scala2-11-12":
+    <<: *openjdk8-scala2-11-12_environment
+    steps: *mamlJVM_steps
+
+  "mamlJVM-openjdk8-scala2-12-8":
+    <<: *openjdk8-scala2-12-8_environment
+    steps: *mamlJVM_steps
+
+  "mamlJS-openjdk8-scala2-11-12":
+    machine: true
+    environment:
+      SCALA_VERSION: 2.11.12
+    steps: *mamlJVM_steps
+
+  "mamlJS-openjdk8-scala2-12-8":
+    machine: true
+    environment:
+      SCALA_VERSION: 2.12.8
+    steps: *mamlJVM_steps
+
+  "mamlSpark-openjdk8-scala2-11-12":
+    <<: *openjdk8-scala2-11-12_environment
+    steps: *mamlJVM_steps
+
+  "mamlSpark-openjdk8-scala2-12-8":
+    <<: *openjdk8-scala2-12-8_environment
+    steps: *mamlJVM_steps

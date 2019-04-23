@@ -1,0 +1,32 @@
+#!/bin/bash
+
+set -e
+
+if [[ -n "${MAML_DEBUG}" ]]; then
+    set -x
+fi
+
+function usage() {
+    echo -n \
+        "Usage: $(basename "$0")
+Update Scala dependencies and execute tests.
+"
+}
+
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+    if [[ "${1:-}" == "--help" ]]; then
+        usage
+    elif [[ -n "${1}" ]]; then
+        # We execute `./sbt test:compile` on CircleCI in a way that lets us
+        # reliably cache the results so we don't need to pull down dependencies
+        # twice.
+        echo "Executing Scala test suite"
+        ./sbt "++${SCALA_VERSION:-2.11.12}" "project ${1}" test
+    else
+        echo "Updating Scala dependencies"
+        ./sbt "++${SCALA_VERSION:-2.11.12}" test:compile
+
+        echo "Executing Scala test suite"
+        ./sbt "++${SCALA_VERSION:-2.11.12}" test
+    fi
+fi

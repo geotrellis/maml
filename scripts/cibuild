@@ -1,0 +1,24 @@
+#!/bin/bash
+
+set -e
+
+if [[ -n "${MAML_DEBUG}" ]]; then
+    set -x
+fi
+
+function usage() {
+    echo -n \
+        "Usage: $(basename "$0")
+Execute tests and build artifacts.
+"
+}
+
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+    if [[ "${1:-}" == "--help" ]]; then
+        usage
+    elif [[ -n "${1}" ]]; then
+        ./scripts/test "${1}"
+    else
+        ./scripts/test
+    fi
+fi
