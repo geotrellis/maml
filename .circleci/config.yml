@@ -1,13 +1,13 @@
 aliases:
   - &restore_sbt_cache
-      key: sbt-{{ checksum "/tmp/scala_version" }}-cache
+    key: sbt-{{ checksum "/tmp/scala_version" }}-cache
 
   - &save_sbt_cache
-      key: sbt-{{ checksum "/tmp/scala_version" }}-cache-{{ epoch }}
-      paths:
-        - "~/.ivy2/cache"
-        - "~/.sbt"
-        - "~/cache/coursier"
+    key: sbt-{{ checksum "/tmp/scala_version" }}-cache-{{ epoch }}
+    paths:
+      - "~/.ivy2/cache"
+      - "~/.sbt"
+      - "~/cache/coursier"
 
   - &run_cibuild
     - checkout
