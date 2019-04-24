@@ -11,7 +11,7 @@ aliases:
         - "~/.sbt"
         - "~/cache/coursier"
 
-  - &build_steps
+  - &run_cibuild
     - checkout
     - run: echo "${SCALA_VERSION}" > /tmp/scala_version
     - *restore_sbt_cache
@@ -34,11 +34,11 @@ jobs:
       - image: circleci/openjdk:8-stretch-node
     environment:
       SCALA_VERSION: 2.11.12
-    steps: *build_steps
+    steps: *run_cibuild
 
   "openjdk8-scala2.12.8-nodelts":
     docker:
       - image: circleci/openjdk:8-stretch-node
     environment:
       SCALA_VERSION: 2.12.8
-    steps: *build_steps
+    steps: *run_cibuild
