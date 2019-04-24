@@ -9,8 +9,7 @@ aliases:
       paths:
         - "~/.ivy2/cache"
         - "~/.sbt"
-        - "~/.m2"
-        - "~/.coursier"
+        - "~/cache/coursier"
 
   - &attach_workspace
     attach_workspace:
@@ -18,18 +17,19 @@ aliases:
 
   - &persist_to_workspace
     persist_to_workspace:
-      root: "~/"
+      root: "~"
       paths:
         - ".ivy2/cache"
         - ".sbt"
-        - ".m2"
-        - ".coursier"
-        - "project/*/target/*"
+        - ".cache/coursier"
+        - "project/target"
+        - "project/**/target"
+        - "project/**/**/target"
 
   - &dependencies
     - checkout
     - *attach_workspace
-    - run: 
+    - run:
         name: "(workaround for cache key by Scala version)"
         command: echo "${SCALA_VERSION}" > /tmp/scala_version
     - *restore_sbt_cache
