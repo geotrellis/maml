@@ -79,6 +79,18 @@ aliases:
     environment:
       SCALA_VERSION: 2.12.8
 
+  - &openjdk8-scala2-11-12-nodelts_environment
+    docker:
+      - image: circleci/openjdk:8-stretch-node
+    environment:
+      SCALA_VERSION: 2.11.12
+
+  - &openjdk8-scala2-12-8-nodelts_environment
+    docker:
+      - image: circleci/openjdk:8-stretch-node
+    environment:
+      SCALA_VERSION: 2.12.8
+
 version: 2
 workflows:
   version: 2
@@ -117,21 +129,17 @@ jobs:
     steps: *mamlJVM_steps
 
   "mamlJS-openjdk8-scala2-11-12":
-    machine: true
-    environment:
-      SCALA_VERSION: 2.11.12
-    steps: *mamlJVM_steps
+    <<: *openjdk8-scala2-11-12-nodelts_environment
+    steps: *mamlJS_steps
 
   "mamlJS-openjdk8-scala2-12-8":
-    machine: true
-    environment:
-      SCALA_VERSION: 2.12.8
-    steps: *mamlJVM_steps
+    <<: *openjdk8-scala2-12-8-nodelts_environment
+    steps: *mamlJS_steps
 
   "mamlSpark-openjdk8-scala2-11-12":
     <<: *openjdk8-scala2-11-12_environment
-    steps: *mamlJVM_steps
+    steps: *mamlSpark_steps
 
   "mamlSpark-openjdk8-scala2-12-8":
     <<: *openjdk8-scala2-12-8_environment
-    steps: *mamlJVM_steps
+    steps: *mamlSpark_steps
