@@ -1,10 +1,8 @@
 aliases:
   - &restore_sbt_cache
-    restore_cache:
       key: sbt-{{ checksum "/tmp/scala_version" }}-cache
 
   - &save_sbt_cache
-    save_cache:
       key: sbt-{{ checksum "/tmp/scala_version" }}-cache-{{ epoch }}
       paths:
         - "~/.ivy2/cache"
@@ -14,11 +12,11 @@ aliases:
   - &run_cibuild
     - checkout
     - run: echo "${SCALA_VERSION}" > /tmp/scala_version
-    - *restore_sbt_cache
+    - restore_cache: *restore_sbt_cache
     - run:
         name: Executing cibuild
         command: ./scripts/cibuild
-    - *save_sbt_cache
+    - save_cache: *save_sbt_cache
 
 version: 2
 workflows:
