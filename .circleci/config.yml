@@ -7,7 +7,7 @@ aliases:
     paths:
       - "~/.ivy2/cache"
       - "~/.sbt"
-      - "~/cache/coursier"
+      - "~/.cache/coursier"
 
   - &run_cibuild
     - checkout
