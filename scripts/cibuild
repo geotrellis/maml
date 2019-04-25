@@ -9,7 +9,7 @@ fi
 function usage() {
     echo -n \
         "Usage: $(basename "$0")
-Execute tests and build artifacts.
+Execute tests.
 "
 }
 
