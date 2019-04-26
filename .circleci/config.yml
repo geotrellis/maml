@@ -1,0 +1,42 @@
+aliases:
+  - &restore_sbt_cache
+    key: sbt-{{ checksum "/tmp/scala_version" }}-cache
+
+  - &save_sbt_cache
+    key: sbt-{{ checksum "/tmp/scala_version" }}-cache-{{ epoch }}
+    paths:
+      - "~/.ivy2/cache"
+      - "~/.sbt"
+      - "~/.cache/coursier"
+
+  - &run_cibuild
+    - checkout
+    - run: echo "${SCALA_VERSION}" > /tmp/scala_version
+    - restore_cache: *restore_sbt_cache
+    - run:
+        name: Executing cibuild
+        command: ./scripts/cibuild
+    - save_cache: *save_sbt_cache
+
+version: 2
+workflows:
+  version: 2
+  build:
+    jobs:
+      - "openjdk8-scala2.11.12-nodelts"
+      - "openjdk8-scala2.12.8-nodelts"
+
+jobs:
+  "openjdk8-scala2.11.12-nodelts":
+    docker:
+      - image: circleci/openjdk:8-stretch-node
+    environment:
+      SCALA_VERSION: 2.11.12
+    steps: *run_cibuild
+
+  "openjdk8-scala2.12.8-nodelts":
+    docker:
+      - image: circleci/openjdk:8-stretch-node
+    environment:
+      SCALA_VERSION: 2.12.8
+    steps: *run_cibuild
