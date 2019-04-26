@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Add README [#92](https://github.com/geotrellis/maml/pull/92)
 - Add STRTA and migrate to CircleCI [#93](https://github.com/geotrellis/maml/pull/93)
+- Add changelog and pull request template [#96](https://github.com/geotrellis/maml/pull/96)
 
 ## [0.3.2] - 2019-04-17
 ### Added
