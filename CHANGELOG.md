@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add README [#92](https://github.com/geotrellis/maml/pull/92)
 - Add STRTA and migrate to CircleCI [#93](https://github.com/geotrellis/maml/pull/93)
 - Add changelog and pull request template [#96](https://github.com/geotrellis/maml/pull/96)
+- Add automated releases to Sonatype Nexus through CI [#98](https://github.com/geotrellis/maml/pull/98)
 
 ### Changed
 - Fixed 2.12 compilation in tests [#95](https://github.com/geotrellis/maml/pull/95)
