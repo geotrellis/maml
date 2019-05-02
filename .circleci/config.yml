@@ -57,7 +57,7 @@ workflows:
           requires:
             - "openjdk8-scala2.11.12-nodelts"
           filters:
-           tags:
+            tags:
               only:
                 - /^(.*)$/
             branches:
