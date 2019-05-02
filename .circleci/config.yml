@@ -62,6 +62,7 @@ workflows:
                 - /^(.*)$/
             branches:
               only:
+                - master
                 - develop
                 - feature/jrb/automated-releases-to-sonatype
       - "openjdk8-scala2.12.8-nodelts_deploy":
@@ -73,6 +74,7 @@ workflows:
                 - /^(.*)$/
             branches:
               only:
+                - master
                 - develop
                 - feature/jrb/automated-releases-to-sonatype
 
