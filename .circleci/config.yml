@@ -57,19 +57,23 @@ workflows:
           requires:
             - "openjdk8-scala2.11.12-nodelts"
           filters:
+           tags:
+              only:
+                - /^(.*)$/
             branches:
               only:
                 - develop
-                - master
                 - feature/jrb/automated-releases-to-sonatype
       - "openjdk8-scala2.12.8-nodelts_deploy":
           requires:
             - "openjdk8-scala2.12.8-nodelts"
           filters:
+            tags:
+              only:
+                - /^(.*)$/
             branches:
               only:
                 - develop
-                - master
                 - feature/jrb/automated-releases-to-sonatype
 
 jobs:
