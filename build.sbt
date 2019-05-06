@@ -5,12 +5,9 @@ import com.scalapenos.sbt.prompt.SbtPrompt.autoImport._
 promptTheme := com.scalapenos.sbt.prompt.PromptThemes.ScalapenosTheme
 
 val commonSettings = Seq(
-  // sbt-git provides the isSnapshot.value variable, which will return true if there
-  // are no tags associated with the HEAD commit, or if there are uncommitted
-  // changes. However, sbt-git only appends the -SNAPSHOT suffix if there are
-  // uncommitted changes in the workspace.
-  //
-  // https://github.com/sbt/sbt-git/blob/f8caf9365be380cf101e9605af159b5e7f842d0c/src/main/scala/com/typesafe/sbt/SbtGit.scala#L173
+  // We are overriding the default behavior of sbt-git which, by default,
+  // only appends the `-SNAPSHOT` suffix if there are uncommitted
+  // changes in the workspace.
   version := {
     // Avoid Cyclic reference involving error
     if (git.gitCurrentTags.value.isEmpty || git.gitUncommittedChanges.value)
