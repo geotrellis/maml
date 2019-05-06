@@ -20,7 +20,7 @@ object Expression {
           case None => Invalid(NEL.of(NoVariableBinding(v, params)))
         }
       case _ =>
-        subExpr.children.map(eval(_)).sequence.map(subExpr.withChildren)
+        subExpr.children.traverse(eval(_)).map(subExpr.withChildren)
     }
     eval(expr)
   }
@@ -34,7 +34,7 @@ sealed abstract class Expression(val sym: String) extends Product with Serializa
   def withChildren(newChildren: List[Expression]): Expression
 
   def bind(args: Map[String, Literal]): Interpreted[Expression] =
-    children.map(_.bind(args)).sequence.map(this.withChildren)
+    children.traverse(_.bind(args)).map(this.withChildren)
 }
 
 case class Addition(children: List[Expression]) extends Expression("+") with FoldableExpression {

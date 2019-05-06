@@ -20,10 +20,10 @@ trait ScopedInterpreter[Scope] extends Interpreter {
   def apply(exp: Expression): Interpreted[Result] = {
     def eval(exp: Expression, maybeScope: Option[Scope] = None): Interpreted[Result] = {
       val currentScope = scopeFor(exp, maybeScope)
-      val children: Interpreted[List[Result]] = exp.children.map({ childTree =>
+      val children: Interpreted[List[Result]] = exp.children.traverse({ childTree =>
         val childScope = scopeFor(childTree, Some(currentScope))
         eval(childTree, Some(childScope))
-      }).sequence
+      })
       children.andThen({ childResult => instructions(exp, childResult, currentScope) })
     }
     eval(exp)

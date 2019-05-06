@@ -15,7 +15,7 @@ import scala.reflect.ClassTag
 case class NaiveInterpreter(directives: List[Directive]) extends Interpreter {
 
   def apply(exp: Expression): Interpreted[Result] = {
-    val children: Interpreted[List[Result]] = exp.children.map(apply).sequence
+    val children: Interpreted[List[Result]] = exp.children.traverse(apply)
     children.andThen({ childRes => instructions(exp, childRes) })
   }
 
