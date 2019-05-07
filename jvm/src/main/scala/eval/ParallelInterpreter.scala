@@ -60,3 +60,8 @@ class ParallelInterpreter[F[_]](directives: List[Directive])(
       .reduceLeft(_ orElse _)
       .orElse(fallbackDirective)((expression, children))
 }
+
+object ParallelInterpreter {
+  def DEFAULT[T[_]: Concurrent] =
+    new ParallelInterpreter[T](NaiveInterpreter.DEFAULT.directives)
+}
