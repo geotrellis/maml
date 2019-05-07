@@ -17,15 +17,7 @@ class ParallelInterpreter[F[_]](directives: List[Directive])(
     implicit Conc: Concurrent[F]
 ) {
   def apply(exp: Expression): F[Interpreted[Result]] = {
-    val children =
-      exp.children.traverse((child: Expression) => evalInF(child)) map {
-        _.foldLeft(Valid(List.empty): Interpreted[List[Result]])(
-          (
-              interp1: Interpreted[List[Result]],
-              interp2: Interpreted[List[Result]]
-          ) => interp1 combine interp2
-        )
-      }
+    val children = evalInF(exp)
     val out = children map {
       _.andThen({ childRes =>
         instructions(exp, childRes)
@@ -39,13 +31,7 @@ class ParallelInterpreter[F[_]](directives: List[Directive])(
       expression.children traverse { expr =>
         Conc.start(apply(expr))
       }
-    fibsF flatMap { (fibs: List[Fiber[F, Interpreted[Result]]]) =>
-      {
-        fibs traverse { (fib: Fiber[F, Interpreted[Result]]) =>
-          fib.join
-        }
-      }
-    } map { _.sequence }
+    fibsF flatMap { _.traverse { _.join } } map { _.sequence }
   }
 
   val fallbackDirective: Directive = {
