@@ -63,7 +63,7 @@ class ParallelEvaluationSpec
     interpreter(expr).unsafeRunSync.as[Int] should be(Valid(2))
     val now2 = Instant.now.toEpochMilli
     val duration = (now2 - now1) / 1000
-    (duration > 2 * sleepDuration) should be(false)
+    duration should be < (2 * sleepDuration)
   }
 
   it("Should interpret and evaluate to Boolean literals") {
