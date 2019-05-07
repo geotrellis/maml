@@ -9,13 +9,12 @@ import cats.implicits._
 import cats.data.Validated._
 import cats.data.{NonEmptyList => NEL, _}
 import cats.effect.{Concurrent, Fiber}
-import cats.syntax.semigroup._
 
 import scala.reflect.ClassTag
 
 class ParallelInterpreter[F[_]](directives: List[Directive])(
     implicit Conc: Concurrent[F]
-) {
+) extends Interpreter[F] {
   def apply(exp: Expression): F[Interpreted[Result]] = {
     val children = evalInF(exp)
     val out = children map {

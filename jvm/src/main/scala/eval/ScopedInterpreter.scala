@@ -10,7 +10,7 @@ import cats.data.{NonEmptyList => NEL, _}
 import geotrellis.raster.GridBounds
 
 
-trait ScopedInterpreter[Scope] extends Interpreter {
+trait ScopedInterpreter[Scope] extends Interpreter[Id] {
   def scopeFor(exp: Expression, previous: Option[Scope]): Scope
   def appendDirective(directive: ScopedDirective[Scope]): ScopedInterpreter[Scope]
   def prependDirective(directive: ScopedDirective[Scope]): ScopedInterpreter[Scope]

@@ -12,17 +12,17 @@ import cats.data.{NonEmptyList => NEL, _}
 import scala.reflect.ClassTag
 
 
-case class NaiveInterpreter(directives: List[Directive]) extends Interpreter {
+case class NaiveInterpreter(directives: List[Directive]) extends Interpreter[Id] {
 
   def apply(exp: Expression): Interpreted[Result] = {
     val children: Interpreted[List[Result]] = exp.children.traverse(apply)
     children.andThen({ childRes => instructions(exp, childRes) })
   }
 
-  def prependDirective(directive: Directive): Interpreter =
+  def prependDirective(directive: Directive): Interpreter[Id] =
     NaiveInterpreter(directive +: directives)
 
-  def appendDirective(directive: Directive): Interpreter =
+  def appendDirective(directive: Directive): Interpreter[Id] =
     NaiveInterpreter(directives :+ directive)
 
   val fallbackDirective: Directive =
