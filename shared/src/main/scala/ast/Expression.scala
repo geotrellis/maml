@@ -349,3 +349,7 @@ case class RasterVar(name: String) extends Expression("rasterV") with Variable {
   val kind = MamlKind.Image
 }
 
+case class Sleep(seconds: Long, children: List[Expression]) extends Expression("sleep") with UnaryExpression {
+  val kindDerivation = UnaryExpression.imageOrScalar
+  def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
+}

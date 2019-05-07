@@ -27,6 +27,7 @@ import scala.reflect._
 import org.scalatest._
 
 import scala.concurrent.ExecutionContext.Implicits.global
+import java.time.Instant
 
 class ParallelEvaluationSpec
     extends FunSpec
@@ -51,6 +52,18 @@ class ParallelEvaluationSpec
       case Valid(r)       => r.as[T]
       case i @ Invalid(_) => i
     }
+  }
+
+  it("should take less time than the total duration of its leaves") {
+    val sleepDuration = 3L
+    val expr = Addition(List(
+      Sleep(sleepDuration, List(IntLit(1))),
+      Sleep(sleepDuration, List(IntLit(1)))))
+    val now1 = Instant.now.toEpochMilli
+    interpreter(expr).unsafeRunSync.as[Int] should be(Valid(2))
+    val now2 = Instant.now.toEpochMilli
+    val duration = (now2 - now1) / 1000
+    (duration > 2 * sleepDuration) should be(false)
   }
 
   it("Should interpret and evaluate to Boolean literals") {

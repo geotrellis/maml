@@ -48,5 +48,5 @@ class ParallelInterpreter[F[_]](directives: List[Directive])(
 
 object ParallelInterpreter {
   def DEFAULT[T[_]: Concurrent] =
-    new ParallelInterpreter[T](NaiveInterpreter.DEFAULT.directives)
+    new ParallelInterpreter[T](NaiveInterpreter.DEFAULT.directives :+ OpDirectives.sleep)
 }
