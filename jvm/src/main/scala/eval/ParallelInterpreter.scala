@@ -37,6 +37,12 @@ class ParallelInterpreter[F[_]](directives: List[Directive])(
     case (exp, res) => Invalid(NEL.of(UnhandledCase(exp, exp.kind)))
   }
 
+  def prependDirective(directive: Directive) =
+    new ParallelInterpreter[F](directive +: directives)
+
+  def appendDirective(directive: Directive) =
+    new ParallelInterpreter[F](directives :+ directive)
+
   def instructions(
       expression: Expression,
       children: List[Result]
@@ -48,5 +54,5 @@ class ParallelInterpreter[F[_]](directives: List[Directive])(
 
 object ParallelInterpreter {
   def DEFAULT[T[_]: Concurrent] =
-    new ParallelInterpreter[T](NaiveInterpreter.DEFAULT.directives :+ OpDirectives.sleep)
+    new ParallelInterpreter[T](NaiveInterpreter.DEFAULT.directives)
 }

@@ -34,7 +34,7 @@ class ParallelEvaluationSpec
     with Matchers
     with ExpressionTreeCodec {
   implicit val cs = IO.contextShift(global)
-  val interpreter = ParallelInterpreter.DEFAULT[IO]
+  val interpreter = ParallelInterpreter.DEFAULT[IO].prependDirective(sleep)
 
   implicit def tileIsTileLiteral(
       tile: Tile
