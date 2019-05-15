@@ -12,7 +12,7 @@ import cats.effect.{Concurrent, Fiber}
 
 import scala.reflect.ClassTag
 
-class ParallelInterpreter[F[_]](directives: List[Directive])(
+class ConcurrentInterpreter[F[_]](directives: List[Directive])(
     implicit Conc: Concurrent[F]
 ) extends Interpreter[F] {
   def apply(exp: Expression): F[Interpreted[Result]] = {
@@ -38,10 +38,10 @@ class ParallelInterpreter[F[_]](directives: List[Directive])(
   }
 
   def prependDirective(directive: Directive) =
-    new ParallelInterpreter[F](directive +: directives)
+    new ConcurrentInterpreter[F](directive +: directives)
 
   def appendDirective(directive: Directive) =
-    new ParallelInterpreter[F](directives :+ directive)
+    new ConcurrentInterpreter[F](directives :+ directive)
 
   def instructions(
       expression: Expression,
@@ -52,7 +52,7 @@ class ParallelInterpreter[F[_]](directives: List[Directive])(
       .orElse(fallbackDirective)((expression, children))
 }
 
-object ParallelInterpreter {
+object ConcurrentInterpreter {
   def DEFAULT[T[_]: Concurrent] =
-    new ParallelInterpreter[T](NaiveInterpreter.DEFAULT.directives)
+    new ConcurrentInterpreter[T](NaiveInterpreter.DEFAULT.directives)
 }

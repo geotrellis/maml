@@ -29,12 +29,12 @@ import org.scalatest._
 import scala.concurrent.ExecutionContext.Implicits.global
 import java.time.Instant
 
-class ParallelEvaluationSpec
+class ConcurrentEvaluationSpec
     extends FunSpec
     with Matchers
     with ExpressionTreeCodec {
   implicit val cs = IO.contextShift(global)
-  val interpreter = ParallelInterpreter.DEFAULT[IO].prependDirective(sleep)
+  val interpreter = ConcurrentInterpreter.DEFAULT[IO].prependDirective(sleep)
 
   implicit def tileIsTileLiteral(
       tile: Tile
