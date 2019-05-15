@@ -14,6 +14,7 @@ import Validated._
 import geotrellis.vector._
 import geotrellis.raster.{Tile, isData}
 
+import scala.concurrent.duration._
 import scala.util.Try
 
 
@@ -346,6 +347,12 @@ object OpDirectives {
       )
     })
     Valid(results)
+  }
+
+  /** Sleeping */
+  val sleep = Directive { case (Sleep(n, _), childResults) =>
+    Thread.sleep(n * 1000)
+    Valid(childResults.head)
   }
 
   /** Tile-specific Operations */
