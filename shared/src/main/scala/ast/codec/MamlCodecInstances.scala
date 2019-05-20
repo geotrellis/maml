@@ -50,6 +50,13 @@ trait MamlCodecInstances extends MamlUtilityCodecs {
   implicit lazy val encodeMasking: Encoder[Masking] =
     Encoder.forProduct2("args", "symbol")(u => (u.children, u.sym))
 
+  implicit lazy val decoderSleep: Decoder[Sleep] =
+    Decoder.forProduct2("seconds", "args"){
+      (seconds: Long, args: List[Expression]) => Sleep(seconds, args)
+    }
+  implicit lazy val encoderSleep: Encoder[Sleep] =
+    Encoder.forProduct2("seconds", "args")(u => (u.seconds, u.children))
+
   implicit lazy val decodePow: Decoder[Pow] =
     Decoder.forProduct1("args"){ args: List[Expression] => Pow(args) }
   implicit lazy val encodePow: Encoder[Pow] =

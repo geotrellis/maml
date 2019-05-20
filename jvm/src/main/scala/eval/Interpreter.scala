@@ -11,8 +11,8 @@ import cats.data.{NonEmptyList => NEL, _}
 import scala.reflect.ClassTag
 
 
-trait Interpreter {
-  def apply(exp: Expression): Interpreted[Result]
+trait Interpreter[F[_]] {
+  def apply(exp: Expression): F[Interpreted[Result]]
 }
 
 object Interpreter {
