@@ -9,8 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `ParallelInterpreter` [#101](https://github.com/geotrellis/maml/pull/101)
 - Add automated releases to Sonatype Nexus through CI [#98](https://github.com/geotrellis/maml/pull/98)
 
-### Changed
+### Fixed
 - Fixed 2.12 compilation in tests [#95](https://github.com/geotrellis/maml/pull/95)
+- Reconcile change log for 0.3.3 release [#102](https://github.com/geotrellis/maml/pull/102)
 
 ## [0.3.3] - 2019-04-29
 ### Added
