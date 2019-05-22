@@ -6,14 +6,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
-- Add README [#92](https://github.com/geotrellis/maml/pull/92)
-- Add STRTA and migrate to CircleCI [#93](https://github.com/geotrellis/maml/pull/93)
-- Add changelog and pull request template [#96](https://github.com/geotrellis/maml/pull/96)
 - Added `ParallelInterpreter` [#101](https://github.com/geotrellis/maml/pull/101)
 - Add automated releases to Sonatype Nexus through CI [#98](https://github.com/geotrellis/maml/pull/98)
 
 ### Changed
 - Fixed 2.12 compilation in tests [#95](https://github.com/geotrellis/maml/pull/95)
+
+## [0.3.3] - 2019-04-29
+### Added
+- Add README [#92](https://github.com/geotrellis/maml/pull/92)
+- Add STRTA and migrate to CircleCI [#93](https://github.com/geotrellis/maml/pull/93)
+- Add changelog and pull request template [#96](https://github.com/geotrellis/maml/pull/96)
 
 ## [0.3.2] - 2019-04-17
 ### Added
@@ -25,5 +28,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Mask on LazyMultibandRasters directly [#89](https://github.com/geotrellis/maml/pull/89)
 - Assume correct extents in binary ops to avoid floating point errors [#91](https://github.com/geotrellis/maml/pull/91)
 
-[Unreleased]: https://github.com/geotrellis/maml/compare/0.3.2...HEAD
+[Unreleased]: https://github.com/geotrellis/maml/compare/0.3.3...HEAD
+[0.3.3]: https://github.com/geotrellis/maml/compare/0.3.2...0.3.3
 [0.3.2]: https://github.com/geotrellis/maml/compare/v0.2.2...0.3.2
