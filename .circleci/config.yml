@@ -1,9 +1,9 @@
 aliases:
   - &restore_sbt_cache
-    key: sbt-{{ checksum "/tmp/scala_version" }}-cache
+    key: sbt-cache-{{ checksum "/tmp/scala_version" }}
 
   - &save_sbt_cache
-    key: sbt-{{ checksum "/tmp/scala_version" }}-cache-{{ epoch }}
+    key: sbt-cache-{{ checksum "/tmp/scala_version" }}-{{ epoch }}
     paths:
       - "~/.ivy2/cache"
       - "~/.sbt"
@@ -18,25 +18,87 @@ aliases:
         command: ./scripts/cibuild
     - save_cache: *save_sbt_cache
 
+  - &run_cipublish
+    - checkout
+    - run: echo "${SCALA_VERSION}" > /tmp/scala_version
+    - restore_cache: *restore_sbt_cache
+    - run:
+        name: "Import signing key"
+        command: |
+          echo "${GPG_KEY}" | base64 -d > signing_key.asc && \
+          gpg --batch \
+            --passphrase "${GPG_PASSPHRASE}" \
+            --import signing_key.asc
+    - run:
+        name: Executing cipublish
+        command: ./scripts/cipublish
+
+  # Build environments
+  - &openjdk8-scala2_11_12-nodelts_environment
+    docker:
+      - image: circleci/openjdk:8-stretch-node
+    environment:
+      SCALA_VERSION: 2.11.12
+
+  - &openjdk8-scala2_12_8-nodelts_environment
+    docker:
+      - image: circleci/openjdk:8-stretch-node
+    environment:
+      SCALA_VERSION: 2.12.8
+
 version: 2
 workflows:
   version: 2
   build:
     jobs:
-      - "openjdk8-scala2.11.12-nodelts"
-      - "openjdk8-scala2.12.8-nodelts"
+      - "openjdk8-scala2.11.12-nodelts":
+          filters: # required since `openjdk8-scala2.11.12-nodelts_deploy` has tag filters AND requires `openjdk8-scala2.11.12-nodelts`
+            tags:
+              only:
+                - /^(.*)$/
+      - "openjdk8-scala2.12.8-nodelts":
+          filters: # required since `openjdk8-scala2.12.8-nodelts_deploy` has tag filters AND requires `openjdk8-scala2.12.8-nodelts`
+            tags:
+              only:
+                - /^(.*)$/
+      - "openjdk8-scala2.11.12-nodelts_deploy":
+          requires:
+            - "openjdk8-scala2.11.12-nodelts"
+          filters:
+            tags:
+              only:
+                - /^(.*)$/
+            branches:
+              only:
+                - master
+                - develop
+                - feature/jrb/automated-releases-to-sonatype
+      - "openjdk8-scala2.12.8-nodelts_deploy":
+          requires:
+            - "openjdk8-scala2.12.8-nodelts"
+          filters:
+            tags:
+              only:
+                - /^(.*)$/
+            branches:
+              only:
+                - master
+                - develop
+                - feature/jrb/automated-releases-to-sonatype
 
 jobs:
   "openjdk8-scala2.11.12-nodelts":
-    docker:
-      - image: circleci/openjdk:8-stretch-node
-    environment:
-      SCALA_VERSION: 2.11.12
+    <<: *openjdk8-scala2_11_12-nodelts_environment
     steps: *run_cibuild
 
   "openjdk8-scala2.12.8-nodelts":
-    docker:
-      - image: circleci/openjdk:8-stretch-node
-    environment:
-      SCALA_VERSION: 2.12.8
+    <<: *openjdk8-scala2_12_8-nodelts_environment
     steps: *run_cibuild
+
+  "openjdk8-scala2.11.12-nodelts_deploy":
+    <<: *openjdk8-scala2_11_12-nodelts_environment
+    steps: *run_cipublish
+
+  "openjdk8-scala2.12.8-nodelts_deploy":
+    <<: *openjdk8-scala2_12_8-nodelts_environment
+    steps: *run_cipublish
