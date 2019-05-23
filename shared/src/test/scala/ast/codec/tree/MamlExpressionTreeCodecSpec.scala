@@ -12,7 +12,7 @@ import org.scalatest._
 import org.scalatest.prop._
 
 
-class ExpressionTreeCodecSpec extends PropSpec with Checkers with LazyLogging {
+class ExpressionTreeCodecSpec extends PropSpec with Checkers with LazyLogging with ExpressionTreeCodec {
   property("bijective serialization on whole tree") {
     check(forAll(Generators.genExpression()) { (ast: Expression) =>
       logger.debug(s"Attempting to encode AST: $ast")

@@ -48,3 +48,6 @@ nohup.out
 
 site/
 .metadata/
+
+.metals
+.bloop
