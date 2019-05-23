@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
+
+## [0.4.0] - 2019-05-23
+### Added
 - Added `ParallelInterpreter` [#101](https://github.com/geotrellis/maml/pull/101)
 - Add automated releases to Sonatype Nexus through CI [#98](https://github.com/geotrellis/maml/pull/98)
 
@@ -29,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Mask on LazyMultibandRasters directly [#89](https://github.com/geotrellis/maml/pull/89)
 - Assume correct extents in binary ops to avoid floating point errors [#91](https://github.com/geotrellis/maml/pull/91)
 
-[Unreleased]: https://github.com/geotrellis/maml/compare/0.3.3...HEAD
+[Unreleased]: https://github.com/geotrellis/maml/compare/0.4.0...HEAD
+[0.4.0]: https://github.com/geotrellis/maml/compare/0.3.3...0.4.0
 [0.3.3]: https://github.com/geotrellis/maml/compare/0.3.2...0.3.3
 [0.3.2]: https://github.com/geotrellis/maml/compare/v0.2.2...0.3.2
