@@ -72,6 +72,7 @@ workflows:
               only:
                 - master
                 - develop
+                - /release\/.*/
       - "openjdk8-scala2.12.8-nodelts_deploy":
           requires:
             - "openjdk8-scala2.12.8-nodelts"
@@ -83,6 +84,7 @@ workflows:
               only:
                 - master
                 - develop
+                - /release\/.*/
 
 jobs:
   "openjdk8-scala2.11.12-nodelts":
