@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Update CircleCI publishing strategy [#107](https://github.com/geotrellis/maml/pull/107)
 
+### Fixed
+- Manually create staging repository to define repository ID in state [#109](https://github.com/geotrellis/maml/pull/109)
+
 ## [0.4.0] - 2019-05-23
 ### Added
 - Added `ParallelInterpreter` [#101](https://github.com/geotrellis/maml/pull/101)
