@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Changed
 - Update CircleCI publishing strategy [#107](https://github.com/geotrellis/maml/pull/107)
+- Upgrade to GeoTrellis 3.1.0 [#110](https://github.com/geotrellis/maml/pull/110)
 
 ### Fixed
 - Manually create staging repository to define repository ID in state [#109](https://github.com/geotrellis/maml/pull/109)

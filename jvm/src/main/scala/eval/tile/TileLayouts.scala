@@ -3,7 +3,7 @@ package com.azavea.maml.eval.tile
 import com.typesafe.scalalogging.LazyLogging
 import geotrellis.proj4.WebMercator
 import geotrellis.raster._
-import geotrellis.spark.tiling._
+import geotrellis.layer._
 
 
 /** This interpreter handles resource resolution and compilation of MapAlgebra ASTs */

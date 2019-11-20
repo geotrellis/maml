@@ -15,8 +15,10 @@ import cats._
 import cats.data.{NonEmptyList => NEL, _}
 import cats.data.Validated._
 import org.scalatest._
+
 import geotrellis.raster._
 import geotrellis.spark._
+import geotrellis.layer._
 import geotrellis.spark.testkit._
 
 import scala.reflect._

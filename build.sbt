@@ -92,7 +92,7 @@ lazy val root = project.in(file("."))
 
 val circeVer       = "0.11.1"
 val circeOpticsVer = "0.11.0"
-val gtVer          = "3.0.0-M3"
+val gtVer          = "3.1.0"
 
 lazy val maml = crossProject.in(file("."))
   .settings(commonSettings)
@@ -127,6 +127,18 @@ lazy val mamlSpark = project.in(file("spark"))
       "org.locationtech.geotrellis" %% "geotrellis-spark-testkit" % gtVer % "test",
       "org.apache.spark"            %% "spark-core"               % "2.4.0" % "provided",
       "org.apache.spark"            %% "spark-sql"                % "2.4.0" % "provided"
-    )
-  )
-  .dependsOn(mamlJvm)
+    ),
+  /** https://github.com/lucidworks/spark-solr/issues/179 */
+    dependencyOverrides ++= {
+      val deps = Seq(
+        "com.fasterxml.jackson.core" % "jackson-core" % "2.6.7",
+        "com.fasterxml.jackson.core" % "jackson-databind" % "2.6.7",
+        "com.fasterxml.jackson.core" % "jackson-annotations" % "2.6.7"
+      )
+      CrossVersion.partialVersion(scalaVersion.value) match {
+        // if Scala 2.12+ is used
+        case Some((2, scalaMajor)) if scalaMajor >= 12 => deps
+        case _ => deps :+ "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.6.7"
+      }
+    }
+  ).dependsOn(mamlJvm)
