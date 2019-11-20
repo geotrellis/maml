@@ -8,13 +8,7 @@ val commonSettings = Seq(
   // We are overriding the default behavior of sbt-git which, by default,
   // only appends the `-SNAPSHOT` suffix if there are uncommitted
   // changes in the workspace.
-  version := {
-    // Avoid Cyclic reference involving error
-    if (git.gitCurrentTags.value.isEmpty || git.gitUncommittedChanges.value)
-      git.gitDescribedVersion.value.get + "-SNAPSHOT"
-    else
-      git.gitDescribedVersion.value.get
-  },
+  version := git.gitDescribedVersion.value.get,
   scalaVersion := "2.11.12",
   crossScalaVersions := Seq("2.11.12", "2.12.8"),
   resolvers ++= Seq(
