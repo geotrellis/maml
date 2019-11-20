@@ -7,9 +7,12 @@ import com.azavea.maml.ast._
 
 import io.circe._
 import io.circe.parser._
+
 import geotrellis.vector._
 import geotrellis.vector.Geometry
 import geotrellis.raster._
+import geotrellis.layer._
+
 import cats.data.{NonEmptyList => NEL, _}
 import Validated._
 

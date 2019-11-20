@@ -7,6 +7,7 @@ import com.azavea.maml.ast._
 import com.azavea.maml.spark.eval._
 
 import geotrellis.spark._
+import geotrellis.layer._
 import cats.data.{NonEmptyList => NEL, _}
 import cats.data.Validated._
 

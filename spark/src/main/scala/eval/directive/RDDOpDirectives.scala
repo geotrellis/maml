@@ -11,12 +11,14 @@ import cats._
 import cats.data.{NonEmptyList => NEL, _}
 import cats.data.Validated._
 import cats.implicits._
+
+import geotrellis.layer._
 import geotrellis.raster._
-import geotrellis.raster.render._
 import geotrellis.raster.mapalgebra.{local => gt}
 import geotrellis.spark._
 import geotrellis.spark.render._
 import geotrellis.vector._
+
 import org.apache.spark.rdd._
 
 

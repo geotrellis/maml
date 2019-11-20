@@ -14,11 +14,16 @@ import Validated._
 import geotrellis.vector._
 import geotrellis.raster.{Tile, isData}
 
+import scala.reflect.ClassTag
 import scala.concurrent.duration._
 import scala.util.Try
 
 
 object OpDirectives {
+
+  private def asInstanceOfOption[T: ClassTag](o: Any): Option[T] = 
+    Some(o) collect { case m: T => m}
+
   private def doubleResults(grouped: Map[MamlKind, Seq[Result]]): Interpreted[List[Double]] =
     grouped.getOrElse(MamlKind.Double, List.empty).map(_.as[Double]).toList.sequence
 
@@ -365,7 +370,7 @@ object OpDirectives {
       case _ =>
         Invalid(NEL.of(NonEvaluableNode(mask, Some("Masking operation requires both a tile and a vector argument"))))
     }).andThen({ case (lzRaster, geom) =>
-      geom.as[MultiPolygon] match {
+      asInstanceOfOption[MultiPolygon](geom) match {
         case Some(mp) =>
           Valid(ImageResult(lzRaster.mask(mp)))
         case None =>
