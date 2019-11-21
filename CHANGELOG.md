@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.1] - 2019-11-21
+
+**No changes -- testing release process**
+
 ## [0.5.0] - 2019-11-20
 ### Changed
 - Update CircleCI publishing strategy [#107](https://github.com/geotrellis/maml/pull/107)
