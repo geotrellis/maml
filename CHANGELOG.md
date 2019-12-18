@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Changed
+ - GeoTrellis 3.2.0 and bump dependencies for scala 2.12 build [#112](https://github.com/geotrellis/maml/pull/112)
 
 ## [0.5.1] - 2019-11-21
 
