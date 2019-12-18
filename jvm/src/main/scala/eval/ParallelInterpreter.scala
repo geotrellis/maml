@@ -2,7 +2,7 @@ package com.azavea.maml.eval
 
 import com.azavea.maml.ast._
 import com.azavea.maml.error._
-import com.azavea.maml.eval.directive._
+import com.azavea.maml.compact.ParallelCompact
 
 import cats._
 import cats.implicits._
@@ -10,10 +10,8 @@ import cats.data.Validated._
 import cats.data.{NonEmptyList => NEL, _}
 import cats.effect.ContextShift
 
-import scala.reflect.ClassTag
-
 class ParallelInterpreter[F[_]: Monad, G[_]](directives: List[Directive])(
-    implicit Par: Parallel[F, G],
+    implicit Par: ParallelCompact[F, G],
     contextShift: ContextShift[F]
 ) extends Interpreter[F] {
   def apply(exp: Expression): F[Interpreted[Result]] = {
@@ -57,9 +55,8 @@ class ParallelInterpreter[F[_]: Monad, G[_]](directives: List[Directive])(
 
 object ParallelInterpreter {
   def DEFAULT[T[_], U[_]](
-      implicit P: Parallel[T, U],
+      implicit P: ParallelCompact[T, U],
       M: Monad[T],
       contextShift: ContextShift[T]
-  ) =
-    new ParallelInterpreter[T, U](NaiveInterpreter.DEFAULT.directives)
+  ) = new ParallelInterpreter[T, U](NaiveInterpreter.DEFAULT.directives)
 }
