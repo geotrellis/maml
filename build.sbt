@@ -1,8 +1,6 @@
 import xerial.sbt.Sonatype._
 
-import com.scalapenos.sbt.prompt.SbtPrompt.autoImport._
-
-promptTheme := com.scalapenos.sbt.prompt.PromptThemes.ScalapenosTheme
+import Dependencies._
 
 val commonSettings = Seq(
   // We are overriding the default behavior of sbt-git which, by default,
@@ -90,30 +88,28 @@ lazy val root = project.in(file("."))
   .aggregate(mamlJs, mamlJvm, mamlSpark)
   .enablePlugins(ScalaJSPlugin)
 
-val circeVer       = "0.11.1"
-val circeOpticsVer = "0.11.0"
-val gtVer          = "3.1.0"
-
 lazy val maml = crossProject.in(file("."))
   .settings(commonSettings)
   .settings(publishSettings)
   .settings(
     libraryDependencies ++= Seq(
-      "org.scalacheck"             %% "scalacheck"           % "1.13.4" % "test",
-      "org.scalatest"              %% "scalatest"            % "3.0.1"  % "test",
-      "com.typesafe.scala-logging" %% "scala-logging"        % "3.9.0",
-      "io.circe"                   %% "circe-core"           % circeVer,
-      "io.circe"                   %% "circe-generic"        % circeVer,
-      "io.circe"                   %% "circe-generic-extras" % circeVer,
-      "io.circe"                   %% "circe-parser"         % circeVer,
-      "io.circe"                   %% "circe-optics"         % circeOpticsVer
+      scalacheck % Test,
+      scalatest % Test,
+      logging % Test,
+      cats("core").value,
+      cats("effect").value,
+      circe("core").value,
+      circe("generic").value,
+      circe("generic-extras").value,
+      circe("parser").value,
+      circe("optics").value
     )
   ).jvmSettings(
     name := "maml-jvm",
     libraryDependencies ++= Seq(
-      "org.locationtech.geotrellis" %% "geotrellis-raster"    % gtVer,
-      "org.locationtech.geotrellis" %% "geotrellis-spark"     % gtVer,
-      "org.locationtech.geotrellis" %% "geotrellis-s3"        % gtVer
+      geotrellis("raster").value,
+      geotrellis("layer").value,
+      geotrellis("proj4").value
     )
   ).jsSettings(name := "maml-js")
 
@@ -124,9 +120,10 @@ lazy val mamlSpark = project.in(file("spark"))
   .settings(publishSettings)
   .settings(
     libraryDependencies ++= Seq(
-      "org.locationtech.geotrellis" %% "geotrellis-spark-testkit" % gtVer % "test",
-      "org.apache.spark"            %% "spark-core"               % "2.4.0" % "provided",
-      "org.apache.spark"            %% "spark-sql"                % "2.4.0" % "provided"
+      spark("sql").value % Test,
+      spark("core").value % Provided,
+      geotrellis("spark-testkit").value % Test,
+      geotrellis("spark").value % Provided
     ),
   /** https://github.com/lucidworks/spark-solr/issues/179 */
     dependencyOverrides ++= {

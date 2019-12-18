@@ -2,7 +2,7 @@ package com.azavea.maml.ast.codec.tree
 
 import com.azavea.maml.ast._
 
-import com.typesafe.scalalogging.LazyLogging
+import org.log4s._
 import io.circe._
 import io.circe.syntax._
 import io.circe.parser._
@@ -12,7 +12,9 @@ import org.scalatest._
 import org.scalatest.prop._
 
 
-class ExpressionTreeCodecSpec extends PropSpec with Checkers with LazyLogging with ExpressionTreeCodec {
+class ExpressionTreeCodecSpec extends PropSpec with Checkers with ExpressionTreeCodec {
+  @transient private[this] lazy val logger = getLogger
+
   property("bijective serialization on whole tree") {
     check(forAll(Generators.genExpression()) { (ast: Expression) =>
       logger.debug(s"Attempting to encode AST: $ast")
@@ -24,7 +26,7 @@ class ExpressionTreeCodecSpec extends PropSpec with Checkers with LazyLogging wi
         case Right(exp) =>
           exp == ast
         case Left(f) =>
-          logger.debug(f.toString, f)
+          logger.debug(f)(f.toString)
           fail(f)
       }
     })
