@@ -14,7 +14,7 @@ val commonSettings = Seq(
       git.gitDescribedVersion.value.get
   },
   scalaVersion := "2.11.12",
-  crossScalaVersions := Seq("2.11.12", "2.12.8"),
+  crossScalaVersions := Seq("2.11.12", "2.12.10"),
   resolvers ++= Seq(
     Resolver.sonatypeRepo("releases"),
     "locationtech-releases" at "https://repo.locationtech.org/content/groups/releases",
