@@ -192,6 +192,10 @@ class EvaluationSpec extends FunSpec with Matchers with ExpressionTreeCodec {
       case Valid(t) => t.bands.head.get(5, 5) should be (10)
       case i@Invalid(_) => fail(s"$i")
     }
+    interpreter(FocalAspect(List(IntArrayTile(1 to 100 toArray, 10, 10)))).as[MultibandTile] match {
+      case Valid(t) => t.bands.head.get(5, 5) should be (354)
+      case i@Invalid(_) => fail(s"$i")
+    }
 
     /** The hillshade test is a bit more involved than some of the above
      *  See http://bit.ly/Qj0YPg for more information about the proper interpretation

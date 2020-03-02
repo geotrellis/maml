@@ -304,6 +304,12 @@ case class FocalHillshade(children: List[Expression], azimuth: Double, altitude:
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
+case class FocalAspect(children: List[Expression]) extends Expression("faspect") with FocalExpression {
+  // Not used in this focal operation
+  def neighborhood = Square(1)
+  def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
+}
+
 case class ImageSelect(children: List[Expression], labels: List[String]) extends Expression("sel") with UnaryExpression {
   val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.imageOnly
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)

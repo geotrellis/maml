@@ -88,6 +88,16 @@ case class LazyMultibandRaster(val bands: Map[String, LazyRaster]) {
     LazyMultibandRaster(lztiles)
   }
 
+  def aspect(
+    gridbounds: Option[GridBounds[Int]],
+    cs: CellSize
+  ): LazyMultibandRaster = {
+    val lztiles = bands.mapValues({ lt =>
+      LazyRaster.Aspect(List(lt), gridbounds, cs)
+    })
+    LazyMultibandRaster(lztiles)
+  }
+
   def mask(
     maskPoly: MultiPolygon
   ): LazyMultibandRaster = {
