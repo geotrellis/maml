@@ -10,6 +10,7 @@ import geotrellis.raster.Tile
 import geotrellis.raster.mapalgebra.focal
 import geotrellis.vector.Point
 import geotrellis.proj4.{CRS, LatLng}
+
 import cats._
 import cats.implicits._
 import cats.data.{NonEmptyList => NEL, _}
@@ -111,6 +112,17 @@ object FocalDirectives {
           1 / (EQUATOR_METERS * math.cos(math.toRadians(middleY)))
         }
         ImageResult(image.hillshade(None, zfactor, re.cellSize, azimuth, altitude))
+      })
+  }
+
+  val aspect = Directive { case (fm@FocalAspect(_), childResults) =>
+    childResults
+      .map({ _.as[LazyMultibandRaster] })
+      .toList.sequence
+      .map({ lr =>
+        val image = lr.head
+        val re = image.rasterExtent
+        ImageResult(image.aspect(None, re.cellSize))
       })
   }
 }

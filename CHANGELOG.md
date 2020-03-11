@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ## [0.6.0] - 2020-02-06
+### Added
+- Added support for Focal Aspect calculations [#103](https://github.com/geotrellis/maml/issues/103)
+
 ### Changed
  - GeoTrellis 3.2.0 and bump dependencies for scala 2.12 build [#112](https://github.com/geotrellis/maml/pull/112)
 
