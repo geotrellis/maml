@@ -2,19 +2,13 @@ package com.azavea.maml.ast.kind
 
 import com.azavea.maml.ast._
 import com.azavea.maml.util._
+import geotrellis.raster.TargetCell
 
 import org.scalatest._
-import io.circe._
-import io.circe.parser._
-import io.circe.syntax._
-import cats._
-import cats.data._
-import Validated._
-
 
 class KindSpec extends FunSpec with Matchers {
   it("Typecheck a valid focal tree") {
-    FocalMax(List(RasterVar("test")), Square(1))
+    FocalMax(List(RasterVar("test")), Square(1), TargetCell.All)
   }
 
   it("Should correctly determine the output type for a foldable operation (image)") {

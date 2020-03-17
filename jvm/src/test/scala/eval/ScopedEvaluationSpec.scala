@@ -33,7 +33,7 @@ class ScopedEvaluationSpec extends FunSpec with Matchers {
   val interpreter = BufferingInterpreter.DEFAULT
 
   it("Should interpret and evaluate focal operation") {
-    interpreter(FocalMax(List(tileToLit(IntArrayTile(1 to 4 toArray, 2, 2))), Square(1))).as[MultibandTile] match {
+    interpreter(FocalMax(List(tileToLit(IntArrayTile(1 to 4 toArray, 2, 2))), Square(1), TargetCell.All)).as[MultibandTile] match {
       case Valid(tile) => tile.bands.head.get(0, 0) should be (4)
       case i@Invalid(_) => fail(s"$i")
     }

@@ -1,13 +1,7 @@
 package com.azavea.maml.eval.tile
 
 import geotrellis.raster._
-import geotrellis.raster.mapalgebra.local._
-import geotrellis.raster.mapalgebra.focal
-import geotrellis.raster.mapalgebra.focal.Neighborhood
-import geotrellis.raster.render._
-import geotrellis.vector.{ Extent, MultiPolygon, Point }
-import spire.syntax.cfor._
-
+import geotrellis.vector.MultiPolygon
 
 case class MaskingNode(children: List[LazyRaster], mask: MultiPolygon) extends LazyRaster.UnaryBranch {
   lazy val cellMask: Tile = {

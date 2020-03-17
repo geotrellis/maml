@@ -3,25 +3,16 @@ package com.azavea.maml.eval
 import com.azavea.maml.ast._
 import com.azavea.maml.dsl._
 import com.azavea.maml.error._
-import com.azavea.maml.eval._
-import com.azavea.maml.eval.tile._
-import com.azavea.maml.eval.directive.SourceDirectives._
-import com.azavea.maml.eval.directive.OpDirectives._
 import com.azavea.maml.ast.codec.tree.ExpressionTreeCodec
-import com.azavea.maml.util.Square
 
-import io.circe._
-import io.circe.syntax._
 import geotrellis.raster._
 import geotrellis.vector._
 import geotrellis.proj4.WebMercator
-import cats._
-import cats.data.{NonEmptyList => NEL, _}
+import cats.data._
 import Validated._
 import org.scalatest._
 
 import scala.reflect._
-
 
 class EvaluationSpec extends FunSpec with Matchers with ExpressionTreeCodec {
 
@@ -188,11 +179,11 @@ class EvaluationSpec extends FunSpec with Matchers with ExpressionTreeCodec {
       case Valid(t) => t.bands.head.get(0, 0) should be (1)
       case i@Invalid(_) => fail(s"$i")
     }
-    interpreter(FocalSlope(List(IntArrayTile(1 to 100 toArray, 10, 10)))).as[MultibandTile] match {
+    interpreter(FocalSlope(List(IntArrayTile(1 to 100 toArray, 10, 10)), TargetCell.All)).as[MultibandTile] match {
       case Valid(t) => t.bands.head.get(5, 5) should be (10)
       case i@Invalid(_) => fail(s"$i")
     }
-    interpreter(FocalAspect(List(IntArrayTile(1 to 100 toArray, 10, 10)))).as[MultibandTile] match {
+    interpreter(FocalAspect(List(IntArrayTile(1 to 100 toArray, 10, 10)), TargetCell.All)).as[MultibandTile] match {
       case Valid(t) => t.bands.head.get(5, 5) should be (354)
       case i@Invalid(_) => fail(s"$i")
     }
@@ -214,7 +205,7 @@ class EvaluationSpec extends FunSpec with Matchers with ExpressionTreeCodec {
     val hillshadeProjectedRaster =
       ProjectedRaster(Raster(MultibandTile(hillshadeTile), hillshadeE), WebMercator)
 
-    interpreter(FocalHillshade(List(RasterLit(hillshadeProjectedRaster)), 315, 45)).as[MultibandTile] match {
+    interpreter(FocalHillshade(List(RasterLit(hillshadeProjectedRaster)), 315, 45, TargetCell.All)).as[MultibandTile] match {
       case Valid(t) => t.bands.head.get(2, 2) should be (77)
       case i@Invalid(_) => fail(s"$i")
     }

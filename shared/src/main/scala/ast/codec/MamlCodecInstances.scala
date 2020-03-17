@@ -68,57 +68,57 @@ trait MamlCodecInstances extends MamlUtilityCodecs {
     Encoder.forProduct3("args", "classifications", "symbol")(u => (u.children, u.classMap, u.sym))
 
   implicit lazy val decodeFocalMax: Decoder[FocalMax] =
-    Decoder.forProduct2("args", "neighborhood")(FocalMax.apply)
+    Decoder.forProduct3("args", "neighborhood", "target")(FocalMax.apply)
   implicit lazy val encodeFocalMax: Encoder[FocalMax] =
-    Encoder.forProduct3("args", "neighborhood", "symbol")(u => (u.children, u.neighborhood, u.sym))
+    Encoder.forProduct4("args", "neighborhood", "target","symbol")(u => (u.children, u.neighborhood, u.target, u.sym))
 
   implicit lazy val decodeFocalMin: Decoder[FocalMin] =
-    Decoder.forProduct2("args", "neighborhood")(FocalMin.apply)
+    Decoder.forProduct3("args", "neighborhood", "target")(FocalMin.apply)
   implicit lazy val encodeFocalMin: Encoder[FocalMin] =
-    Encoder.forProduct3("args", "neighborhood", "symbol")(u => (u.children, u.neighborhood, u.sym))
+    Encoder.forProduct4("args", "neighborhood", "target", "symbol")(u => (u.children, u.neighborhood, u.target, u.sym))
 
   implicit lazy val decodeFocalMean: Decoder[FocalMean] =
-    Decoder.forProduct2("args", "neighborhood")(FocalMean.apply)
+    Decoder.forProduct3("args", "neighborhood", "target")(FocalMean.apply)
   implicit lazy val encodeFocalMean: Encoder[FocalMean] =
-    Encoder.forProduct3("args", "neighborhood", "symbol")(u => (u.children, u.neighborhood, u.sym))
+    Encoder.forProduct4("args", "neighborhood", "target", "symbol")(u => (u.children, u.neighborhood, u.target, u.sym))
 
   implicit lazy val decodeFocalMedian: Decoder[FocalMedian] =
-    Decoder.forProduct2("args", "neighborhood")(FocalMedian.apply)
+    Decoder.forProduct3("args", "neighborhood", "target")(FocalMedian.apply)
   implicit lazy val encodeFocalMedian: Encoder[FocalMedian] =
-    Encoder.forProduct3("args", "neighborhood", "symbol")(u => (u.children, u.neighborhood, u.sym))
+    Encoder.forProduct4("args", "neighborhood", "target", "symbol")(u => (u.children, u.neighborhood, u.target, u.sym))
 
   implicit lazy val decodeFocalMode: Decoder[FocalMode] =
-    Decoder.forProduct2("args", "neighborhood")(FocalMode.apply)
+    Decoder.forProduct3("args", "neighborhood", "target")(FocalMode.apply)
   implicit lazy val encodeFocalMode: Encoder[FocalMode] =
-    Encoder.forProduct3("args", "neighborhood", "symbol")(u => (u.children, u.neighborhood, u.sym))
+    Encoder.forProduct4("args", "neighborhood", "target", "symbol")(u => (u.children, u.neighborhood, u.target, u.sym))
 
   implicit lazy val decodeFocalSum: Decoder[FocalSum] =
-    Decoder.forProduct2("args", "neighborhood")(FocalSum.apply)
+    Decoder.forProduct3("args", "neighborhood", "target")(FocalSum.apply)
   implicit lazy val encodeFocalSum: Encoder[FocalSum] =
-    Encoder.forProduct3("args", "neighborhood", "symbol")(u => (u.children, u.neighborhood, u.sym))
+    Encoder.forProduct4("args", "neighborhood", "target", "symbol")(u => (u.children, u.neighborhood, u.target, u.sym))
 
   implicit lazy val decodeFocalStdDev: Decoder[FocalStdDev] =
-    Decoder.forProduct2("args", "neighborhood")(FocalStdDev.apply)
+    Decoder.forProduct3("args", "neighborhood", "target")(FocalStdDev.apply)
   implicit lazy val encodeFocalStdDev: Encoder[FocalStdDev] =
-    Encoder.forProduct3("args", "neighborhood", "symbol")(u => (u.children, u.neighborhood, u.sym))
+    Encoder.forProduct4("args", "neighborhood", "target", "symbol")(u => (u.children, u.neighborhood, u.target, u.sym))
 
   implicit lazy val decodeFocalSlope: Decoder[FocalSlope] =
-    Decoder.forProduct1("args")(FocalSlope.apply)
+    Decoder.forProduct2("args", "target")(FocalSlope.apply)
   implicit lazy val encodeFocalSlope: Encoder[FocalSlope] =
-    Encoder.forProduct2("args", "symbol")(u => (u.children, u.sym))
+    Encoder.forProduct3("args", "target", "symbol")(u => (u.children, u.target, u.sym))
 
   implicit lazy val decodeFocalHillshade: Decoder[FocalHillshade] =
-    Decoder.forProduct3("args", "azimuth", "altitude")(FocalHillshade.apply)
+    Decoder.forProduct4("args", "azimuth", "altitude", "target")(FocalHillshade.apply)
   implicit lazy val encodeFocalHillshade: Encoder[FocalHillshade] =
-    Encoder.forProduct4("args", "azimuth", "altitude", "symbol")(u =>
-      (u.children, u.azimuth, u.altitude, u.sym)
+    Encoder.forProduct5("args", "azimuth", "altitude", "target", "symbol")(u =>
+      (u.children, u.azimuth, u.altitude, u.target, u.sym)
     )
 
   implicit lazy val decodeFocalAspect: Decoder[FocalAspect] =
-    Decoder.forProduct1("args")(FocalAspect.apply)
+    Decoder.forProduct2("args", "target")(FocalAspect.apply)
   implicit lazy val encodeFocalAspect: Encoder[FocalAspect] =
-    Encoder.forProduct2("args", "symbol")(u =>
-      (u.children, u.sym)
+    Encoder.forProduct3("args", "target", "symbol")(u =>
+      (u.children, u.target, u.sym)
     )
 
   implicit lazy val decodeGreater: Decoder[Greater] =

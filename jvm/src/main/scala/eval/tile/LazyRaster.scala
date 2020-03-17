@@ -1,23 +1,12 @@
 package com.azavea.maml.eval.tile
 
-import com.azavea.maml.eval._
-
 import geotrellis.raster._
-import geotrellis.raster.mapalgebra.local._
-import geotrellis.raster.mapalgebra.focal.{Square, Neighborhood, TargetCell, Slope => GTFocalSlope, Aspect => GTAspect}
+import geotrellis.raster.mapalgebra.focal.{Neighborhood, Square, TargetCell, Aspect => GTAspect, Slope => GTFocalSlope}
 import geotrellis.raster.mapalgebra.focal.hillshade.{Hillshade => GTHillshade}
-import geotrellis.raster.render._
-import geotrellis.vector.{Extent, MultiPolygon, Point}
+import geotrellis.vector.Extent
 import geotrellis.proj4.CRS
-import cats._
-import cats.data._
-import cats.data.Validated._
-import cats.data.{NonEmptyList => NEL, _}
-import cats.implicits._
+
 import spire.syntax.cfor._
-
-import scala.reflect.ClassTag
-
 
 sealed trait LazyRaster {
   // TODO: We need to find a way to rip RasterExtent out of LazyRaster
@@ -157,12 +146,13 @@ object LazyRaster {
     children: List[LazyRaster],
     neighborhood: Neighborhood,
     gridbounds: Option[GridBounds[Int]],
+    target: TargetCell,
     focalFn: (Tile, Neighborhood, Option[GridBounds[Int]], TargetCell) => Tile
   ) extends UnaryBranch {
     override lazy val cols: Int = gridbounds.map(_.width).getOrElse(fst.cols)
     override lazy val rows: Int = gridbounds.map(_.height).getOrElse(fst.rows)
-    lazy val intTile = focalFn(fst.evaluate, neighborhood, gridbounds, TargetCell.All)
-    lazy val dblTile = focalFn(fst.evaluateDouble, neighborhood, gridbounds, TargetCell.All)
+    lazy val intTile = focalFn(fst.evaluate, neighborhood, gridbounds, target)
+    lazy val dblTile = focalFn(fst.evaluateDouble, neighborhood, gridbounds, target)
 
     def get(col: Int, row: Int) = intTile.get(col, row)
     def getDouble(col: Int, row: Int) = dblTile.get(col, row)
@@ -172,12 +162,13 @@ object LazyRaster {
     children: List[LazyRaster],
     gridbounds: Option[GridBounds[Int]],
     zFactor: Double,
-    cs: CellSize
+    cs: CellSize,
+    target: TargetCell
   ) extends UnaryBranch {
     override lazy val cols: Int = gridbounds.map(_.width).getOrElse(fst.cols)
     override lazy val rows: Int = gridbounds.map(_.height).getOrElse(fst.rows)
-    lazy val intTile = GTFocalSlope(fst.evaluate, Square(1), gridbounds, cs, zFactor, TargetCell.All)
-    lazy val dblTile = GTFocalSlope(fst.evaluateDouble, Square(1),  gridbounds, cs, zFactor, TargetCell.All)
+    lazy val intTile = GTFocalSlope(fst.evaluate, Square(1), gridbounds, cs, zFactor, target)
+    lazy val dblTile = GTFocalSlope(fst.evaluateDouble, Square(1),  gridbounds, cs, zFactor, target)
 
     def get(col: Int, row: Int) = intTile.get(col, row)
     def getDouble(col: Int, row: Int) = dblTile.get(col, row)
@@ -189,15 +180,16 @@ object LazyRaster {
     zFactor: Double,
     cs: CellSize,
     azimuth: Double,
-    altitude: Double
+    altitude: Double,
+    target: TargetCell
   ) extends UnaryBranch {
     override lazy val cols: Int = gridbounds.map(_.width).getOrElse(fst.cols)
     override lazy val rows: Int = gridbounds.map(_.height).getOrElse(fst.rows)
 
     lazy val intTile =
-      GTHillshade(fst.evaluate, Square(1), gridbounds, cs, azimuth, altitude, zFactor, TargetCell.All)
+      GTHillshade(fst.evaluate, Square(1), gridbounds, cs, azimuth, altitude, zFactor, target)
     lazy val dblTile =
-      GTHillshade(fst.evaluateDouble, Square(1), gridbounds, cs, azimuth, altitude, zFactor, TargetCell.All)
+      GTHillshade(fst.evaluateDouble, Square(1), gridbounds, cs, azimuth, altitude, zFactor, target)
 
     def get(col: Int, row: Int) = intTile.get(col, row)
     def getDouble(col: Int, row: Int) = dblTile.get(col, row)
@@ -206,15 +198,16 @@ object LazyRaster {
   case class Aspect(
     children: List[LazyRaster],
     gridbounds: Option[GridBounds[Int]],
-    cs: CellSize
+    cs: CellSize,
+    target: TargetCell
   ) extends UnaryBranch {
     override lazy val cols: Int = gridbounds.map(_.width).getOrElse(fst.cols)
     override lazy val rows: Int = gridbounds.map(_.height).getOrElse(fst.rows)
 
     lazy val intTile =
-      GTAspect(fst.evaluate, Square(1), gridbounds, cs, TargetCell.All)
+      GTAspect(fst.evaluate, Square(1), gridbounds, cs, target)
     lazy val dblTile =
-      GTAspect(fst.evaluateDouble, Square(1), gridbounds, cs, TargetCell.All)
+      GTAspect(fst.evaluateDouble, Square(1), gridbounds, cs, target)
 
     def get(col: Int, row: Int) = intTile.get(col, row)
     def getDouble(col: Int, row: Int) = dblTile.get(col, row)

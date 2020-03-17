@@ -1,24 +1,11 @@
 package com.azavea.maml.eval.tile
 
-import com.azavea.maml.eval._
-
 import geotrellis.raster._
-import geotrellis.raster.mapalgebra.local._
-import geotrellis.raster.mapalgebra.focal.{ Neighborhood, TargetCell }
-import geotrellis.raster.render._
+import geotrellis.raster.mapalgebra.focal.{Neighborhood, TargetCell}
 import geotrellis.proj4.CRS
-import geotrellis.vector.{ Extent, MultiPolygon, Point }
-import cats._
-import cats.data._
-import cats.data.Validated._
-import cats.data.{NonEmptyList => NEL, _}
-import cats.implicits._
-import spire.syntax.cfor._
+import geotrellis.vector.MultiPolygon
 
-import scala.reflect.ClassTag
-
-
-case class LazyMultibandRaster(val bands: Map[String, LazyRaster]) {
+case class LazyMultibandRaster(bands: Map[String, LazyRaster]) {
   assert(
     Set(bands.values.map(_.crs)).size == 1,
     s"All raster data must have the same projection. Found: ${bands.values.mkString("; ")}"
@@ -62,18 +49,20 @@ case class LazyMultibandRaster(val bands: Map[String, LazyRaster]) {
   def focal(
     neighborhood: Neighborhood,
     gridbounds: Option[GridBounds[Int]],
+    target: TargetCell,
     focalFn: (Tile, Neighborhood, Option[GridBounds[Int]], TargetCell) => Tile
   ): LazyMultibandRaster = {
-    val lztiles = bands.mapValues({ lt => LazyRaster.Focal(List(lt), neighborhood, gridbounds, focalFn) })
+    val lztiles = bands.mapValues({ lt => LazyRaster.Focal(List(lt), neighborhood, gridbounds, target, focalFn) })
     LazyMultibandRaster(lztiles)
   }
 
   def slope(
     gridbounds: Option[GridBounds[Int]],
     zFactor: Double,
-    cs: CellSize
+    cs: CellSize,
+    target: TargetCell
   ): LazyMultibandRaster = {
-    val lztiles = bands.mapValues({ lt => LazyRaster.Slope(List(lt), gridbounds, zFactor, cs) })
+    val lztiles = bands.mapValues({ lt => LazyRaster.Slope(List(lt), gridbounds, zFactor, cs, target) })
     LazyMultibandRaster(lztiles)
   }
 
@@ -82,18 +71,20 @@ case class LazyMultibandRaster(val bands: Map[String, LazyRaster]) {
     zFactor: Double,
     cs: CellSize,
     azimuth: Double,
-    altitude: Double
+    altitude: Double,
+    target: TargetCell
   ): LazyMultibandRaster = {
-    val lztiles = bands.mapValues({ lt => LazyRaster.Hillshade(List(lt), gridbounds, zFactor, cs, azimuth, altitude) })
+    val lztiles = bands.mapValues({ lt => LazyRaster.Hillshade(List(lt), gridbounds, zFactor, cs, azimuth, altitude, target) })
     LazyMultibandRaster(lztiles)
   }
 
   def aspect(
     gridbounds: Option[GridBounds[Int]],
-    cs: CellSize
+    cs: CellSize,
+    target: TargetCell
   ): LazyMultibandRaster = {
     val lztiles = bands.mapValues({ lt =>
-      LazyRaster.Aspect(List(lt), gridbounds, cs)
+      LazyRaster.Aspect(List(lt), gridbounds, cs, target)
     })
     LazyMultibandRaster(lztiles)
   }
