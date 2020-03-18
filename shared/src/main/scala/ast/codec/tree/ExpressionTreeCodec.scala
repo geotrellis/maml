@@ -3,15 +3,11 @@ package com.azavea.maml.ast.codec.tree
 import com.azavea.maml.ast._
 import com.azavea.maml.ast.codec._
 
-import cats._
 import cats.syntax.functor._
 import io.circe._
 import io.circe.syntax._
-import io.circe.generic.extras.semiauto._
-import io.circe.generic.extras.Configuration
 
 import java.security.InvalidParameterException
-
 
 trait ExpressionTreeCodec extends MamlCodecInstances {
   implicit lazy val totalEncoder: Encoder[Expression] = Encoder.instance {
@@ -34,16 +30,16 @@ trait ExpressionTreeCodec extends MamlCodecInstances {
     case min @ Min(_) => min.asJson
     case mask @ Masking(_) => mask.asJson
     case cls @ Classification(_, _) => cls.asJson
-    case fmax @ FocalMax(_, _) => fmax.asJson
-    case fmin @ FocalMin(_, _) => fmin.asJson
-    case fmean @ FocalMean(_, _) => fmean.asJson
-    case fmed @ FocalMedian(_, _) => fmed.asJson
-    case fmode @ FocalMode(_, _) => fmode.asJson
-    case fsum @ FocalSum(_, _) => fsum.asJson
-    case fstddev @ FocalStdDev(_, _) => fstddev.asJson
-    case fslope @ FocalSlope(_) => fslope.asJson
-    case fhillshade @ FocalHillshade(_, _, _) => fhillshade.asJson
-    case faspect @ FocalAspect(_) => faspect.asJson
+    case fmax @ FocalMax(_, _, _) => fmax.asJson
+    case fmin @ FocalMin(_, _, _) => fmin.asJson
+    case fmean @ FocalMean(_, _, _) => fmean.asJson
+    case fmed @ FocalMedian(_, _, _) => fmed.asJson
+    case fmode @ FocalMode(_, _, _) => fmode.asJson
+    case fsum @ FocalSum(_, _, _) => fsum.asJson
+    case fstddev @ FocalStdDev(_, _, _) => fstddev.asJson
+    case fslope @ FocalSlope(_, _) => fslope.asJson
+    case fhillshade @ FocalHillshade(_, _, _, _) => fhillshade.asJson
+    case faspect @ FocalAspect(_, _) => faspect.asJson
     case imgsel @ ImageSelect(_, _) => imgsel.asJson
     case lneg @ LogicalNegation(_) => lneg.asJson
     case nneg @ NumericNegation(_) => nneg.asJson

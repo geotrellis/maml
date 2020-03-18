@@ -303,11 +303,11 @@ object RDDOpDirectives {
   }
 
   /* --- FOCAL EXPRESSIONS --- */
-  val focalMax = Directive { case (FocalMax(_, n), RDDResult(r) :: Nil) => Valid(RDDResult(r.focalMax(NC(n)))) }
-  val focalMin = Directive { case (FocalMin(_, n), RDDResult(r) :: Nil) => Valid(RDDResult(r.focalMin(NC(n)))) }
-  val focalMean = Directive { case (FocalMean(_, n), RDDResult(r) :: Nil) => Valid(RDDResult(r.focalMean(NC(n)))) }
-  val focalMedian = Directive { case (FocalMedian(_, n), RDDResult(r) :: Nil) => Valid(RDDResult(r.focalMedian(NC(n)))) }
-  val focalMode = Directive { case (FocalMode(_, n), RDDResult(r) :: Nil) => Valid(RDDResult(r.focalMode(NC(n)))) }
-  val focalSum = Directive { case (FocalSum(_, n), RDDResult(r) :: Nil) => Valid(RDDResult(r.focalSum(NC(n)))) }
-  val focalStdDev = Directive { case (FocalStdDev(_, n), RDDResult(r) :: Nil) => Valid(RDDResult(r.focalStandardDeviation(NC(n)))) }
+  val focalMax = Directive { case (FocalMax(_, n, t), RDDResult(r) :: Nil) => Valid(RDDResult(r.focalMax(NC(n), t))) }
+  val focalMin = Directive { case (FocalMin(_, n, t), RDDResult(r) :: Nil) => Valid(RDDResult(r.focalMin(NC(n), t))) }
+  val focalMean = Directive { case (FocalMean(_, n, t), RDDResult(r) :: Nil) => Valid(RDDResult(r.focalMean(NC(n), t))) }
+  val focalMedian = Directive { case (FocalMedian(_, n, t), RDDResult(r) :: Nil) => Valid(RDDResult(r.focalMedian(NC(n), t))) }
+  val focalMode = Directive { case (FocalMode(_, n, t), RDDResult(r) :: Nil) => Valid(RDDResult(r.focalMode(NC(n), t))) }
+  val focalSum = Directive { case (FocalSum(_, n, t), RDDResult(r) :: Nil) => Valid(RDDResult(r.focalSum(NC(n), t))) }
+  val focalStdDev = Directive { case (FocalStdDev(_, n, t), RDDResult(r) :: Nil) => Valid(RDDResult(r.focalStandardDeviation(NC(n), t))) }
 }

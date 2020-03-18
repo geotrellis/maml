@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Add TargetCell Parameter to Focal operations [#118](https://github.com/geotrellis/maml/pull/118)
+
 ## [0.6.0] - 2020-02-06
 ### Added
 - Added support for Focal Aspect calculations [#103](https://github.com/geotrellis/maml/issues/103)

@@ -3,8 +3,10 @@ package com.azavea.maml.ast
 import com.azavea.maml.util._
 import com.azavea.maml.error._
 
+import geotrellis.raster.TargetCell
 import cats._
-import cats.data.{NonEmptyList => NEL, _}; import Validated._
+import cats.data.{NonEmptyList => NEL, _}
+import Validated._
 import cats.implicits._
 
 import java.security.InvalidParameterException
@@ -264,47 +266,47 @@ case class LogicalNegation(children: List[Expression]) extends Expression("lneg"
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
-case class FocalMax(children: List[Expression], neighborhood: Neighborhood) extends Expression("fmax") with FocalExpression {
+case class FocalMax(children: List[Expression], neighborhood: Neighborhood, target: TargetCell) extends Expression("fmax") with FocalExpression {
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
-case class FocalMin(children: List[Expression], neighborhood: Neighborhood) extends Expression("fmin") with FocalExpression {
+case class FocalMin(children: List[Expression], neighborhood: Neighborhood, target: TargetCell) extends Expression("fmin") with FocalExpression {
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
-case class FocalMean(children: List[Expression], neighborhood: Neighborhood) extends Expression("fmean") with FocalExpression {
+case class FocalMean(children: List[Expression], neighborhood: Neighborhood, target: TargetCell) extends Expression("fmean") with FocalExpression {
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
-case class FocalMedian(children: List[Expression], neighborhood: Neighborhood) extends Expression("fmedian") with FocalExpression {
+case class FocalMedian(children: List[Expression], neighborhood: Neighborhood, target: TargetCell) extends Expression("fmedian") with FocalExpression {
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
-case class FocalMode(children: List[Expression], neighborhood: Neighborhood) extends Expression("fmode") with FocalExpression {
+case class FocalMode(children: List[Expression], neighborhood: Neighborhood, target: TargetCell) extends Expression("fmode") with FocalExpression {
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
-case class FocalSum(children: List[Expression], neighborhood: Neighborhood) extends Expression("fsum") with FocalExpression {
+case class FocalSum(children: List[Expression], neighborhood: Neighborhood, target: TargetCell) extends Expression("fsum") with FocalExpression {
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
-case class FocalStdDev(children: List[Expression], neighborhood: Neighborhood) extends Expression("fstddev") with FocalExpression {
+case class FocalStdDev(children: List[Expression], neighborhood: Neighborhood, target: TargetCell) extends Expression("fstddev") with FocalExpression {
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
-case class FocalSlope(children: List[Expression]) extends Expression("fslope") with FocalExpression {
+case class FocalSlope(children: List[Expression], target: TargetCell) extends Expression("fslope") with FocalExpression {
   // Not used in this focal operation
   def neighborhood = Square(1)
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
-case class FocalHillshade(children: List[Expression], azimuth: Double, altitude: Double) extends Expression("fhillshade") with FocalExpression {
+case class FocalHillshade(children: List[Expression], azimuth: Double, altitude: Double, target: TargetCell) extends Expression("fhillshade") with FocalExpression {
   // Not used in this focal operation
   def neighborhood = Square(1)
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
-case class FocalAspect(children: List[Expression]) extends Expression("faspect") with FocalExpression {
+case class FocalAspect(children: List[Expression], target: TargetCell) extends Expression("faspect") with FocalExpression {
   // Not used in this focal operation
   def neighborhood = Square(1)
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)

@@ -307,12 +307,12 @@ class ConcurrentEvaluationSpec
       case Valid(t)       => t.bands.head.get(0, 0) should be(1)
       case i @ Invalid(_) => fail(s"$i")
     }
-    interpreter(FocalSlope(List(IntArrayTile(1 to 100 toArray, 10, 10)))).unsafeRunSync
+    interpreter(FocalSlope(List(IntArrayTile(1 to 100 toArray, 10, 10)), TargetCell.All)).unsafeRunSync
       .as[MultibandTile] match {
       case Valid(t)       => t.bands.head.get(5, 5) should be(10)
       case i @ Invalid(_) => fail(s"$i")
     }
-    interpreter(FocalAspect(List(IntArrayTile(1 to 100 toArray, 10, 10)))).unsafeRunSync
+    interpreter(FocalAspect(List(IntArrayTile(1 to 100 toArray, 10, 10)),  TargetCell.All)).unsafeRunSync
       .as[MultibandTile] match {
       case Valid(t)       => t.bands.head.get(5, 5) should be(354)
       case i @ Invalid(_) => fail(s"$i")
@@ -338,7 +338,7 @@ class ConcurrentEvaluationSpec
       )
 
     interpreter(
-      FocalHillshade(List(RasterLit(hillshadeProjectedRaster)), 315, 45)
+      FocalHillshade(List(RasterLit(hillshadeProjectedRaster)), 315, 45, TargetCell.All)
     ).unsafeRunSync.as[MultibandTile] match {
       case Valid(t)       => t.bands.head.get(2, 2) should be(77)
       case i @ Invalid(_) => fail(s"$i")
