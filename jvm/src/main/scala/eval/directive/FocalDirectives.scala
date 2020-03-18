@@ -81,14 +81,14 @@ object FocalDirectives {
       })
   }
 
-  val slope = Directive { case (FocalSlope(_, target), childResults) =>
+  val slope = Directive { case (FocalSlope(_, zf, target), childResults) =>
     childResults
       .map({ _.as[LazyMultibandRaster] })
       .toList.sequence
       .map({ lr =>
         val image = lr.head
         val re = image.rasterExtent
-        val zfactor = {
+        val zfactor = zf.getOrElse {
           val llExtent = re.extent.reproject(image.crs, LatLng)
           val middleY = llExtent.ymax - (llExtent.ymax - llExtent.ymin)
           val EQUATOR_METERS = 11320
@@ -98,14 +98,14 @@ object FocalDirectives {
       })
   }
 
-  val hillshade = Directive { case (FocalHillshade(_, azimuth, altitude, target), childResults) =>
+  val hillshade = Directive { case (FocalHillshade(_, azimuth, altitude, zf, target), childResults) =>
     childResults
       .map({ _.as[LazyMultibandRaster] })
       .toList.sequence
       .map({ lr =>
         val image = lr.head
         val re = image.rasterExtent
-        val zfactor = {
+        val zfactor = zf.getOrElse {
           val llExtent = re.extent.reproject(image.crs, LatLng)
           val middleY = llExtent.ymax - (llExtent.ymax - llExtent.ymin)
           val EQUATOR_METERS = 11320

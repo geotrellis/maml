@@ -103,15 +103,15 @@ trait MamlCodecInstances extends MamlUtilityCodecs {
     Encoder.forProduct4("args", "neighborhood", "target", "symbol")(u => (u.children, u.neighborhood, u.target, u.sym))
 
   implicit lazy val decodeFocalSlope: Decoder[FocalSlope] =
-    Decoder.forProduct2("args", "target")(FocalSlope.apply)
+    Decoder.forProduct3("args", "zFactor", "target")(FocalSlope.apply)
   implicit lazy val encodeFocalSlope: Encoder[FocalSlope] =
-    Encoder.forProduct3("args", "target", "symbol")(u => (u.children, u.target, u.sym))
+    Encoder.forProduct4("args", "zFactor", "target", "symbol")(u => (u.children, u.zFactor, u.target, u.sym))
 
   implicit lazy val decodeFocalHillshade: Decoder[FocalHillshade] =
-    Decoder.forProduct4("args", "azimuth", "altitude", "target")(FocalHillshade.apply)
+    Decoder.forProduct5("args", "azimuth", "altitude", "zFactor", "target")(FocalHillshade.apply)
   implicit lazy val encodeFocalHillshade: Encoder[FocalHillshade] =
-    Encoder.forProduct5("args", "azimuth", "altitude", "target", "symbol")(u =>
-      (u.children, u.azimuth, u.altitude, u.target, u.sym)
+    Encoder.forProduct6("args", "azimuth", "altitude", "zFactor", "target", "symbol")(u =>
+      (u.children, u.azimuth, u.altitude, u.zFactor, u.target, u.sym)
     )
 
   implicit lazy val decodeFocalAspect: Decoder[FocalAspect] =

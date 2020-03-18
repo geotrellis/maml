@@ -294,13 +294,13 @@ case class FocalStdDev(children: List[Expression], neighborhood: Neighborhood, t
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
-case class FocalSlope(children: List[Expression], target: TargetCell) extends Expression("fslope") with FocalExpression {
+case class FocalSlope(children: List[Expression], zFactor: Option[Double], target: TargetCell) extends Expression("fslope") with FocalExpression {
   // Not used in this focal operation
   def neighborhood = Square(1)
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
-case class FocalHillshade(children: List[Expression], azimuth: Double, altitude: Double, target: TargetCell) extends Expression("fhillshade") with FocalExpression {
+case class FocalHillshade(children: List[Expression], azimuth: Double, altitude: Double, zFactor: Option[Double], target: TargetCell) extends Expression("fhillshade") with FocalExpression {
   // Not used in this focal operation
   def neighborhood = Square(1)
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
