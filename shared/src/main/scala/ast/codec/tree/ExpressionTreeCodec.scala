@@ -37,8 +37,8 @@ trait ExpressionTreeCodec extends MamlCodecInstances {
     case fmode @ FocalMode(_, _, _) => fmode.asJson
     case fsum @ FocalSum(_, _, _) => fsum.asJson
     case fstddev @ FocalStdDev(_, _, _) => fstddev.asJson
-    case fslope @ FocalSlope(_, _) => fslope.asJson
-    case fhillshade @ FocalHillshade(_, _, _, _) => fhillshade.asJson
+    case fslope @ FocalSlope(_, _, _) => fslope.asJson
+    case fhillshade @ FocalHillshade(_, _, _, _, _) => fhillshade.asJson
     case faspect @ FocalAspect(_, _) => faspect.asJson
     case imgsel @ ImageSelect(_, _) => imgsel.asJson
     case lneg @ LogicalNegation(_) => lneg.asJson
