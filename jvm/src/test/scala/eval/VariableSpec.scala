@@ -41,13 +41,13 @@ class VariableSpec extends FunSpec with Matchers {
   }
 
   it("should produce an accurate variable map with buffer in a simple case") {
-    Vars.varsWithBuffer(FocalMax(List(RasterVar("someRaster")), Square(1), TargetCell.All)) should be (Map("someRaster" -> (MamlKind.Image, 1)))
+    Vars.varsWithBuffer(FocalMax(List(RasterVar("someRaster")), Square(1))) should be (Map("someRaster" -> (MamlKind.Image, 1)))
   }
 
   it("should produce an accurate variable map with buffer in an ambiguous case") {
     val ast = Addition(List(
         FocalMax(List(
-          FocalMax(List(RasterVar("someRaster")), Square(1), TargetCell.All)
+          FocalMax(List(RasterVar("someRaster")), Square(1))
         ), Square(1), TargetCell.All),
         RasterVar("someRaster")
     ))

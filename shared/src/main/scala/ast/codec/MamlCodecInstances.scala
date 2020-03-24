@@ -1,15 +1,10 @@
 package com.azavea.maml.ast.codec
 
 import com.azavea.maml.ast._
-import com.azavea.maml.util._
+import com.azavea.maml.util.Neighborhood
 
+import geotrellis.raster.TargetCell
 import io.circe._
-import io.circe.syntax._
-import io.circe.generic.extras.semiauto._
-import io.circe.generic.extras.Configuration
-
-import java.security.InvalidParameterException
-
 
 trait MamlCodecInstances extends MamlUtilityCodecs {
   implicit def totalDecoder: Decoder[Expression]
@@ -68,54 +63,74 @@ trait MamlCodecInstances extends MamlUtilityCodecs {
     Encoder.forProduct3("args", "classifications", "symbol")(u => (u.children, u.classMap, u.sym))
 
   implicit lazy val decodeFocalMax: Decoder[FocalMax] =
-    Decoder.forProduct3("args", "neighborhood", "target")(FocalMax.apply)
+    Decoder.forProduct3[FocalMax, List[Expression], Neighborhood, Option[TargetCell]]("args", "neighborhood", "target") {
+      (args, zFactor, target) => FocalMax(args, zFactor, target.getOrElse(TargetCell.All))
+    }
   implicit lazy val encodeFocalMax: Encoder[FocalMax] =
     Encoder.forProduct4("args", "neighborhood", "target","symbol")(u => (u.children, u.neighborhood, u.target, u.sym))
 
   implicit lazy val decodeFocalMin: Decoder[FocalMin] =
-    Decoder.forProduct3("args", "neighborhood", "target")(FocalMin.apply)
+    Decoder.forProduct3[FocalMin, List[Expression], Neighborhood, Option[TargetCell]]("args", "neighborhood", "target") {
+      (args, zFactor, target) => FocalMin(args, zFactor, target.getOrElse(TargetCell.All))
+    }
   implicit lazy val encodeFocalMin: Encoder[FocalMin] =
     Encoder.forProduct4("args", "neighborhood", "target", "symbol")(u => (u.children, u.neighborhood, u.target, u.sym))
 
   implicit lazy val decodeFocalMean: Decoder[FocalMean] =
-    Decoder.forProduct3("args", "neighborhood", "target")(FocalMean.apply)
+    Decoder.forProduct3[FocalMean, List[Expression], Neighborhood, Option[TargetCell]]("args", "neighborhood", "target") {
+      (args, zFactor, target) => FocalMean(args, zFactor, target.getOrElse(TargetCell.All))
+    }
   implicit lazy val encodeFocalMean: Encoder[FocalMean] =
     Encoder.forProduct4("args", "neighborhood", "target", "symbol")(u => (u.children, u.neighborhood, u.target, u.sym))
 
   implicit lazy val decodeFocalMedian: Decoder[FocalMedian] =
-    Decoder.forProduct3("args", "neighborhood", "target")(FocalMedian.apply)
+    Decoder.forProduct3[FocalMedian, List[Expression], Neighborhood, Option[TargetCell]]("args", "neighborhood", "target") {
+      (args, zFactor, target) => FocalMedian(args, zFactor, target.getOrElse(TargetCell.All))
+    }
   implicit lazy val encodeFocalMedian: Encoder[FocalMedian] =
     Encoder.forProduct4("args", "neighborhood", "target", "symbol")(u => (u.children, u.neighborhood, u.target, u.sym))
 
   implicit lazy val decodeFocalMode: Decoder[FocalMode] =
-    Decoder.forProduct3("args", "neighborhood", "target")(FocalMode.apply)
+    Decoder.forProduct3[FocalMode, List[Expression], Neighborhood, Option[TargetCell]]("args", "neighborhood", "target") {
+      (args, zFactor, target) => FocalMode(args, zFactor, target.getOrElse(TargetCell.All))
+    }
   implicit lazy val encodeFocalMode: Encoder[FocalMode] =
     Encoder.forProduct4("args", "neighborhood", "target", "symbol")(u => (u.children, u.neighborhood, u.target, u.sym))
 
   implicit lazy val decodeFocalSum: Decoder[FocalSum] =
-    Decoder.forProduct3("args", "neighborhood", "target")(FocalSum.apply)
+    Decoder.forProduct3[FocalSum, List[Expression], Neighborhood, Option[TargetCell]]("args", "neighborhood", "target") {
+      (args, zFactor, target) => FocalSum(args, zFactor, target.getOrElse(TargetCell.All))
+    }
   implicit lazy val encodeFocalSum: Encoder[FocalSum] =
     Encoder.forProduct4("args", "neighborhood", "target", "symbol")(u => (u.children, u.neighborhood, u.target, u.sym))
 
   implicit lazy val decodeFocalStdDev: Decoder[FocalStdDev] =
-    Decoder.forProduct3("args", "neighborhood", "target")(FocalStdDev.apply)
+    Decoder.forProduct3[FocalStdDev, List[Expression], Neighborhood, Option[TargetCell]]("args", "neighborhood", "target") {
+      (args, zFactor, target) => FocalStdDev(args, zFactor, target.getOrElse(TargetCell.All))
+    }
   implicit lazy val encodeFocalStdDev: Encoder[FocalStdDev] =
     Encoder.forProduct4("args", "neighborhood", "target", "symbol")(u => (u.children, u.neighborhood, u.target, u.sym))
 
   implicit lazy val decodeFocalSlope: Decoder[FocalSlope] =
-    Decoder.forProduct3("args", "zFactor", "target")(FocalSlope.apply)
+    Decoder.forProduct3[FocalSlope, List[Expression], Option[Double], Option[TargetCell]]("args", "zFactor", "target") {
+      (args, zFactor, target) => FocalSlope(args, zFactor, target.getOrElse(TargetCell.All))
+    }
   implicit lazy val encodeFocalSlope: Encoder[FocalSlope] =
     Encoder.forProduct4("args", "zFactor", "target", "symbol")(u => (u.children, u.zFactor, u.target, u.sym))
 
   implicit lazy val decodeFocalHillshade: Decoder[FocalHillshade] =
-    Decoder.forProduct5("args", "azimuth", "altitude", "zFactor", "target")(FocalHillshade.apply)
+    Decoder.forProduct5[FocalHillshade, List[Expression], Double, Double, Option[Double], Option[TargetCell]]("args", "azimuth", "altitude", "zFactor", "target") {
+      (args, azimuth, altitude, zFactor, target) => FocalHillshade(args, azimuth, altitude, zFactor, target.getOrElse(TargetCell.All))
+    }
   implicit lazy val encodeFocalHillshade: Encoder[FocalHillshade] =
     Encoder.forProduct6("args", "azimuth", "altitude", "zFactor", "target", "symbol")(u =>
       (u.children, u.azimuth, u.altitude, u.zFactor, u.target, u.sym)
     )
 
   implicit lazy val decodeFocalAspect: Decoder[FocalAspect] =
-    Decoder.forProduct2("args", "target")(FocalAspect.apply)
+    Decoder.forProduct2[FocalAspect, List[Expression], Option[TargetCell]]("args", "target") {
+      (args, target) => FocalAspect(args, target.getOrElse(TargetCell.All))
+    }
   implicit lazy val encodeFocalAspect: Encoder[FocalAspect] =
     Encoder.forProduct3("args", "target", "symbol")(u =>
       (u.children, u.target, u.sym)
