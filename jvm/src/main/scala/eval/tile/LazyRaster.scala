@@ -1,11 +1,11 @@
 package com.azavea.maml.eval.tile
 
+import cats.Semigroup
 import geotrellis.raster._
 import geotrellis.raster.mapalgebra.focal.{Neighborhood, Square, TargetCell, Aspect => GTAspect, Slope => GTFocalSlope}
 import geotrellis.raster.mapalgebra.focal.hillshade.{Hillshade => GTHillshade}
 import geotrellis.vector.Extent
 import geotrellis.proj4.CRS
-
 import spire.syntax.cfor._
 
 sealed trait LazyRaster {

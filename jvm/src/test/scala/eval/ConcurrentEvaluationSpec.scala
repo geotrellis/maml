@@ -1,26 +1,18 @@
 package com.azavea.maml.eval
 
+import com.azavea.maml.ast
 import com.azavea.maml.ast._
-import com.azavea.maml.ast.codec.tree.ExpressionTreeCodec
 import com.azavea.maml.dsl._
 import com.azavea.maml.error._
-import com.azavea.maml.eval._
-import com.azavea.maml.eval.tile._
-import com.azavea.maml.eval.directive.SourceDirectives._
 import com.azavea.maml.eval.directive.OpDirectives._
 import com.azavea.maml.ast.codec.tree.ExpressionTreeCodec
-import com.azavea.maml.util.Square
 
-import io.circe._
-import io.circe.syntax._
 import geotrellis.raster._
 import geotrellis.vector._
 import geotrellis.proj4.WebMercator
-import cats._
-import cats.data.{NonEmptyList => NEL, _}
+import cats.data._
 import cats.effect._
 import Validated._
-import org.scalatest._
 
 import scala.reflect._
 
@@ -316,6 +308,21 @@ class ConcurrentEvaluationSpec
       .as[MultibandTile] match {
       case Valid(t)       => t.bands.head.get(5, 5) should be(354)
       case i @ Invalid(_) => fail(s"$i")
+    }
+    interpreter(ast.RGB(
+      List(
+        IntArrayTile(1 to 100 toArray, 10, 10),
+        IntArrayTile(101 to 200 toArray, 10, 10),
+        IntArrayTile(201 to 300 toArray, 10, 10)
+      )
+    )).unsafeRunSync.as[MultibandTile] match {
+      case Valid(t) => t.bands match {
+        case Vector(r, g, b) =>
+          r.get(0, 0) should be(1)
+          g.get(0, 0) should be(101)
+          b.get(0, 0) should be(201)
+      }
+      case i@Invalid(_) => fail(s"$i")
     }
 
     /** The hillshade test is a bit more involved than some of the above

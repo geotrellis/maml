@@ -1,10 +1,5 @@
 package com.azavea.maml.ast
 
-import com.azavea.maml.util._
-
-import cats.data._
-import Validated._
-
 import java.security.InvalidParameterException
 
 trait FoldableExpression { expression: Expression =>

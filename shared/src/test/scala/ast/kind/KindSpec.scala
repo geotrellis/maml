@@ -17,4 +17,8 @@ class KindSpec extends FunSpec with Matchers {
   it("Should correctly determine the output type for a foldable operation (scalar)") {
     Max(List(IntLit(42), IntLit(51))).kind should be (MamlKind.Int)
   }
+
+  it("Should correctly determine RGB output type for a foldable operation (scalar)") {
+    RGB(List(RasterVar("test1"), RasterVar("test2"), RasterVar("test3"))).kind should be (MamlKind.Image)
+  }
 }

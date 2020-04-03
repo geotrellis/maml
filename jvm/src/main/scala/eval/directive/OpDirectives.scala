@@ -1,11 +1,10 @@
 package com.azavea.maml.eval.directive
 
-import com.azavea.maml.error._
+import com.azavea.maml.error.{Interpreted, _}
 import com.azavea.maml.eval._
 import com.azavea.maml.eval.tile._
 import com.azavea.maml.ast._
 import com.azavea.maml.dsl.tile._
-
 import cats._
 import cats.data._
 import cats.implicits._
@@ -182,30 +181,44 @@ object OpDirectives {
       .andThen({ results => Valid(DoubleResult(results.reduce(_ max _))) })
   }
 
-  val maxTile = Directive { case (a@Max(_), childResults) if (a.kind == MamlKind.Image) =>
-  val grouped = childResults.groupBy(_.kind)
+  val maxTile = Directive { case (a@Max(_), childResults) if a.kind == MamlKind.Image =>
+    val grouped = childResults.groupBy(_.kind)
 
-  val scalarMax: Interpreted[Option[Double]] =
-    (doubleResults(grouped), intResults(grouped)).mapN { case (dbls, ints) =>
-      (Try(dbls.max).toOption, Try(ints.max).toOption) match {
-        case (Some(dbl), Some(int)) => Some(dbl max int)
-        case (None, Some(int)) => Some(int)
-        case (Some(dbl), None) => Some(dbl)
-        case _ => None
+    val scalarMax: Interpreted[Option[Double]] =
+      (doubleResults(grouped), intResults(grouped)).mapN { case (dbls, ints) =>
+        (Try(dbls.max).toOption, Try(ints.max).toOption) match {
+          case (Some(dbl), Some(int)) => Some(dbl max int)
+          case (None, Some(int)) => Some(int)
+          case (Some(dbl), None) => Some(dbl)
+          case _ => None
+        }
+      }
+
+    (imageResults(grouped), scalarMax).mapN({ case (tiles, maximum) =>
+      val tileMax = tiles.reduce({ (lt1: LazyMultibandRaster, lt2: LazyMultibandRaster) =>
+        lt1.dualCombine(lt2, {_ max _}, {_ max _})
+      })
+      maximum match {
+        case Some(scalarMax) =>
+          ImageResult(tileMax.dualMap({ i: Int => i max scalarMax.toInt }, { i: Double => i max scalarMax }))
+        case None =>
+          ImageResult(tileMax)
+      }
+    })
+  }
+
+  val rgbTile = Directive { case (a @ RGB(_), childResults) if a.kind == MamlKind.Image =>
+    val grouped = childResults.groupBy(_.kind)
+
+    imageResults(grouped).map { tiles =>
+      tiles.take(3) match {
+        case r :: g :: b :: Nil =>
+          ImageResult(LazyMultibandRaster(Map("0" -> r.bands("0"), "1" -> g.bands("0"), "2" -> b.bands("0"))))
+        case list => ImageResult(list.reduce { (lt1: LazyMultibandRaster, lt2: LazyMultibandRaster) =>
+          LazyMultibandRaster(lt1.bands ++ lt2.bands)
+        })
       }
     }
-
-  (imageResults(grouped), scalarMax).mapN({ case (tiles, maximum) =>
-    val tileMax = tiles.reduce({ (lt1: LazyMultibandRaster, lt2: LazyMultibandRaster) =>
-      lt1.dualCombine(lt2, {_ max _}, {_ max _})
-    })
-    maximum match {
-      case Some(scalarMax) =>
-        ImageResult(tileMax.dualMap({ i: Int => i max scalarMax.toInt }, { i: Double => i max scalarMax }))
-      case None =>
-        ImageResult(tileMax)
-    }
-  })
   }
 
   val minDouble = Directive { case (a@Min(_), childResults) if (a.kind == MamlKind.Double) =>

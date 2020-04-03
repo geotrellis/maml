@@ -340,4 +340,9 @@ trait MamlCodecInstances extends MamlUtilityCodecs {
     Decoder.forProduct1("name")(RasterVar.apply)
   implicit lazy val encodeRasterVar: Encoder[RasterVar] =
     Encoder.forProduct2("name", "symbol")(u => (u.name, u.sym))
+
+  implicit lazy val decodeRGB: Decoder[RGB] =
+    Decoder.forProduct1("args"){ args: List[Expression] => RGB(args) }
+  implicit lazy val encodeRGB: Encoder[RGB] =
+    Encoder.forProduct2("args", "symbol")(u => (u.children, u.sym))
 }

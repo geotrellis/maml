@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Add TargetCell Parameter to Focal operations [#118](https://github.com/geotrellis/maml/pull/118)
 - Expose Focal Slope and Hillshade zFactor [#119](https://github.com/geotrellis/maml/pull/119)
+- RGB composite as MAML operation [#114](https://github.com/geotrellis/maml/issues/114)
 
 ## [0.6.0] - 2020-02-06
 ### Added
