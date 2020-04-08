@@ -1,10 +1,11 @@
 package com.azavea.maml.eval.directive
 
-import com.azavea.maml.error.{Interpreted, _}
+import com.azavea.maml.error._
 import com.azavea.maml.eval._
 import com.azavea.maml.eval.tile._
 import com.azavea.maml.ast._
 import com.azavea.maml.dsl.tile._
+
 import cats._
 import cats.data._
 import cats.implicits._
