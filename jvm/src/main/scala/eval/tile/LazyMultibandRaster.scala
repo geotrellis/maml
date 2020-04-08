@@ -95,6 +95,16 @@ case class LazyMultibandRaster(bands: Map[String, LazyRaster]) {
     val lztiles = bands.mapValues({ lt => MaskingNode(List(lt), maskPoly) })
     LazyMultibandRaster(lztiles)
   }
+
+  def rescale(newMin: Double, newMax: Double): LazyMultibandRaster = {
+    val lztiles = bands.mapValues({ lt => LazyRaster.Rescale(List(lt), newMin, newMax) })
+    LazyMultibandRaster(lztiles)
+  }
+
+  def normalize(oldMin: Double, oldMax: Double, newMin: Double, newMax: Double): LazyMultibandRaster = {
+    val lztiles = bands.mapValues({ lt => LazyRaster.Normalize(List(lt), oldMin, oldMax, newMin, newMax) })
+    LazyMultibandRaster(lztiles)
+  }
 }
 
 object LazyMultibandRaster {

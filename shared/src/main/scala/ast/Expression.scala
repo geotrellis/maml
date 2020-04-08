@@ -279,6 +279,16 @@ case class LogicalNegation(children: List[Expression]) extends Expression("lneg"
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
+case class Rescale(children: List[Expression], newMin: Double, newMax: Double, band: Option[String] = None) extends Expression("rescale") with UnaryExpression {
+  val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.imageOrScalar
+  def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
+}
+
+case class Normalize(children: List[Expression], oldMin: Double, oldMax: Double, newMin: Double, newMax: Double, band: Option[String] = None) extends Expression("normalize") with UnaryExpression {
+  val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.imageOrScalar
+  def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
+}
+
 case class FocalMax(children: List[Expression], neighborhood: Neighborhood, target: TargetCell = TargetCell.All) extends Expression("fmax") with FocalExpression {
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }

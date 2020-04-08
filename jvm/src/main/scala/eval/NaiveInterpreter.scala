@@ -91,7 +91,9 @@ object NaiveInterpreter {
       FocalDirectives.slope,
       FocalDirectives.hillshade,
       FocalDirectives.aspect,
-      OpDirectives.rgbTile
+      OpDirectives.rgbTile,
+      UnaryDirectives.rescale,
+      UnaryDirectives.normalize
     )
   )
 }

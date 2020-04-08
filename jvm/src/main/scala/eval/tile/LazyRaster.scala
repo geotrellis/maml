@@ -142,6 +142,32 @@ object LazyRaster {
     def getDouble(col: Int, row: Int) = f(fst.getDouble(col, row), scalar)
   }
 
+  case class Rescale(
+    children: List[LazyRaster],
+    newMin: Double,
+    newMax: Double
+  ) extends UnaryBranch {
+    lazy val intTile = fst.evaluate.rescale(newMin.toInt, newMax.toInt)
+    lazy val dblTile = fst.evaluateDouble.rescale(newMin, newMax)
+
+    def get(col: Int, row: Int) = intTile.get(col, row)
+    def getDouble(col: Int, row: Int) = dblTile.getDouble(col, row)
+  }
+
+  case class Normalize(
+    children: List[LazyRaster],
+    oldMin: Double,
+    oldMax: Double,
+    newMin: Double,
+    newMax: Double
+  ) extends UnaryBranch {
+    lazy val intTile = fst.evaluate.normalize(oldMin.toInt, oldMax.toInt, newMin.toInt, newMax.toInt)
+    lazy val dblTile = fst.evaluateDouble.normalize(oldMin, oldMax, newMin, newMax)
+
+    def get(col: Int, row: Int) = intTile.get(col, row)
+    def getDouble(col: Int, row: Int) = dblTile.getDouble(col, row)
+  }
+
   case class Focal(
     children: List[LazyRaster],
     neighborhood: Neighborhood,
@@ -155,7 +181,7 @@ object LazyRaster {
     lazy val dblTile = focalFn(fst.evaluateDouble, neighborhood, gridbounds, target)
 
     def get(col: Int, row: Int) = intTile.get(col, row)
-    def getDouble(col: Int, row: Int) = dblTile.get(col, row)
+    def getDouble(col: Int, row: Int) = dblTile.getDouble(col, row)
   }
 
   case class Slope(
@@ -171,7 +197,7 @@ object LazyRaster {
     lazy val dblTile = GTFocalSlope(fst.evaluateDouble, Square(1),  gridbounds, cs, zFactor, target)
 
     def get(col: Int, row: Int) = intTile.get(col, row)
-    def getDouble(col: Int, row: Int) = dblTile.get(col, row)
+    def getDouble(col: Int, row: Int) = dblTile.getDouble(col, row)
   }
 
   case class Hillshade(
@@ -192,7 +218,7 @@ object LazyRaster {
       GTHillshade(fst.evaluateDouble, Square(1), gridbounds, cs, azimuth, altitude, zFactor, target)
 
     def get(col: Int, row: Int) = intTile.get(col, row)
-    def getDouble(col: Int, row: Int) = dblTile.get(col, row)
+    def getDouble(col: Int, row: Int) = dblTile.getDouble(col, row)
   }
 
   case class Aspect(
@@ -210,6 +236,6 @@ object LazyRaster {
       GTAspect(fst.evaluateDouble, Square(1), gridbounds, cs, target)
 
     def get(col: Int, row: Int) = intTile.get(col, row)
-    def getDouble(col: Int, row: Int) = dblTile.get(col, row)
+    def getDouble(col: Int, row: Int) = dblTile.getDouble(col, row)
   }
 }

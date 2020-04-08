@@ -1,9 +1,5 @@
 package com.azavea.maml.ast
 
-import MamlKind._
-import com.azavea.maml.util._
-
-
 /** Operations which should only have one argument. */
 trait UnaryExpression { expression: Expression =>
   require(expression.children.length == 1, s"Incorrect number of arguments to a unary expression. Expected 1, found ${expression.children.length}")

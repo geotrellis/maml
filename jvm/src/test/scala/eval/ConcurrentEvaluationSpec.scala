@@ -348,7 +348,39 @@ class ConcurrentEvaluationSpec
           g.get(0, 0) should be(101)
           b.get(0, 0) should be(201)
       }
-      case i@Invalid(_) => fail(s"$i")
+      case i @ Invalid(_) => fail(s"$i")
+    }
+
+    interpreter(Rescale(ast.RGB(
+      List(
+        IntArrayTile(1 to 100 toArray, 10, 10),
+        IntArrayTile(101 to 200 toArray, 10, 10),
+        IntArrayTile(201 to 300 toArray, 10, 10)
+      )
+    ) :: Nil, 10, 11)).unsafeRunSync.as[MultibandTile] match {
+      case Valid(t) => t.bands match {
+        case Vector(r, g, b) =>
+          r.get(0, 0) should be(10)
+          g.get(0, 0) should be(10)
+          b.get(0, 0) should be(10)
+      }
+      case i @ Invalid(_) => fail(s"$i")
+    }
+
+    interpreter(ast.RGB(
+      List(
+        Rescale(IntArrayTile(1 to 100 toArray, 10, 10) :: Nil, 10, 11),
+        Rescale(IntArrayTile(101 to 200 toArray, 10, 10) :: Nil, 20, 21),
+        Rescale(IntArrayTile(201 to 300 toArray, 10, 10) :: Nil, 30, 31)
+      )
+    )).unsafeRunSync.as[MultibandTile] match {
+      case Valid(t) => t.bands match {
+        case Vector(r, g, b) =>
+          r.get(0, 0) should be(10)
+          g.get(0, 0) should be(20)
+          b.get(0, 0) should be(30)
+      }
+      case i @ Invalid(_) => fail(s"$i")
     }
 
     /** The hillshade test is a bit more involved than some of the above
