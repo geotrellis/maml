@@ -207,13 +207,13 @@ object OpDirectives {
     })
   }
 
-  val rgbTile = Directive { case (a @ RGB(_), childResults) if a.kind == MamlKind.Image =>
+  val rgbTile = Directive { case (a @ RGB(_, rb, gb, bb), childResults) if a.kind == MamlKind.Image =>
     val grouped = childResults.groupBy(_.kind)
 
     imageResults(grouped).map { tiles =>
       tiles.take(3) match {
         case r :: g :: b :: Nil =>
-          ImageResult(LazyMultibandRaster(Map("0" -> r.bands("0"), "1" -> g.bands("0"), "2" -> b.bands("0"))))
+          ImageResult(LazyMultibandRaster(Map("0" -> r.bands(rb), "1" -> g.bands(gb), "2" -> b.bands(bb))))
         case list => ImageResult(list.reduce { (lt1: LazyMultibandRaster, lt2: LazyMultibandRaster) =>
           LazyMultibandRaster(lt1.bands ++ lt2.bands)
         })

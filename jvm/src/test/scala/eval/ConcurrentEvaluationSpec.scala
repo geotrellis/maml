@@ -39,6 +39,17 @@ class ConcurrentEvaluationSpec
       )
     )
 
+  implicit def tileIsTileLiteral(
+      tile: MultibandTile
+  ): RasterLit[ProjectedRaster[MultibandTile]] =
+    RasterLit(
+      ProjectedRaster(
+        tile,
+        Extent(0, 0, 0.05, 0.05),
+        WebMercator
+      )
+    )
+
   implicit class TypeRefinement(self: Interpreted[Result]) {
     def as[T: ClassTag]: Interpreted[T] = self match {
       case Valid(r)       => r.as[T]
@@ -316,6 +327,21 @@ class ConcurrentEvaluationSpec
         IntArrayTile(201 to 300 toArray, 10, 10)
       )
     )).unsafeRunSync.as[MultibandTile] match {
+      case Valid(t) => t.bands match {
+        case Vector(r, g, b) =>
+          r.get(0, 0) should be(1)
+          g.get(0, 0) should be(101)
+          b.get(0, 0) should be(201)
+      }
+      case i@Invalid(_) => fail(s"$i")
+    }
+
+    val mbt: Expression = MultibandTile(
+      IntArrayTile(1 to 100 toArray, 10, 10),
+      IntArrayTile(101 to 200 toArray, 10, 10),
+      IntArrayTile(201 to 300 toArray, 10, 10)
+    )
+    interpreter(ast.RGB(List(mbt, mbt, mbt), "0", "1", "2")).unsafeRunSync.as[MultibandTile] match {
       case Valid(t) => t.bands match {
         case Vector(r, g, b) =>
           r.get(0, 0) should be(1)

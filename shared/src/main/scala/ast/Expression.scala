@@ -86,9 +86,11 @@ case class Masking(children: List[Expression]) extends Expression("mask") with B
  * It is a [[FoldableExpression]] though expects only 3 rasters to be passed.
  * It would use the first band of every raster and combine them into a single RGB raster.
  *
- * TODO: add more parameters for an RGB image color correction
+ * redBand - the nam / number of the band from the first (red) argument
+ * greenBand - the name / number of the band from the second (green) argument
+ * blueBand - the name / number of the band from the third (blue) argument
  */
-case class RGB(children: List[Expression]) extends Expression("rgb") with FoldableExpression {
+case class RGB(children: List[Expression], redBand: String = "0", blueBand: String = "0", greenBand: String = "0") extends Expression("rgb") with FoldableExpression {
   val kindDerivation = FoldableExpression.imageOrScalarDerivation(this)(_, _)
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
