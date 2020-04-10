@@ -171,7 +171,15 @@ object UnaryDirectives {
     childResults.head match {
       case ImageResult(mbLzTile) =>
         Valid(ImageResult(band.fold(mbLzTile)(_ => mbLzTile.select(band.toList)).normalize(oldMin, oldMax, newMin, newMax)))
-      case _ => Invalid(NEL.of(NonEvaluableNode(normalize, Some("Rescale node requires multiband lazyraster argument"))))
+      case _ => Invalid(NEL.of(NonEvaluableNode(normalize, Some("Normalize node requires multiband lazyraster argument"))))
+    }
+  }
+
+  val clamp = Directive { case (clamp @ Clamp(_, min, max, band), childResults) =>
+    childResults.head match {
+      case ImageResult(mbLzTile) =>
+        Valid(ImageResult(band.fold(mbLzTile)(_ => mbLzTile.select(band.toList)).clamp(min, max)))
+      case _ => Invalid(NEL.of(NonEvaluableNode(clamp, Some("Clamp node requires multiband lazyraster argument"))))
     }
   }
 }

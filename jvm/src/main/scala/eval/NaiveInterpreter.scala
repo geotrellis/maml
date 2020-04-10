@@ -93,7 +93,8 @@ object NaiveInterpreter {
       FocalDirectives.aspect,
       OpDirectives.rgbTile,
       UnaryDirectives.rescale,
-      UnaryDirectives.normalize
+      UnaryDirectives.normalize,
+      UnaryDirectives.clamp
     )
   )
 }

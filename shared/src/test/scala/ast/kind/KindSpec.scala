@@ -25,4 +25,12 @@ class KindSpec extends FunSpec with Matchers {
   it("Should correctly determine RGB with Rescale output type for a foldable operation (scalar)") {
     RGB(List(Rescale(RasterVar("test1") :: Nil, 10, 20), Rescale(RasterVar("test2") :: Nil, 30, 40), Rescale(RasterVar("test3") :: Nil, 50, 60))).kind should be (MamlKind.Image)
   }
+
+  it("Should correctly determine RGB with Clamp output type for a foldable operation (scalar)") {
+    RGB(List(
+      Rescale(Addition(Clamp(RasterVar("test1") :: Nil, 10, 20) :: DblLit(15D) :: Nil) :: Nil, 10, 20),
+      Rescale(Addition(Clamp(RasterVar("test2") :: Nil, 10, 20) :: DblLit(15D) :: Nil) :: Nil, 30, 40),
+      Rescale(Addition(Clamp(RasterVar("test3") :: Nil, 10, 20) :: DblLit(15D) :: Nil) :: Nil, 50, 60)
+    )).kind should be (MamlKind.Image)
+  }
 }
