@@ -82,6 +82,19 @@ case class Masking(children: List[Expression]) extends Expression("mask") with B
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
+/**
+ * It is a [[FoldableExpression]] though expects only 3 rasters to be passed.
+ * It would use the first band of every raster and combine them into a single RGB raster.
+ *
+ * redBand - the nam / number of the band from the first (red) argument
+ * greenBand - the name / number of the band from the second (green) argument
+ * blueBand - the name / number of the band from the third (blue) argument
+ */
+case class RGB(children: List[Expression], redBand: String = "0", blueBand: String = "0", greenBand: String = "0") extends Expression("rgb") with FoldableExpression {
+  val kindDerivation = FoldableExpression.imageOrScalarDerivation(this)(_, _)
+  def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
+}
+
 case class Pow(children: List[Expression]) extends Expression("**") with BinaryExpression {
   val kindDerivation = { (k1: MamlKind, k2: MamlKind) =>
     (k1, k2) match {
@@ -263,6 +276,16 @@ case class NumericNegation(children: List[Expression]) extends Expression("nneg"
 
 case class LogicalNegation(children: List[Expression]) extends Expression("lneg") with UnaryExpression {
   val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.imageOnly ++ UnaryExpression.boolOnly
+  def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
+}
+
+case class Rescale(children: List[Expression], newMin: Double, newMax: Double, band: Option[String] = None) extends Expression("rescale") with UnaryExpression {
+  val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.imageOrScalar
+  def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
+}
+
+case class Normalize(children: List[Expression], oldMin: Double, oldMax: Double, newMin: Double, newMax: Double, band: Option[String] = None) extends Expression("normalize") with UnaryExpression {
+  val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.imageOrScalar
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 

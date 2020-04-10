@@ -9,11 +9,10 @@ import com.azavea.maml.util._
 import geotrellis.raster.Tile
 import geotrellis.raster.mapalgebra.focal
 import geotrellis.vector.Point
-import geotrellis.proj4.{CRS, LatLng}
+import geotrellis.proj4.LatLng
 
-import cats._
 import cats.implicits._
-import cats.data.{NonEmptyList => NEL, _}
+import cats.data._
 import Validated._
 
 

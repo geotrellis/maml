@@ -19,6 +19,9 @@ class EvaluationSpec extends FunSpec with Matchers with ExpressionTreeCodec {
   implicit def tileIsTileLiteral(tile: Tile): RasterLit[ProjectedRaster[MultibandTile]] =
     RasterLit(ProjectedRaster(MultibandTile(tile), Extent(0, 0, 0.05, 0.05), WebMercator))
 
+  implicit def mbTileIsTileLiteral(tile: MultibandTile): RasterLit[ProjectedRaster[MultibandTile]] =
+    RasterLit(ProjectedRaster(tile, Extent(0, 0, 0.05, 0.05), WebMercator))
+
   implicit class TypeRefinement(self: Interpreted[Result]) {
     def as[T: ClassTag]: Interpreted[T] = self match {
       case Valid(r) => r.as[T]

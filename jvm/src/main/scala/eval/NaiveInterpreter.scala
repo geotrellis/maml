@@ -90,7 +90,10 @@ object NaiveInterpreter {
       FocalDirectives.standardDeviation,
       FocalDirectives.slope,
       FocalDirectives.hillshade,
-      FocalDirectives.aspect
+      FocalDirectives.aspect,
+      OpDirectives.rgbTile,
+      UnaryDirectives.rescale,
+      UnaryDirectives.normalize
     )
   )
 }

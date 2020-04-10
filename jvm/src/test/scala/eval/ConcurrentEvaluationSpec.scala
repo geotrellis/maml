@@ -1,26 +1,18 @@
 package com.azavea.maml.eval
 
+import com.azavea.maml.ast
 import com.azavea.maml.ast._
-import com.azavea.maml.ast.codec.tree.ExpressionTreeCodec
 import com.azavea.maml.dsl._
 import com.azavea.maml.error._
-import com.azavea.maml.eval._
-import com.azavea.maml.eval.tile._
-import com.azavea.maml.eval.directive.SourceDirectives._
 import com.azavea.maml.eval.directive.OpDirectives._
 import com.azavea.maml.ast.codec.tree.ExpressionTreeCodec
-import com.azavea.maml.util.Square
 
-import io.circe._
-import io.circe.syntax._
 import geotrellis.raster._
 import geotrellis.vector._
 import geotrellis.proj4.WebMercator
-import cats._
-import cats.data.{NonEmptyList => NEL, _}
+import cats.data._
 import cats.effect._
 import Validated._
-import org.scalatest._
 
 import scala.reflect._
 
@@ -42,6 +34,17 @@ class ConcurrentEvaluationSpec
     RasterLit(
       ProjectedRaster(
         MultibandTile(tile),
+        Extent(0, 0, 0.05, 0.05),
+        WebMercator
+      )
+    )
+
+  implicit def tileIsTileLiteral(
+      tile: MultibandTile
+  ): RasterLit[ProjectedRaster[MultibandTile]] =
+    RasterLit(
+      ProjectedRaster(
+        tile,
         Extent(0, 0, 0.05, 0.05),
         WebMercator
       )
@@ -315,6 +318,68 @@ class ConcurrentEvaluationSpec
     interpreter(FocalAspect(List(IntArrayTile(1 to 100 toArray, 10, 10)))).unsafeRunSync
       .as[MultibandTile] match {
       case Valid(t)       => t.bands.head.get(5, 5) should be(354)
+      case i @ Invalid(_) => fail(s"$i")
+    }
+    interpreter(ast.RGB(
+      List(
+        IntArrayTile(1 to 100 toArray, 10, 10),
+        IntArrayTile(101 to 200 toArray, 10, 10),
+        IntArrayTile(201 to 300 toArray, 10, 10)
+      )
+    )).unsafeRunSync.as[MultibandTile] match {
+      case Valid(t) => t.bands match {
+        case Vector(r, g, b) =>
+          r.get(0, 0) should be(1)
+          g.get(0, 0) should be(101)
+          b.get(0, 0) should be(201)
+      }
+      case i@Invalid(_) => fail(s"$i")
+    }
+
+    val mbt: Expression = MultibandTile(
+      IntArrayTile(1 to 100 toArray, 10, 10),
+      IntArrayTile(101 to 200 toArray, 10, 10),
+      IntArrayTile(201 to 300 toArray, 10, 10)
+    )
+    interpreter(ast.RGB(List(mbt, mbt, mbt), "0", "1", "2")).unsafeRunSync.as[MultibandTile] match {
+      case Valid(t) => t.bands match {
+        case Vector(r, g, b) =>
+          r.get(0, 0) should be(1)
+          g.get(0, 0) should be(101)
+          b.get(0, 0) should be(201)
+      }
+      case i @ Invalid(_) => fail(s"$i")
+    }
+
+    interpreter(Rescale(ast.RGB(
+      List(
+        IntArrayTile(1 to 100 toArray, 10, 10),
+        IntArrayTile(101 to 200 toArray, 10, 10),
+        IntArrayTile(201 to 300 toArray, 10, 10)
+      )
+    ) :: Nil, 10, 11)).unsafeRunSync.as[MultibandTile] match {
+      case Valid(t) => t.bands match {
+        case Vector(r, g, b) =>
+          r.get(0, 0) should be(10)
+          g.get(0, 0) should be(10)
+          b.get(0, 0) should be(10)
+      }
+      case i @ Invalid(_) => fail(s"$i")
+    }
+
+    interpreter(ast.RGB(
+      List(
+        Rescale(IntArrayTile(1 to 100 toArray, 10, 10) :: Nil, 10, 11),
+        Rescale(IntArrayTile(101 to 200 toArray, 10, 10) :: Nil, 20, 21),
+        Rescale(IntArrayTile(201 to 300 toArray, 10, 10) :: Nil, 30, 31)
+      )
+    )).unsafeRunSync.as[MultibandTile] match {
+      case Valid(t) => t.bands match {
+        case Vector(r, g, b) =>
+          r.get(0, 0) should be(10)
+          g.get(0, 0) should be(20)
+          b.get(0, 0) should be(30)
+      }
       case i @ Invalid(_) => fail(s"$i")
     }
 
