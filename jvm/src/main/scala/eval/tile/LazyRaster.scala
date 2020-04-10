@@ -168,6 +168,29 @@ object LazyRaster {
     def getDouble(col: Int, row: Int) = dblTile.getDouble(col, row)
   }
 
+  case class Clamp(
+    children: List[LazyRaster],
+    min: Double,
+    max: Double
+  ) extends UnaryBranch {
+    val minInt = min.toInt
+    val maxInt = max.toInt
+
+    def clampInt(z: Int): Int =
+      if(isData(z)) { if(z > maxInt) { maxInt } else if(z < minInt) { minInt } else { z } }
+      else { z }
+
+    def clampDouble(z: Double): Double =
+      if(isData(z)) { if(z > max) { max } else if(z < min) { min } else { z } }
+      else { z }
+
+    lazy val intTile = fst.evaluate.map(clampInt _)
+    lazy val dblTile = fst.evaluateDouble.mapDouble(clampDouble _)
+
+    def get(col: Int, row: Int) = intTile.get(col, row)
+    def getDouble(col: Int, row: Int) = dblTile.getDouble(col, row)
+  }
+
   case class Focal(
     children: List[LazyRaster],
     neighborhood: Neighborhood,

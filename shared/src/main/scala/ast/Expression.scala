@@ -2,15 +2,13 @@ package com.azavea.maml.ast
 
 import com.azavea.maml.util._
 import com.azavea.maml.error._
-
-import geotrellis.raster.TargetCell
+import geotrellis.raster.{CellType, TargetCell}
 import cats._
 import cats.data.{NonEmptyList => NEL, _}
 import Validated._
 import cats.implicits._
 
 import java.security.InvalidParameterException
-
 
 object Expression {
   def bindParams(expr: Expression, params: Map[String, Literal]): Interpreted[Expression] = {
@@ -285,6 +283,11 @@ case class Rescale(children: List[Expression], newMin: Double, newMax: Double, b
 }
 
 case class Normalize(children: List[Expression], oldMin: Double, oldMax: Double, newMin: Double, newMax: Double, band: Option[String] = None) extends Expression("normalize") with UnaryExpression {
+  val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.imageOrScalar
+  def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
+}
+
+case class Clamp(children: List[Expression], min: Double, max: Double, band: Option[String] = None) extends Expression("clamp") with UnaryExpression {
   val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.imageOrScalar
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }

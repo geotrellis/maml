@@ -357,4 +357,9 @@ trait MamlCodecInstances extends MamlUtilityCodecs {
     Decoder.forProduct6("args", "oldMin", "oldMax", "newMin", "newMax", "band")(Normalize.apply)
   implicit lazy val encodeNormalize: Encoder[Normalize] =
     Encoder.forProduct7("args", "oldMin", "oldMax", "newMin", "newMax", "band", "symbol")(u => (u.children, u.oldMin, u.oldMax, u.newMin, u.newMax, u.band, u.sym))
+
+  implicit lazy val decodeClamp: Decoder[Clamp] =
+    Decoder.forProduct4("args", "min", "max", "band")(Clamp.apply)
+  implicit lazy val encodeClamp: Encoder[Clamp] =
+    Encoder.forProduct5("args", "min", "max", "band", "symbol")(u => (u.children, u.min, u.max, u.band, u.sym))
 }

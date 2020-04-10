@@ -105,6 +105,11 @@ case class LazyMultibandRaster(bands: Map[String, LazyRaster]) {
     val lztiles = bands.mapValues({ lt => LazyRaster.Normalize(List(lt), oldMin, oldMax, newMin, newMax) })
     LazyMultibandRaster(lztiles)
   }
+
+  def clamp(min: Double, max: Double): LazyMultibandRaster = {
+    val lztiles = bands.mapValues({ lt => LazyRaster.Clamp(List(lt), min, max) })
+    LazyMultibandRaster(lztiles)
+  }
 }
 
 object LazyMultibandRaster {
