@@ -85,6 +85,7 @@ workflows:
                 - develop
                 - /release\/.*/
                 - /hotfix\/.*/
+                - feature/jrb/receive-gpg-key
 
 jobs:
   "openjdk8-scala2.11.12-nodelts":
