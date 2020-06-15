@@ -343,6 +343,12 @@ case class ImageSelect(children: List[Expression], labels: List[String]) extends
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
+/** Assemble first bands from each child expression into a multiband image */
+case class Assemble(children: List[Expression]) extends Expression("assemble") with FoldableExpression {
+  val kindDerivation = FoldableExpression.imageOnly(this)(_, _)
+  def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
+}
+
 case class IntLit(value: Int) extends Expression("int") with Literal {
   val kind = MamlKind.Int
 }

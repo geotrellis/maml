@@ -348,6 +348,13 @@ trait MamlCodecInstances extends MamlUtilityCodecs {
   implicit lazy val encodeRGB: Encoder[RGB] =
     Encoder.forProduct5("args", "redBand", "greenBand", "blueBand", "symbol")(u => (u.children, u.redBand, u.greenBand, u.blueBand, u.sym))
 
+  implicit lazy val decodeAssemble: Decoder[Assemble] =
+    Decoder.forProduct1[Assemble, List[Expression]]("args") {
+      (args) => Assemble(args)
+    }
+  implicit lazy val encodeAssemble: Encoder[Assemble] =
+    Encoder.forProduct2("args", "symbol")(u => (u.children, u.sym))
+
   implicit lazy val decodeRescale: Decoder[Rescale] =
     Decoder.forProduct4("args", "newMin", "newMax", "band")(Rescale.apply)
   implicit lazy val encodeRescale: Encoder[Rescale] =

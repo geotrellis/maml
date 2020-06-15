@@ -33,4 +33,8 @@ class KindSpec extends FunSpec with Matchers {
       Rescale(Addition(Clamp(RasterVar("test3") :: Nil, 10, 20) :: DblLit(15D) :: Nil) :: Nil, 50, 60)
     )).kind should be (MamlKind.Image)
   }
+
+  it("Should correctly determine Assemble output type for a foldable operation") {
+    Assemble(List(RasterVar("test1"), RasterVar("test2"), RasterVar("test3"))).kind should be (MamlKind.Image)
+  }
 }

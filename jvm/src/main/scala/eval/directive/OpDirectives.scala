@@ -20,7 +20,7 @@ import scala.util.Try
 
 object OpDirectives {
 
-  private def asInstanceOfOption[T: ClassTag](o: Any): Option[T] = 
+  private def asInstanceOfOption[T: ClassTag](o: Any): Option[T] =
     Some(o) collect { case m: T => m}
 
   private def doubleResults(grouped: Map[MamlKind, Seq[Result]]): Interpreted[List[Double]] =
@@ -210,14 +210,26 @@ object OpDirectives {
   val rgbTile = Directive { case (a @ RGB(_, rb, gb, bb), childResults) if a.kind == MamlKind.Image =>
     val grouped = childResults.groupBy(_.kind)
 
-    imageResults(grouped).map { tiles =>
-      tiles.take(3) match {
+    imageResults(grouped).map { tiles => tiles.take(3) match {
         case r :: g :: b :: Nil =>
           ImageResult(LazyMultibandRaster(Map("0" -> r.bands(rb), "1" -> g.bands(gb), "2" -> b.bands(bb))))
         case list => ImageResult(list.reduce { (lt1: LazyMultibandRaster, lt2: LazyMultibandRaster) =>
           LazyMultibandRaster(lt1.bands ++ lt2.bands)
         })
       }
+    }
+  }
+
+  val assembleTile = Directive { case (a @ Assemble(_), childResults) if a.kind == MamlKind.Image =>
+    val grouped = childResults.groupBy(_.kind)
+
+    imageResults(grouped).map { tiles =>
+      val bands =
+        tiles.zipWithIndex.map { case (tile, index) =>
+          index.toString -> tile.bands("0")
+        }
+
+      ImageResult(LazyMultibandRaster(bands.toMap))
     }
   }
 
@@ -404,4 +416,3 @@ object OpDirectives {
     Valid(results)
   }
 }
-

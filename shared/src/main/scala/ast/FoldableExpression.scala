@@ -21,5 +21,9 @@ object FoldableExpression {
     case (MamlKind.Int, MamlKind.Double) => MamlKind.Double
     case (x1, x2) => throw new InvalidParameterException(s"Expected image, int, or double kind. Found $x1 $x2")
   }
-}
 
+  def imageOnly(exp: FoldableExpression)(k1: MamlKind, k2: MamlKind): MamlKind = (k1, k2) match {
+    case (MamlKind.Image, MamlKind.Image) => MamlKind.Image
+    case (x1, x2) => throw new InvalidParameterException(s"Expected image kind. Found $x1 $x2")
+  }
+}
