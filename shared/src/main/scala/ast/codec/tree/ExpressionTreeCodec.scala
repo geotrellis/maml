@@ -75,6 +75,7 @@ trait ExpressionTreeCodec extends MamlCodecInstances {
     case pow @ Pow(_) => pow.asJson
     case sleep @ Sleep(_, _) => sleep.asJson
     case rgb @ RGB(_, _, _, _) => rgb.asJson
+    case assemble @ Assemble(_) => assemble.asJson
     case rescale @ Rescale(_, _, _, _) => rescale.asJson
     case normalize @ Normalize(_, _, _, _, _, _) => normalize.asJson
     case clamp @ Clamp(_, _, _, _) => clamp.asJson
@@ -144,6 +145,7 @@ trait ExpressionTreeCodec extends MamlCodecInstances {
       case "rasterV" => Decoder[RasterVar]
       case "sleep" => Decoder[Sleep]
       case "rgb" => Decoder[RGB]
+      case "assemble" => Decoder[Assemble]
       case "rescale" => Decoder[Rescale]
       case "normalize" => Decoder[Normalize]
       case "clamp" => Decoder[Clamp]
@@ -153,4 +155,3 @@ trait ExpressionTreeCodec extends MamlCodecInstances {
     }
   }
 }
-

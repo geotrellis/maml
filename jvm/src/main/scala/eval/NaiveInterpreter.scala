@@ -92,6 +92,7 @@ object NaiveInterpreter {
       FocalDirectives.hillshade,
       FocalDirectives.aspect,
       OpDirectives.rgbTile,
+      OpDirectives.assembleTile,
       UnaryDirectives.rescale,
       UnaryDirectives.normalize,
       UnaryDirectives.clamp

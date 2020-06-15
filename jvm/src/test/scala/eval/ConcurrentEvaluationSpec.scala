@@ -200,6 +200,25 @@ class ConcurrentEvaluationSpec
     }
   }
 
+
+  it("Should interpret and evaluate tile assembly") {
+    interpreter(ast.Assemble(
+      List(
+        IntArrayTile(1 to 100 toArray, 10, 10),
+        IntArrayTile(101 to 200 toArray, 10, 10),
+        IntArrayTile(201 to 300 toArray, 10, 10)
+      )
+    )).unsafeRunSync.as[MultibandTile] match {
+      case Valid(t) => t.bands match {
+        case Vector(r, g, b) =>
+          r.get(0, 0) should be(1)
+          g.get(0, 0) should be(101)
+          b.get(0, 0) should be(201)
+      }
+      case i @ Invalid(_) => fail(s"$i")
+    }
+  }
+
   it("should interpret and evaluate tile comparison") {
     interpreter(
       IntArrayTile(1 to 4 toArray, 2, 2) < IntArrayTile(2 to 5 toArray, 2, 2)
