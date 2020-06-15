@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Expose Focal Slope and Hillshade zFactor [#119](https://github.com/geotrellis/maml/pull/119)
 - RGB composite as MAML operation, Rescale and Normalize nodes [#114](https://github.com/geotrellis/maml/issues/114)
 - Receive GPG key while publishing artifacts [#122](https://github.com/geotrellis/maml/issues/122)
+- Assemble bands into image as MAML operation [#123](https://github.com/geotrellis/maml/pull/123)
 
 ## [0.6.0] - 2020-02-06
 ### Added
