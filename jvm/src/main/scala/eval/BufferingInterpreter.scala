@@ -4,17 +4,11 @@ import com.azavea.maml.error._
 import com.azavea.maml.ast._
 import com.azavea.maml.util._
 import com.azavea.maml.eval.directive._
-import com.azavea.maml.eval.tile._
 
-import cats._
-import cats.implicits._
-import cats.data.Validated._
-import cats.data.{NonEmptyList => NEL, _}
-import geotrellis.raster.{Tile, Raster, GridBounds}
+import geotrellis.raster.GridBounds
 import geotrellis.raster.mapalgebra.focal
-
-import scala.reflect.ClassTag
-
+import cats.data.Validated._
+import cats.data.{NonEmptyList => NEL}
 
 case class BufferingInterpreter(
   directives: List[ScopedDirective[BufferingInterpreter.Scope]],
@@ -108,80 +102,80 @@ object BufferingInterpreter {
     ), Options(256)
   )
 
-  val focalMax = ScopedDirective[Scope] { case (fm@FocalMax(_, neighborhood), childResults, scope) =>
+  val focalMax = ScopedDirective[Scope] { case (FocalMax(_, neighborhood, target), childResults, scope) =>
     val n = NeighborhoodConversion(neighborhood)
     val gridbounds =
       GridBounds(n.extent, n.extent, scope.tileSize - 1 + scope.buffer * 2 + n.extent, scope.tileSize - 1 + scope.buffer * 2 + n.extent)
 
     childResults.head match {
       case ImageResult(lzTile) =>
-        Valid(ImageResult(lzTile.focal(n, Some(gridbounds), focal.Max.apply _)))
+        Valid(ImageResult(lzTile.focal(n, Some(gridbounds), target, focal.Max.apply _)))
     }
   }
 
-  val focalMin = ScopedDirective[Scope] { case (fm@FocalMin(_, neighborhood), childResults, scope) =>
+  val focalMin = ScopedDirective[Scope] { case (FocalMin(_, neighborhood, target), childResults, scope) =>
     val n = NeighborhoodConversion(neighborhood)
     val gridbounds =
       GridBounds(n.extent, n.extent, scope.tileSize - 1 + scope.buffer * 2 + n.extent, scope.tileSize - 1 + scope.buffer * 2 + n.extent)
 
     childResults.head match {
       case ImageResult(lzTile) =>
-        Valid(ImageResult(lzTile.focal(n, Some(gridbounds), focal.Min.apply _)))
+        Valid(ImageResult(lzTile.focal(n, Some(gridbounds), target, focal.Min.apply _)))
     }
   }
 
-  val focalMean = ScopedDirective[Scope] { case (fm@FocalMean(_, neighborhood), childResults, scope) =>
+  val focalMean = ScopedDirective[Scope] { case (FocalMean(_, neighborhood, target), childResults, scope) =>
     val n = NeighborhoodConversion(neighborhood)
     val gridbounds =
       GridBounds(n.extent, n.extent, scope.tileSize - 1 + scope.buffer * 2 + n.extent, scope.tileSize - 1 + scope.buffer * 2 + n.extent)
 
     childResults.head match {
       case ImageResult(lzTile) =>
-        Valid(ImageResult(lzTile.focal(n, Some(gridbounds), focal.Mean.apply _)))
+        Valid(ImageResult(lzTile.focal(n, Some(gridbounds), target, focal.Mean.apply _)))
     }
   }
 
-  val focalMedian = ScopedDirective[Scope] { case (fm@FocalMedian(_, neighborhood), childResults, scope) =>
+  val focalMedian = ScopedDirective[Scope] { case (FocalMedian(_, neighborhood, target), childResults, scope) =>
     val n = NeighborhoodConversion(neighborhood)
     val gridbounds =
       GridBounds(n.extent, n.extent, scope.tileSize - 1 + scope.buffer * 2 + n.extent, scope.tileSize - 1 + scope.buffer * 2 + n.extent)
 
     childResults.head match {
       case ImageResult(lzTile) =>
-        Valid(ImageResult(lzTile.focal(n, Some(gridbounds), focal.Median.apply _)))
+        Valid(ImageResult(lzTile.focal(n, Some(gridbounds), target, focal.Median.apply _)))
     }
   }
 
-  val focalMode = ScopedDirective[Scope] { case (fm@FocalMode(_, neighborhood), childResults, scope) =>
+  val focalMode = ScopedDirective[Scope] { case (FocalMode(_, neighborhood, target), childResults, scope) =>
     val n = NeighborhoodConversion(neighborhood)
     val gridbounds =
       GridBounds(n.extent, n.extent, scope.tileSize - 1 + scope.buffer * 2 + n.extent, scope.tileSize - 1 + scope.buffer * 2 + n.extent)
 
     childResults.head match {
       case ImageResult(lzTile) =>
-        Valid(ImageResult(lzTile.focal(n, Some(gridbounds), focal.Mode.apply _)))
+        Valid(ImageResult(lzTile.focal(n, Some(gridbounds), target, focal.Mode.apply _)))
     }
   }
 
-  val focalSum = ScopedDirective[Scope] { case (fm@FocalSum(_, neighborhood), childResults, scope) =>
+  val focalSum = ScopedDirective[Scope] { case (FocalSum(_, neighborhood, target), childResults, scope) =>
     val n = NeighborhoodConversion(neighborhood)
     val gridbounds =
       GridBounds(n.extent, n.extent, scope.tileSize - 1 + scope.buffer * 2 + n.extent, scope.tileSize - 1 + scope.buffer * 2 + n.extent)
 
     childResults.head match {
       case ImageResult(lzTile) =>
-        Valid(ImageResult(lzTile.focal(n, Some(gridbounds), focal.Sum.apply _)))
+        Valid(ImageResult(lzTile.focal(n, Some(gridbounds), target, focal.Sum.apply _)))
     }
   }
 
-  val focalStandardDeviation = ScopedDirective[Scope] { case (fm@FocalStdDev(_, neighborhood), childResults, scope) =>
+  val focalStandardDeviation = ScopedDirective[Scope] { case (FocalStdDev(_, neighborhood, target), childResults, scope) =>
     val n = NeighborhoodConversion(neighborhood)
     val gridbounds =
       GridBounds(n.extent, n.extent, scope.tileSize - 1 + scope.buffer * 2 + n.extent, scope.tileSize - 1 + scope.buffer * 2 + n.extent)
 
     childResults.head match {
       case ImageResult(lzTile) =>
-        Valid(ImageResult(lzTile.focal(n, Some(gridbounds), focal.StandardDeviation.apply _)))
+        Valid(ImageResult(lzTile.focal(n, Some(gridbounds), target, focal.StandardDeviation.apply _)))
     }
   }
 }

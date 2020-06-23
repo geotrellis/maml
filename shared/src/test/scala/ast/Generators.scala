@@ -1,15 +1,11 @@
 package com.azavea.maml.ast
 
 import com.azavea.maml.util._
+import geotrellis.raster.TargetCell
 
 import org.scalacheck._
 import org.scalacheck.Gen._
 import org.scalacheck.Arbitrary.arbitrary
-import org.scalacheck.Prop.forAll
-
-import scala.util.Random
-import java.util.UUID
-
 
 object Generators {
 
@@ -63,7 +59,7 @@ object Generators {
                       Wedge(42.2, 45.1, 51.3),
                       Annulus(123.0, 123.4)
                     )
-  } yield constructor(args, neighborhood)
+  } yield constructor(args, neighborhood, TargetCell.All)
 
   def genOpAST(depth: Int) = Gen.frequency(
     (5 -> genBinaryOpAST(depth)),

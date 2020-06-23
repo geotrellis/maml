@@ -1,23 +1,12 @@
 package com.azavea.maml.eval.tile
 
-import com.azavea.maml.eval._
-
+import cats.Semigroup
 import geotrellis.raster._
-import geotrellis.raster.mapalgebra.local._
-import geotrellis.raster.mapalgebra.focal.{Square, Neighborhood, TargetCell, Slope => GTFocalSlope}
+import geotrellis.raster.mapalgebra.focal.{Neighborhood, Square, TargetCell, Aspect => GTAspect, Slope => GTFocalSlope}
 import geotrellis.raster.mapalgebra.focal.hillshade.{Hillshade => GTHillshade}
-import geotrellis.raster.render._
-import geotrellis.vector.{Extent, MultiPolygon, Point}
+import geotrellis.vector.Extent
 import geotrellis.proj4.CRS
-import cats._
-import cats.data._
-import cats.data.Validated._
-import cats.data.{NonEmptyList => NEL, _}
-import cats.implicits._
 import spire.syntax.cfor._
-
-import scala.reflect.ClassTag
-
 
 sealed trait LazyRaster {
   // TODO: We need to find a way to rip RasterExtent out of LazyRaster
@@ -153,34 +142,85 @@ object LazyRaster {
     def getDouble(col: Int, row: Int) = f(fst.getDouble(col, row), scalar)
   }
 
+  case class Rescale(
+    children: List[LazyRaster],
+    newMin: Double,
+    newMax: Double
+  ) extends UnaryBranch {
+    lazy val intTile = fst.evaluate.rescale(newMin.toInt, newMax.toInt)
+    lazy val dblTile = fst.evaluateDouble.rescale(newMin, newMax)
+
+    def get(col: Int, row: Int) = intTile.get(col, row)
+    def getDouble(col: Int, row: Int) = dblTile.getDouble(col, row)
+  }
+
+  case class Normalize(
+    children: List[LazyRaster],
+    oldMin: Double,
+    oldMax: Double,
+    newMin: Double,
+    newMax: Double
+  ) extends UnaryBranch {
+    lazy val intTile = fst.evaluate.normalize(oldMin.toInt, oldMax.toInt, newMin.toInt, newMax.toInt)
+    lazy val dblTile = fst.evaluateDouble.normalize(oldMin, oldMax, newMin, newMax)
+
+    def get(col: Int, row: Int) = intTile.get(col, row)
+    def getDouble(col: Int, row: Int) = dblTile.getDouble(col, row)
+  }
+
+  case class Clamp(
+    children: List[LazyRaster],
+    min: Double,
+    max: Double
+  ) extends UnaryBranch {
+    val minInt = min.toInt
+    val maxInt = max.toInt
+
+    def clampInt(z: Int): Int =
+      if(isData(z)) { if(z > maxInt) { maxInt } else if(z < minInt) { minInt } else { z } }
+      else { z }
+
+    def clampDouble(z: Double): Double =
+      if(isData(z)) { if(z > max) { max } else if(z < min) { min } else { z } }
+      else { z }
+
+    lazy val intTile = fst.evaluate.map(clampInt _)
+    lazy val dblTile = fst.evaluateDouble.mapDouble(clampDouble _)
+
+    def get(col: Int, row: Int) = intTile.get(col, row)
+    def getDouble(col: Int, row: Int) = dblTile.getDouble(col, row)
+  }
+
   case class Focal(
     children: List[LazyRaster],
     neighborhood: Neighborhood,
     gridbounds: Option[GridBounds[Int]],
+    target: TargetCell,
     focalFn: (Tile, Neighborhood, Option[GridBounds[Int]], TargetCell) => Tile
   ) extends UnaryBranch {
     override lazy val cols: Int = gridbounds.map(_.width).getOrElse(fst.cols)
     override lazy val rows: Int = gridbounds.map(_.height).getOrElse(fst.rows)
-    lazy val intTile = focalFn(fst.evaluate, neighborhood, gridbounds, TargetCell.All)
-    lazy val dblTile = focalFn(fst.evaluateDouble, neighborhood, gridbounds, TargetCell.All)
+    lazy val intTile = focalFn(fst.evaluate, neighborhood, gridbounds, target)
+    lazy val dblTile = focalFn(fst.evaluateDouble, neighborhood, gridbounds, target)
 
     def get(col: Int, row: Int) = intTile.get(col, row)
-    def getDouble(col: Int, row: Int) = dblTile.get(col, row)
+    def getDouble(col: Int, row: Int) = dblTile.getDouble(col, row)
   }
 
   case class Slope(
     children: List[LazyRaster],
     gridbounds: Option[GridBounds[Int]],
     zFactor: Double,
-    cs: CellSize
+    cs: CellSize,
+    target: TargetCell
   ) extends UnaryBranch {
     override lazy val cols: Int = gridbounds.map(_.width).getOrElse(fst.cols)
     override lazy val rows: Int = gridbounds.map(_.height).getOrElse(fst.rows)
-    lazy val intTile = GTFocalSlope(fst.evaluate, Square(1), gridbounds, cs, zFactor, TargetCell.All)
-    lazy val dblTile = GTFocalSlope(fst.evaluateDouble, Square(1),  gridbounds, cs, zFactor, TargetCell.All)
+    lazy val intTile = GTFocalSlope(fst.evaluate, Square(1), gridbounds, cs, zFactor, target)
+    lazy val dblTile = GTFocalSlope(fst.evaluateDouble, Square(1),  gridbounds, cs, zFactor, target)
 
     def get(col: Int, row: Int) = intTile.get(col, row)
-    def getDouble(col: Int, row: Int) = dblTile.get(col, row)
+    def getDouble(col: Int, row: Int) = dblTile.getDouble(col, row)
   }
 
   case class Hillshade(
@@ -189,17 +229,36 @@ object LazyRaster {
     zFactor: Double,
     cs: CellSize,
     azimuth: Double,
-    altitude: Double
+    altitude: Double,
+    target: TargetCell
   ) extends UnaryBranch {
     override lazy val cols: Int = gridbounds.map(_.width).getOrElse(fst.cols)
     override lazy val rows: Int = gridbounds.map(_.height).getOrElse(fst.rows)
 
     lazy val intTile =
-      GTHillshade(fst.evaluate, Square(1), gridbounds, cs, azimuth, altitude, zFactor, TargetCell.All)
+      GTHillshade(fst.evaluate, Square(1), gridbounds, cs, azimuth, altitude, zFactor, target)
     lazy val dblTile =
-      GTHillshade(fst.evaluateDouble, Square(1), gridbounds, cs, azimuth, altitude, zFactor, TargetCell.All)
+      GTHillshade(fst.evaluateDouble, Square(1), gridbounds, cs, azimuth, altitude, zFactor, target)
 
     def get(col: Int, row: Int) = intTile.get(col, row)
-    def getDouble(col: Int, row: Int) = dblTile.get(col, row)
+    def getDouble(col: Int, row: Int) = dblTile.getDouble(col, row)
+  }
+
+  case class Aspect(
+    children: List[LazyRaster],
+    gridbounds: Option[GridBounds[Int]],
+    cs: CellSize,
+    target: TargetCell
+  ) extends UnaryBranch {
+    override lazy val cols: Int = gridbounds.map(_.width).getOrElse(fst.cols)
+    override lazy val rows: Int = gridbounds.map(_.height).getOrElse(fst.rows)
+
+    lazy val intTile =
+      GTAspect(fst.evaluate, Square(1), gridbounds, cs, target)
+    lazy val dblTile =
+      GTAspect(fst.evaluateDouble, Square(1), gridbounds, cs, target)
+
+    def get(col: Int, row: Int) = intTile.get(col, row)
+    def getDouble(col: Int, row: Int) = dblTile.getDouble(col, row)
   }
 }

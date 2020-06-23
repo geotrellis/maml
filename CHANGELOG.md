@@ -6,7 +6,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.1] - 2020-06-23
+### Added
+- Add TargetCell Parameter to Focal operations [#118](https://github.com/geotrellis/maml/pull/118)
+- Expose Focal Slope and Hillshade zFactor [#119](https://github.com/geotrellis/maml/pull/119)
+- RGB composite as MAML operation, Rescale and Normalize nodes [#114](https://github.com/geotrellis/maml/issues/114)
+- Receive GPG key while publishing artifacts [#122](https://github.com/geotrellis/maml/issues/122)
+- Assemble bands into image as MAML operation [#123](https://github.com/geotrellis/maml/pull/123)
+
 ## [0.6.0] - 2020-02-06
+### Added
+- Added support for Focal Aspect calculations [#103](https://github.com/geotrellis/maml/issues/103)
+
 ### Changed
  - GeoTrellis 3.2.0 and bump dependencies for scala 2.12 build [#112](https://github.com/geotrellis/maml/pull/112)
 
@@ -47,7 +58,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Mask on LazyMultibandRasters directly [#89](https://github.com/geotrellis/maml/pull/89)
 - Assume correct extents in binary ops to avoid floating point errors [#91](https://github.com/geotrellis/maml/pull/91)
 
-[Unreleased]: https://github.com/geotrellis/maml/compare/0.4.0...HEAD
+[Unreleased]: https://github.com/geotrellis/maml/compare/0.6.1...HEAD
+[0.6.1]: https://github.com/geotrellis/maml/compare/0.6.1...0.6.0
+[0.6.0]: https://github.com/geotrellis/maml/compare/0.5.1...0.6.0
+[0.5.1]: https://github.com/geotrellis/maml/compare/0.5.0...0.5.1
+[0.5.0]: https://github.com/geotrellis/maml/compare/0.4.0...0.5.0
 [0.4.0]: https://github.com/geotrellis/maml/compare/0.3.3...0.4.0
 [0.3.3]: https://github.com/geotrellis/maml/compare/0.3.2...0.3.3
 [0.3.2]: https://github.com/geotrellis/maml/compare/v0.2.2...0.3.2

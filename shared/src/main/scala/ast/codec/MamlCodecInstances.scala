@@ -1,15 +1,10 @@
 package com.azavea.maml.ast.codec
 
 import com.azavea.maml.ast._
-import com.azavea.maml.util._
+import com.azavea.maml.util.Neighborhood
 
+import geotrellis.raster.TargetCell
 import io.circe._
-import io.circe.syntax._
-import io.circe.generic.extras.semiauto._
-import io.circe.generic.extras.Configuration
-
-import java.security.InvalidParameterException
-
 
 trait MamlCodecInstances extends MamlUtilityCodecs {
   implicit def totalDecoder: Decoder[Expression]
@@ -68,50 +63,77 @@ trait MamlCodecInstances extends MamlUtilityCodecs {
     Encoder.forProduct3("args", "classifications", "symbol")(u => (u.children, u.classMap, u.sym))
 
   implicit lazy val decodeFocalMax: Decoder[FocalMax] =
-    Decoder.forProduct2("args", "neighborhood")(FocalMax.apply)
+    Decoder.forProduct3[FocalMax, List[Expression], Neighborhood, Option[TargetCell]]("args", "neighborhood", "target") {
+      (args, zFactor, target) => FocalMax(args, zFactor, target.getOrElse(TargetCell.All))
+    }
   implicit lazy val encodeFocalMax: Encoder[FocalMax] =
-    Encoder.forProduct3("args", "neighborhood", "symbol")(u => (u.children, u.neighborhood, u.sym))
+    Encoder.forProduct4("args", "neighborhood", "target","symbol")(u => (u.children, u.neighborhood, u.target, u.sym))
 
   implicit lazy val decodeFocalMin: Decoder[FocalMin] =
-    Decoder.forProduct2("args", "neighborhood")(FocalMin.apply)
+    Decoder.forProduct3[FocalMin, List[Expression], Neighborhood, Option[TargetCell]]("args", "neighborhood", "target") {
+      (args, zFactor, target) => FocalMin(args, zFactor, target.getOrElse(TargetCell.All))
+    }
   implicit lazy val encodeFocalMin: Encoder[FocalMin] =
-    Encoder.forProduct3("args", "neighborhood", "symbol")(u => (u.children, u.neighborhood, u.sym))
+    Encoder.forProduct4("args", "neighborhood", "target", "symbol")(u => (u.children, u.neighborhood, u.target, u.sym))
 
   implicit lazy val decodeFocalMean: Decoder[FocalMean] =
-    Decoder.forProduct2("args", "neighborhood")(FocalMean.apply)
+    Decoder.forProduct3[FocalMean, List[Expression], Neighborhood, Option[TargetCell]]("args", "neighborhood", "target") {
+      (args, zFactor, target) => FocalMean(args, zFactor, target.getOrElse(TargetCell.All))
+    }
   implicit lazy val encodeFocalMean: Encoder[FocalMean] =
-    Encoder.forProduct3("args", "neighborhood", "symbol")(u => (u.children, u.neighborhood, u.sym))
+    Encoder.forProduct4("args", "neighborhood", "target", "symbol")(u => (u.children, u.neighborhood, u.target, u.sym))
 
   implicit lazy val decodeFocalMedian: Decoder[FocalMedian] =
-    Decoder.forProduct2("args", "neighborhood")(FocalMedian.apply)
+    Decoder.forProduct3[FocalMedian, List[Expression], Neighborhood, Option[TargetCell]]("args", "neighborhood", "target") {
+      (args, zFactor, target) => FocalMedian(args, zFactor, target.getOrElse(TargetCell.All))
+    }
   implicit lazy val encodeFocalMedian: Encoder[FocalMedian] =
-    Encoder.forProduct3("args", "neighborhood", "symbol")(u => (u.children, u.neighborhood, u.sym))
+    Encoder.forProduct4("args", "neighborhood", "target", "symbol")(u => (u.children, u.neighborhood, u.target, u.sym))
 
   implicit lazy val decodeFocalMode: Decoder[FocalMode] =
-    Decoder.forProduct2("args", "neighborhood")(FocalMode.apply)
+    Decoder.forProduct3[FocalMode, List[Expression], Neighborhood, Option[TargetCell]]("args", "neighborhood", "target") {
+      (args, zFactor, target) => FocalMode(args, zFactor, target.getOrElse(TargetCell.All))
+    }
   implicit lazy val encodeFocalMode: Encoder[FocalMode] =
-    Encoder.forProduct3("args", "neighborhood", "symbol")(u => (u.children, u.neighborhood, u.sym))
+    Encoder.forProduct4("args", "neighborhood", "target", "symbol")(u => (u.children, u.neighborhood, u.target, u.sym))
 
   implicit lazy val decodeFocalSum: Decoder[FocalSum] =
-    Decoder.forProduct2("args", "neighborhood")(FocalSum.apply)
+    Decoder.forProduct3[FocalSum, List[Expression], Neighborhood, Option[TargetCell]]("args", "neighborhood", "target") {
+      (args, zFactor, target) => FocalSum(args, zFactor, target.getOrElse(TargetCell.All))
+    }
   implicit lazy val encodeFocalSum: Encoder[FocalSum] =
-    Encoder.forProduct3("args", "neighborhood", "symbol")(u => (u.children, u.neighborhood, u.sym))
+    Encoder.forProduct4("args", "neighborhood", "target", "symbol")(u => (u.children, u.neighborhood, u.target, u.sym))
 
   implicit lazy val decodeFocalStdDev: Decoder[FocalStdDev] =
-    Decoder.forProduct2("args", "neighborhood")(FocalStdDev.apply)
+    Decoder.forProduct3[FocalStdDev, List[Expression], Neighborhood, Option[TargetCell]]("args", "neighborhood", "target") {
+      (args, zFactor, target) => FocalStdDev(args, zFactor, target.getOrElse(TargetCell.All))
+    }
   implicit lazy val encodeFocalStdDev: Encoder[FocalStdDev] =
-    Encoder.forProduct3("args", "neighborhood", "symbol")(u => (u.children, u.neighborhood, u.sym))
+    Encoder.forProduct4("args", "neighborhood", "target", "symbol")(u => (u.children, u.neighborhood, u.target, u.sym))
 
   implicit lazy val decodeFocalSlope: Decoder[FocalSlope] =
-    Decoder.forProduct1("args")(FocalSlope.apply)
+    Decoder.forProduct3[FocalSlope, List[Expression], Option[Double], Option[TargetCell]]("args", "zFactor", "target") {
+      (args, zFactor, target) => FocalSlope(args, zFactor, target.getOrElse(TargetCell.All))
+    }
   implicit lazy val encodeFocalSlope: Encoder[FocalSlope] =
-    Encoder.forProduct2("args", "symbol")(u => (u.children, u.sym))
+    Encoder.forProduct4("args", "zFactor", "target", "symbol")(u => (u.children, u.zFactor, u.target, u.sym))
 
   implicit lazy val decodeFocalHillshade: Decoder[FocalHillshade] =
-    Decoder.forProduct3("args", "azimuth", "altitude")(FocalHillshade.apply)
+    Decoder.forProduct5[FocalHillshade, List[Expression], Double, Double, Option[Double], Option[TargetCell]]("args", "azimuth", "altitude", "zFactor", "target") {
+      (args, azimuth, altitude, zFactor, target) => FocalHillshade(args, azimuth, altitude, zFactor, target.getOrElse(TargetCell.All))
+    }
   implicit lazy val encodeFocalHillshade: Encoder[FocalHillshade] =
-    Encoder.forProduct4("args", "azimuth", "altitude", "symbol")(u =>
-      (u.children, u.azimuth, u.altitude, u.sym)
+    Encoder.forProduct6("args", "azimuth", "altitude", "zFactor", "target", "symbol")(u =>
+      (u.children, u.azimuth, u.altitude, u.zFactor, u.target, u.sym)
+    )
+
+  implicit lazy val decodeFocalAspect: Decoder[FocalAspect] =
+    Decoder.forProduct2[FocalAspect, List[Expression], Option[TargetCell]]("args", "target") {
+      (args, target) => FocalAspect(args, target.getOrElse(TargetCell.All))
+    }
+  implicit lazy val encodeFocalAspect: Encoder[FocalAspect] =
+    Encoder.forProduct3("args", "target", "symbol")(u =>
+      (u.children, u.target, u.sym)
     )
 
   implicit lazy val decodeGreater: Decoder[Greater] =
@@ -318,4 +340,33 @@ trait MamlCodecInstances extends MamlUtilityCodecs {
     Decoder.forProduct1("name")(RasterVar.apply)
   implicit lazy val encodeRasterVar: Encoder[RasterVar] =
     Encoder.forProduct2("name", "symbol")(u => (u.name, u.sym))
+
+  implicit lazy val decodeRGB: Decoder[RGB] =
+    Decoder.forProduct4[RGB, List[Expression], Option[String], Option[String], Option[String]]("args", "redBand", "greenBand", "blueBand") {
+      (args, redBand, greenBand, blueBand) => RGB(args, redBand.getOrElse("0"), greenBand.getOrElse("0"), blueBand.getOrElse("0"))
+    }
+  implicit lazy val encodeRGB: Encoder[RGB] =
+    Encoder.forProduct5("args", "redBand", "greenBand", "blueBand", "symbol")(u => (u.children, u.redBand, u.greenBand, u.blueBand, u.sym))
+
+  implicit lazy val decodeAssemble: Decoder[Assemble] =
+    Decoder.forProduct1[Assemble, List[Expression]]("args") {
+      (args) => Assemble(args)
+    }
+  implicit lazy val encodeAssemble: Encoder[Assemble] =
+    Encoder.forProduct2("args", "symbol")(u => (u.children, u.sym))
+
+  implicit lazy val decodeRescale: Decoder[Rescale] =
+    Decoder.forProduct4("args", "newMin", "newMax", "band")(Rescale.apply)
+  implicit lazy val encodeRescale: Encoder[Rescale] =
+    Encoder.forProduct5("args", "newMin", "newMax", "band", "symbol")(u => (u.children, u.newMin, u.newMax, u.band, u.sym))
+
+  implicit lazy val decodeNormalize: Decoder[Normalize] =
+    Decoder.forProduct6("args", "oldMin", "oldMax", "newMin", "newMax", "band")(Normalize.apply)
+  implicit lazy val encodeNormalize: Encoder[Normalize] =
+    Encoder.forProduct7("args", "oldMin", "oldMax", "newMin", "newMax", "band", "symbol")(u => (u.children, u.oldMin, u.oldMax, u.newMin, u.newMax, u.band, u.sym))
+
+  implicit lazy val decodeClamp: Decoder[Clamp] =
+    Decoder.forProduct4("args", "min", "max", "band")(Clamp.apply)
+  implicit lazy val encodeClamp: Encoder[Clamp] =
+    Encoder.forProduct5("args", "min", "max", "band", "symbol")(u => (u.children, u.min, u.max, u.band, u.sym))
 }

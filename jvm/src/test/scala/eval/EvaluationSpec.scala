@@ -3,30 +3,24 @@ package com.azavea.maml.eval
 import com.azavea.maml.ast._
 import com.azavea.maml.dsl._
 import com.azavea.maml.error._
-import com.azavea.maml.eval._
-import com.azavea.maml.eval.tile._
-import com.azavea.maml.eval.directive.SourceDirectives._
-import com.azavea.maml.eval.directive.OpDirectives._
 import com.azavea.maml.ast.codec.tree.ExpressionTreeCodec
-import com.azavea.maml.util.Square
 
-import io.circe._
-import io.circe.syntax._
 import geotrellis.raster._
 import geotrellis.vector._
 import geotrellis.proj4.WebMercator
-import cats._
-import cats.data.{NonEmptyList => NEL, _}
+import cats.data._
 import Validated._
 import org.scalatest._
 
 import scala.reflect._
 
-
 class EvaluationSpec extends FunSpec with Matchers with ExpressionTreeCodec {
 
   implicit def tileIsTileLiteral(tile: Tile): RasterLit[ProjectedRaster[MultibandTile]] =
     RasterLit(ProjectedRaster(MultibandTile(tile), Extent(0, 0, 0.05, 0.05), WebMercator))
+
+  implicit def mbTileIsTileLiteral(tile: MultibandTile): RasterLit[ProjectedRaster[MultibandTile]] =
+    RasterLit(ProjectedRaster(tile, Extent(0, 0, 0.05, 0.05), WebMercator))
 
   implicit class TypeRefinement(self: Interpreted[Result]) {
     def as[T: ClassTag]: Interpreted[T] = self match {
@@ -190,6 +184,10 @@ class EvaluationSpec extends FunSpec with Matchers with ExpressionTreeCodec {
     }
     interpreter(FocalSlope(List(IntArrayTile(1 to 100 toArray, 10, 10)))).as[MultibandTile] match {
       case Valid(t) => t.bands.head.get(5, 5) should be (10)
+      case i@Invalid(_) => fail(s"$i")
+    }
+    interpreter(FocalAspect(List(IntArrayTile(1 to 100 toArray, 10, 10)))).as[MultibandTile] match {
+      case Valid(t) => t.bands.head.get(5, 5) should be (354)
       case i@Invalid(_) => fail(s"$i")
     }
 

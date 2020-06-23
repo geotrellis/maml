@@ -89,7 +89,13 @@ object NaiveInterpreter {
       FocalDirectives.sum,
       FocalDirectives.standardDeviation,
       FocalDirectives.slope,
-      FocalDirectives.hillshade
+      FocalDirectives.hillshade,
+      FocalDirectives.aspect,
+      OpDirectives.rgbTile,
+      OpDirectives.assembleTile,
+      UnaryDirectives.rescale,
+      UnaryDirectives.normalize,
+      UnaryDirectives.clamp
     )
   )
 }

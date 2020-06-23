@@ -111,7 +111,10 @@ lazy val maml = crossProject.in(file("."))
       geotrellis("layer").value,
       geotrellis("proj4").value
     )
-  ).jsSettings(name := "maml-js")
+  ).jsSettings(
+    name := "maml-js",
+    libraryDependencies += geotrellis("raster").value
+)
 
 lazy val mamlJvm = maml.jvm
 lazy val mamlJs = maml.js

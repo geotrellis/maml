@@ -2,19 +2,17 @@ package com.azavea.maml.ast.codec
 
 import com.azavea.maml.ast._
 import com.azavea.maml.util._
+import geotrellis.raster.TargetCell
 
 import io.circe._
 import io.circe.syntax._
-import io.circe.parser._
-import io.circe.optics.JsonPath._
-import cats._
 import cats.syntax.functor._
 import cats.syntax.either._
 
 import java.security.InvalidParameterException
 import java.util.UUID
-import scala.util.Try
 
+import scala.util.Try
 
 trait MamlUtilityCodecs {
   implicit val decodeKeyDouble: KeyDecoder[Double] = KeyDecoder.instance[Double] {
@@ -93,26 +91,25 @@ trait MamlUtilityCodecs {
     }
   }
 
-  implicit val mamlKindDecoder: Decoder[MamlKind] = Decoder[String].emap({
+  implicit val mamlKindDecoder: Decoder[MamlKind] = Decoder[String].emap {
     case "img" => Right(MamlKind.Image)
     case "int" => Right(MamlKind.Int)
     case "double" => Right(MamlKind.Double)
     case "geom" => Right(MamlKind.Geom)
     case "bool" => Right(MamlKind.Bool)
     case unrecognized => Left(s"Unrecognized MamlKind: $unrecognized")
-  })
+  }
+
   implicit val mamlKindEncoder: Encoder[MamlKind] =
-    Encoder.encodeString.contramap[MamlKind]({ mk =>
-      mk match {
-        case MamlKind.Image => "img"
-        case MamlKind.Int => "int"
-        case MamlKind.Double => "double"
-        case MamlKind.Geom => "geom"
-        case MamlKind.Bool => "bool"
-        case unrecognized =>
-          throw new InvalidParameterException(s"Unrecognized mamlKind: $unrecognized")
-      }
-    })
+    Encoder.encodeString.contramap[MamlKind] {
+      case MamlKind.Image => "img"
+      case MamlKind.Int => "int"
+      case MamlKind.Double => "double"
+      case MamlKind.Geom => "geom"
+      case MamlKind.Bool => "bool"
+      case unrecognized =>
+        throw new InvalidParameterException(s"Unrecognized mamlKind: $unrecognized")
+    }
 
 
   implicit val squareNeighborhoodDecoder: Decoder[Square] =
@@ -139,6 +136,18 @@ trait MamlUtilityCodecs {
     Decoder.forProduct2("innerRadius", "outerRadius")(Annulus.apply)
   implicit val annulusNeighborhoodEncoder: Encoder[Annulus] =
     Encoder.forProduct3("innerRadius", "outerRadius", "type")(op => (op.innerRadius, op.outerRadius, "annulus"))
+
+  implicit val targetCellEncoder: Encoder[TargetCell] = Encoder.instance {
+    case TargetCell.NoData => "nodata".asJson
+    case TargetCell.Data   => "data".asJson
+    case TargetCell.All    => "all".asJson
+  }
+  implicit val targetCellDecoder: Decoder[TargetCell] = Decoder.decodeString.emap {
+    case "nodata" => Right(TargetCell.NoData)
+    case "data"   => Right(TargetCell.Data)
+    case "all"    => Right(TargetCell.All)
+    case str      => Left(s"Unable to parse $str as TargetCell")
+  }
 }
 
 object MamlUtilityCodecs extends MamlUtilityCodecs

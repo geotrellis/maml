@@ -3,15 +3,11 @@ package com.azavea.maml.ast.codec.tree
 import com.azavea.maml.ast._
 import com.azavea.maml.ast.codec._
 
-import cats._
 import cats.syntax.functor._
 import io.circe._
 import io.circe.syntax._
-import io.circe.generic.extras.semiauto._
-import io.circe.generic.extras.Configuration
 
 import java.security.InvalidParameterException
-
 
 trait ExpressionTreeCodec extends MamlCodecInstances {
   implicit lazy val totalEncoder: Encoder[Expression] = Encoder.instance {
@@ -34,15 +30,16 @@ trait ExpressionTreeCodec extends MamlCodecInstances {
     case min @ Min(_) => min.asJson
     case mask @ Masking(_) => mask.asJson
     case cls @ Classification(_, _) => cls.asJson
-    case fmax @ FocalMax(_, _) => fmax.asJson
-    case fmin @ FocalMin(_, _) => fmin.asJson
-    case fmean @ FocalMean(_, _) => fmean.asJson
-    case fmed @ FocalMedian(_, _) => fmed.asJson
-    case fmode @ FocalMode(_, _) => fmode.asJson
-    case fsum @ FocalSum(_, _) => fsum.asJson
-    case fstddev @ FocalStdDev(_, _) => fstddev.asJson
-    case fslope @ FocalSlope(_) => fslope.asJson
-    case fhillshade @ FocalHillshade(_, _, _) => fhillshade.asJson
+    case fmax @ FocalMax(_, _, _) => fmax.asJson
+    case fmin @ FocalMin(_, _, _) => fmin.asJson
+    case fmean @ FocalMean(_, _, _) => fmean.asJson
+    case fmed @ FocalMedian(_, _, _) => fmed.asJson
+    case fmode @ FocalMode(_, _, _) => fmode.asJson
+    case fsum @ FocalSum(_, _, _) => fsum.asJson
+    case fstddev @ FocalStdDev(_, _, _) => fstddev.asJson
+    case fslope @ FocalSlope(_, _, _) => fslope.asJson
+    case fhillshade @ FocalHillshade(_, _, _, _, _) => fhillshade.asJson
+    case faspect @ FocalAspect(_, _) => faspect.asJson
     case imgsel @ ImageSelect(_, _) => imgsel.asJson
     case lneg @ LogicalNegation(_) => lneg.asJson
     case nneg @ NumericNegation(_) => nneg.asJson
@@ -77,6 +74,11 @@ trait ExpressionTreeCodec extends MamlCodecInstances {
     case lt @ Lesser(_) => lt.asJson
     case pow @ Pow(_) => pow.asJson
     case sleep @ Sleep(_, _) => sleep.asJson
+    case rgb @ RGB(_, _, _, _) => rgb.asJson
+    case assemble @ Assemble(_) => assemble.asJson
+    case rescale @ Rescale(_, _, _, _) => rescale.asJson
+    case normalize @ Normalize(_, _, _, _, _, _) => normalize.asJson
+    case clamp @ Clamp(_, _, _, _) => clamp.asJson
   }
 
   implicit lazy val totalDecoder: Decoder[Expression] = Decoder.instance[Expression] { cursor =>
@@ -130,6 +132,7 @@ trait ExpressionTreeCodec extends MamlCodecInstances {
       case "fstddev" => Decoder[FocalStdDev]
       case "fslope" => Decoder[FocalSlope]
       case "fhillshade" => Decoder[FocalHillshade]
+      case "faspect" => Decoder[FocalAspect]
       case "sel" => Decoder[ImageSelect]
       case "int" => Decoder[IntLit]
       case "intV" => Decoder[IntVar]
@@ -141,10 +144,14 @@ trait ExpressionTreeCodec extends MamlCodecInstances {
       case "geomV" => Decoder[GeomVar]
       case "rasterV" => Decoder[RasterVar]
       case "sleep" => Decoder[Sleep]
+      case "rgb" => Decoder[RGB]
+      case "assemble" => Decoder[Assemble]
+      case "rescale" => Decoder[Rescale]
+      case "normalize" => Decoder[Normalize]
+      case "clamp" => Decoder[Clamp]
     } match {
       case Some(decoder) => decoder.widen(cursor)
       case None =>  Left(DecodingFailure(s"No symbol provided for MAML expression", cursor.history))
     }
   }
 }
-

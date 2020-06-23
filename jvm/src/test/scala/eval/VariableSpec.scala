@@ -48,7 +48,7 @@ class VariableSpec extends FunSpec with Matchers {
     val ast = Addition(List(
         FocalMax(List(
           FocalMax(List(RasterVar("someRaster")), Square(1))
-        ), Square(1)),
+        ), Square(1), TargetCell.All),
         RasterVar("someRaster")
     ))
 

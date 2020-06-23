@@ -9,108 +9,119 @@ import com.azavea.maml.util._
 import geotrellis.raster.Tile
 import geotrellis.raster.mapalgebra.focal
 import geotrellis.vector.Point
-import geotrellis.proj4.{CRS, LatLng}
-import cats._
+import geotrellis.proj4.LatLng
+
 import cats.implicits._
-import cats.data.{NonEmptyList => NEL, _}
+import cats.data._
 import Validated._
 
 
 object FocalDirectives {
-  val max = Directive { case (fm@FocalMax(_, neighborhood), childResults) =>
+  val max = Directive { case (FocalMax(_, neighborhood, target), childResults) =>
+    childResults
+      .toList
+      .traverse { _.as[LazyMultibandRaster] }
+      .map({ lr =>
+        ImageResult(lr.head.focal(NeighborhoodConversion(neighborhood), None, target, focal.Max.apply))
+      })
+  }
+
+  val min = Directive { case (FocalMin(_, neighborhood, target), childResults) =>
     childResults
       .map({ _.as[LazyMultibandRaster] })
       .toList.sequence
       .map({ lr =>
-        ImageResult(lr.head.focal(NeighborhoodConversion(neighborhood), None, focal.Max.apply _))
+        ImageResult(lr.head.focal(NeighborhoodConversion(neighborhood), None, target, focal.Min.apply _))
       })
   }
 
-  val min = Directive { case (fm@FocalMin(_, neighborhood), childResults) =>
+  val mean = Directive { case (FocalMean(_, neighborhood, target), childResults) =>
     childResults
       .map({ _.as[LazyMultibandRaster] })
       .toList.sequence
       .map({ lr =>
-        ImageResult(lr.head.focal(NeighborhoodConversion(neighborhood), None, focal.Min.apply _))
+        ImageResult(lr.head.focal(NeighborhoodConversion(neighborhood), None, target, focal.Mean.apply _))
       })
   }
 
-  val mean = Directive { case (fm@FocalMean(_, neighborhood), childResults) =>
+  val median = Directive { case (FocalMedian(_, neighborhood, target), childResults) =>
     childResults
       .map({ _.as[LazyMultibandRaster] })
       .toList.sequence
       .map({ lr =>
-        ImageResult(lr.head.focal(NeighborhoodConversion(neighborhood), None, focal.Mean.apply _))
+        ImageResult(lr.head.focal(NeighborhoodConversion(neighborhood), None, target, focal.Median.apply _))
       })
   }
 
-  val median = Directive { case (fm@FocalMedian(_, neighborhood), childResults) =>
+  val mode = Directive { case (FocalMode(_, neighborhood, target), childResults) =>
     childResults
       .map({ _.as[LazyMultibandRaster] })
       .toList.sequence
       .map({ lr =>
-        ImageResult(lr.head.focal(NeighborhoodConversion(neighborhood), None, focal.Median.apply _))
+        ImageResult(lr.head.focal(NeighborhoodConversion(neighborhood), None, target, focal.Mode.apply _))
       })
   }
 
-  val mode = Directive { case (fm@FocalMode(_, neighborhood), childResults) =>
+  val sum = Directive { case (FocalSum(_, neighborhood, target), childResults) =>
     childResults
       .map({ _.as[LazyMultibandRaster] })
       .toList.sequence
       .map({ lr =>
-        ImageResult(lr.head.focal(NeighborhoodConversion(neighborhood), None, focal.Mode.apply _))
+        ImageResult(lr.head.focal(NeighborhoodConversion(neighborhood), None, target, focal.Sum.apply _))
       })
   }
 
-  val sum = Directive { case (fm@FocalSum(_, neighborhood), childResults) =>
+  val standardDeviation = Directive { case (FocalStdDev(_, neighborhood, target), childResults) =>
     childResults
       .map({ _.as[LazyMultibandRaster] })
       .toList.sequence
       .map({ lr =>
-        ImageResult(lr.head.focal(NeighborhoodConversion(neighborhood), None, focal.Sum.apply _))
+        ImageResult(lr.head.focal(NeighborhoodConversion(neighborhood), None, target, focal.StandardDeviation.apply _))
       })
   }
 
-  val standardDeviation = Directive { case (fm@FocalStdDev(_, neighborhood), childResults) =>
-    childResults
-      .map({ _.as[LazyMultibandRaster] })
-      .toList.sequence
-      .map({ lr =>
-        ImageResult(lr.head.focal(NeighborhoodConversion(neighborhood), None, focal.StandardDeviation.apply _))
-      })
-  }
-
-  val slope = Directive { case (fm@FocalSlope(_), childResults) =>
+  val slope = Directive { case (FocalSlope(_, zf, target), childResults) =>
     childResults
       .map({ _.as[LazyMultibandRaster] })
       .toList.sequence
       .map({ lr =>
         val image = lr.head
         val re = image.rasterExtent
-        val zfactor = {
+        val zfactor = zf.getOrElse {
           val llExtent = re.extent.reproject(image.crs, LatLng)
           val middleY = llExtent.ymax - (llExtent.ymax - llExtent.ymin)
           val EQUATOR_METERS = 11320
           1 / (EQUATOR_METERS * math.cos(math.toRadians(middleY)))
         }
-        ImageResult(image.slope(None, zfactor, re.cellSize))
+        ImageResult(image.slope(None, zfactor, re.cellSize, target))
       })
   }
 
-  val hillshade = Directive { case (fm@FocalHillshade(_, azimuth, altitude), childResults) =>
+  val hillshade = Directive { case (FocalHillshade(_, azimuth, altitude, zf, target), childResults) =>
     childResults
       .map({ _.as[LazyMultibandRaster] })
       .toList.sequence
       .map({ lr =>
         val image = lr.head
         val re = image.rasterExtent
-        val zfactor = {
+        val zfactor = zf.getOrElse {
           val llExtent = re.extent.reproject(image.crs, LatLng)
           val middleY = llExtent.ymax - (llExtent.ymax - llExtent.ymin)
           val EQUATOR_METERS = 11320
           1 / (EQUATOR_METERS * math.cos(math.toRadians(middleY)))
         }
-        ImageResult(image.hillshade(None, zfactor, re.cellSize, azimuth, altitude))
+        ImageResult(image.hillshade(None, zfactor, re.cellSize, azimuth, altitude, target))
+      })
+  }
+
+  val aspect = Directive { case (FocalAspect(_, target), childResults) =>
+    childResults
+      .map({ _.as[LazyMultibandRaster] })
+      .toList.sequence
+      .map({ lr =>
+        val image = lr.head
+        val re = image.rasterExtent
+        ImageResult(image.aspect(None, re.cellSize, target))
       })
   }
 }

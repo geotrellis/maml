@@ -139,23 +139,47 @@ object UnaryDirectives {
   }
 
   /** Logical Operations */
-  val logicalNegation = Directive { case (ln@LogicalNegation(_), childResults) =>
+  val logicalNegation = Directive { case (LogicalNegation(_), childResults) =>
     val result = imageOrBoolResult({ _.not }, {not(isData(_))}, {not(isData(_))}, childResults.head)
     Valid(result)
   }
 
   /** Tile-specific Operations */
-  val classification = Directive { case (classify@Classification(_, classMap), childResults) =>
+  val classification = Directive { case (classify @ Classification(_, classMap), childResults) =>
     childResults.head match {
       case ImageResult(lzTile) => Valid(ImageResult(lzTile.classify(BreakMap(classMap.classifications))))
       case _ => Invalid(NEL.of(NonEvaluableNode(classify, Some("Classification node requires multiband lazyraster argument"))))
     }
   }
 
-  val imageSelection = Directive { case (imgSel@ImageSelect(_, labels), childResults) =>
+  val imageSelection = Directive { case (imgSel @ ImageSelect(_, labels), childResults) =>
     childResults.head match {
       case ImageResult(mbLzTile) => Valid(ImageResult(mbLzTile.select(labels)))
       case _ => Invalid(NEL.of(NonEvaluableNode(imgSel, Some("ImageSelect node requires multiband lazyraster argument"))))
+    }
+  }
+
+  val rescale = Directive { case (rescale @ Rescale(_, newMin, newMax, band), childResults) =>
+    childResults.head match {
+      case ImageResult(mbLzTile) =>
+        Valid(ImageResult(band.fold(mbLzTile)(_ => mbLzTile.select(band.toList)).rescale(newMin, newMax)))
+      case _ => Invalid(NEL.of(NonEvaluableNode(rescale, Some("Rescale node requires multiband lazyraster argument"))))
+    }
+  }
+
+  val normalize = Directive { case (normalize @ Normalize(_, oldMin, oldMax, newMin, newMax, band), childResults) =>
+    childResults.head match {
+      case ImageResult(mbLzTile) =>
+        Valid(ImageResult(band.fold(mbLzTile)(_ => mbLzTile.select(band.toList)).normalize(oldMin, oldMax, newMin, newMax)))
+      case _ => Invalid(NEL.of(NonEvaluableNode(normalize, Some("Normalize node requires multiband lazyraster argument"))))
+    }
+  }
+
+  val clamp = Directive { case (clamp @ Clamp(_, min, max, band), childResults) =>
+    childResults.head match {
+      case ImageResult(mbLzTile) =>
+        Valid(ImageResult(band.fold(mbLzTile)(_ => mbLzTile.select(band.toList)).clamp(min, max)))
+      case _ => Invalid(NEL.of(NonEvaluableNode(clamp, Some("Clamp node requires multiband lazyraster argument"))))
     }
   }
 }

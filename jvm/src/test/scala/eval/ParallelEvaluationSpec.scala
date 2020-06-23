@@ -54,6 +54,7 @@ class ParallelEvaluationSpec
     }
   }
 
+  // WARN: this test depends on the amount of directives in the interpreter BEFORE the Sleep directive
   it("should take less time than the total duration of its leaves") {
     val sleepDuration = 3L
     val expr = Addition(List(
