@@ -369,4 +369,14 @@ trait MamlCodecInstances extends MamlUtilityCodecs {
     Decoder.forProduct4("args", "min", "max", "band")(Clamp.apply)
   implicit lazy val encodeClamp: Encoder[Clamp] =
     Encoder.forProduct5("args", "min", "max", "band", "symbol")(u => (u.children, u.min, u.max, u.band, u.sym))
+
+  implicit lazy val decodeConvert: Decoder[Convert] =
+    Decoder.forProduct2("args", "cellType")(Convert.apply)
+  implicit lazy val encodeConvert: Encoder[Convert] =
+    Encoder.forProduct3("args", "cellType", "symbol")(u => (u.children, u.cellType, u.sym))
+
+  implicit lazy val decodeInterpretAs: Decoder[InterpretAs] =
+    Decoder.forProduct2("args", "cellType")(InterpretAs.apply)
+  implicit lazy val encodeInterpretAs: Encoder[InterpretAs] =
+    Encoder.forProduct3("args", "cellType", "symbol")(u => (u.children, u.cellType, u.sym))
 }

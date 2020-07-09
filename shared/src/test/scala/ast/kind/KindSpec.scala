@@ -2,6 +2,7 @@ package com.azavea.maml.ast.kind
 
 import com.azavea.maml.ast._
 import com.azavea.maml.util._
+import geotrellis.raster.DoubleCellType
 
 import org.scalatest._
 
@@ -36,5 +37,13 @@ class KindSpec extends FunSpec with Matchers {
 
   it("Should correctly determine Assemble output type for a foldable operation") {
     Assemble(List(RasterVar("test1"), RasterVar("test2"), RasterVar("test3"))).kind should be (MamlKind.Image)
+  }
+
+  it("Should correctly determine Convert output type for a foldable operation (scalar)") {
+    Convert(RasterVar("test1") :: Nil, DoubleCellType).kind should be (MamlKind.Image)
+  }
+
+  it("Should correctly determine InterpretAs output type for a foldable operation (scalar)") {
+    InterpretAs(RasterVar("test1") :: Nil, DoubleCellType).kind should be (MamlKind.Image)
   }
 }

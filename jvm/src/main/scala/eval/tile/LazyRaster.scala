@@ -1,6 +1,5 @@
 package com.azavea.maml.eval.tile
 
-import cats.Semigroup
 import geotrellis.raster._
 import geotrellis.raster.mapalgebra.focal.{Neighborhood, Square, TargetCell, Aspect => GTAspect, Slope => GTFocalSlope}
 import geotrellis.raster.mapalgebra.focal.hillshade.{Hillshade => GTHillshade}
@@ -140,6 +139,28 @@ object LazyRaster {
   case class RasterCombineDouble(children: List[LazyRaster], scalar: Double, f: (Double, Double) => Double) extends UnaryBranch {
     def get(col: Int, row: Int) = d2i(getDouble(col, row))
     def getDouble(col: Int, row: Int) = f(fst.getDouble(col, row), scalar)
+  }
+
+  case class Convert(
+    children: List[LazyRaster],
+    cellType: CellType
+  ) extends UnaryBranch {
+    lazy val intTile = fst.evaluate.convert(cellType)
+    lazy val dblTile = fst.evaluateDouble.convert(cellType)
+
+    def get(col: Int, row: Int) = intTile.get(col, row)
+    def getDouble(col: Int, row: Int) = dblTile.getDouble(col, row)
+  }
+
+  case class InterpretAs(
+    children: List[LazyRaster],
+    cellType: CellType
+  ) extends UnaryBranch {
+    lazy val intTile = fst.evaluate.interpretAs(cellType)
+    lazy val dblTile = fst.evaluateDouble.interpretAs(cellType)
+
+    def get(col: Int, row: Int) = intTile.get(col, row)
+    def getDouble(col: Int, row: Int) = dblTile.getDouble(col, row)
   }
 
   case class Rescale(

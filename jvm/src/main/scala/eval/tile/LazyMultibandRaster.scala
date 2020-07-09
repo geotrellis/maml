@@ -110,6 +110,16 @@ case class LazyMultibandRaster(bands: Map[String, LazyRaster]) {
     val lztiles = bands.mapValues({ lt => LazyRaster.Clamp(List(lt), min, max) })
     LazyMultibandRaster(lztiles)
   }
+
+  def convert(cellType: CellType): LazyMultibandRaster = {
+    val lztiles = bands.mapValues({ lt => LazyRaster.Convert(List(lt), cellType) })
+    LazyMultibandRaster(lztiles)
+  }
+
+  def interpretAs(cellType: CellType): LazyMultibandRaster = {
+    val lztiles = bands.mapValues({ lt => LazyRaster.InterpretAs(List(lt), cellType) })
+    LazyMultibandRaster(lztiles)
+  }
 }
 
 object LazyMultibandRaster {

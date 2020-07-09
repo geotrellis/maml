@@ -95,7 +95,9 @@ object NaiveInterpreter {
       OpDirectives.assembleTile,
       UnaryDirectives.rescale,
       UnaryDirectives.normalize,
-      UnaryDirectives.clamp
+      UnaryDirectives.clamp,
+      UnaryDirectives.convert,
+      UnaryDirectives.interpretAs
     )
   )
 }

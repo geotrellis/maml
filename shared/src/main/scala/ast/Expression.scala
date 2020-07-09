@@ -292,6 +292,16 @@ case class Clamp(children: List[Expression], min: Double, max: Double, band: Opt
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }
 
+case class Convert(children: List[Expression], cellType: CellType) extends Expression("convert") with UnaryExpression {
+  val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.imageOrScalar
+  def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
+}
+
+case class InterpretAs(children: List[Expression], cellType: CellType) extends Expression("interpretAs") with UnaryExpression {
+  val kindDerivation: Map[MamlKind, MamlKind] = UnaryExpression.imageOrScalar
+  def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
+}
+
 case class FocalMax(children: List[Expression], neighborhood: Neighborhood, target: TargetCell = TargetCell.All) extends Expression("fmax") with FocalExpression {
   def withChildren(newChildren: List[Expression]): Expression = copy(children = newChildren)
 }

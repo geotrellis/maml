@@ -79,6 +79,8 @@ trait ExpressionTreeCodec extends MamlCodecInstances {
     case rescale @ Rescale(_, _, _, _) => rescale.asJson
     case normalize @ Normalize(_, _, _, _, _, _) => normalize.asJson
     case clamp @ Clamp(_, _, _, _) => clamp.asJson
+    case convert @ Convert(_, _) => convert.asJson
+    case interpretAs @ InterpretAs(_, _) => interpretAs.asJson
   }
 
   implicit lazy val totalDecoder: Decoder[Expression] = Decoder.instance[Expression] { cursor =>
@@ -149,6 +151,8 @@ trait ExpressionTreeCodec extends MamlCodecInstances {
       case "rescale" => Decoder[Rescale]
       case "normalize" => Decoder[Normalize]
       case "clamp" => Decoder[Clamp]
+      case "convert" => Decoder[Convert]
+      case "interpretAs" => Decoder[InterpretAs]
     } match {
       case Some(decoder) => decoder.widen(cursor)
       case None =>  Left(DecodingFailure(s"No symbol provided for MAML expression", cursor.history))

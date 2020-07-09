@@ -5,16 +5,12 @@ import com.azavea.maml.eval._
 import com.azavea.maml.eval.tile._
 import com.azavea.maml.ast._
 import com.azavea.maml.dsl.tile._
-
 import cats._
 import cats.implicits._
 import cats.data.{NonEmptyList => NEL, _}
 import Validated._
 import geotrellis.raster._
 import geotrellis.raster.render._
-
-import scala.util.Try
-
 
 object UnaryDirectives {
 
@@ -180,6 +176,20 @@ object UnaryDirectives {
       case ImageResult(mbLzTile) =>
         Valid(ImageResult(band.fold(mbLzTile)(_ => mbLzTile.select(band.toList)).clamp(min, max)))
       case _ => Invalid(NEL.of(NonEvaluableNode(clamp, Some("Clamp node requires multiband lazyraster argument"))))
+    }
+  }
+
+  val convert = Directive { case (convert @ Convert(_, cellType), childResults) =>
+    childResults.head match {
+      case ImageResult(lzTile) => Valid(ImageResult(lzTile.convert(cellType)))
+      case _ => Invalid(NEL.of(NonEvaluableNode(convert, Some("Convert node requires multiband lazyraster argument"))))
+    }
+  }
+
+  val interpretAs = Directive { case (interepretAs @ InterpretAs(_, cellType), childResults) =>
+    childResults.head match {
+      case ImageResult(lzTile) => Valid(ImageResult(lzTile.interpretAs(cellType)))
+      case _ => Invalid(NEL.of(NonEvaluableNode(interepretAs, Some("InterepretAs node requires multiband lazyraster argument"))))
     }
   }
 }

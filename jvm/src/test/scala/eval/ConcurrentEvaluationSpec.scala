@@ -418,6 +418,26 @@ class ConcurrentEvaluationSpec
       case i @ Invalid(_) => fail(s"$i")
     }
 
+    interpreter(
+      Convert(DoubleArrayTile((1 to 100).map(_ + 0.1) toArray, 10, 10) :: Nil, IntUserDefinedNoDataCellType(1))
+    ).unsafeRunSync.as[MultibandTile] match {
+      case Valid(t) =>
+        val b = t.band(0)
+        b.get(0, 0) should be(NODATA)
+        val arr = b.toArrayDouble
+        (2 to 100).zipWithIndex.foreach { case (v, idx) => arr(idx + 1) shouldBe v.toDouble }
+
+      case i @ Invalid(_) => fail(s"$i")
+    }
+
+    interpreter(
+      InterpretAs(IntArrayTile(1 to 100 toArray, 10, 10) :: Nil, IntUserDefinedNoDataCellType(1))
+    ).unsafeRunSync.as[MultibandTile] match {
+      case Valid(t) =>
+        t.band(0).get(0, 0) should be(NODATA)
+      case i @ Invalid(_) => fail(s"$i")
+    }
+
     /** The hillshade test is a bit more involved than some of the above
       *  See http://bit.ly/Qj0YPg for more information about the proper interpretation
       *   of hillshade values
