@@ -50,4 +50,6 @@ object Dependencies {
   val logging    = "org.log4s"                  %% "log4s"                % "1.8.2"
   val scalatest  = "org.scalatest"              %% "scalatest"            % "3.0.1"
   val scalacheck = "org.scalacheck"             %% "scalacheck"           % "1.13.4"
+
+  val droste     = "io.higherkindness"          %% "droste-core"          % "0.8.0"
 }

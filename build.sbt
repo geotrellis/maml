@@ -13,12 +13,11 @@ val commonSettings = Seq(
     else
       git.gitDescribedVersion.value.get
   },
-  scalaVersion := "2.11.12",
-  crossScalaVersions := Seq("2.11.12", "2.12.10"),
+  scalaVersion := "2.12.10",
   resolvers ++= Seq(
     Resolver.sonatypeRepo("releases"),
-    "locationtech-releases" at "https://repo.locationtech.org/content/groups/releases",
-    "locationtech-snapshots" at "https://repo.locationtech.org/content/groups/snapshots"
+    "eclipse-releases" at "https://repo.eclipse.org/content/groups/releases",
+    "eclipse-snapshots" at "https://repo.eclipse.org/content/groups/snapshots"
   ),
   addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full),
   scalacOptions := Seq(
@@ -96,6 +95,7 @@ lazy val maml = crossProject.in(file("."))
       scalacheck % Test,
       scalatest % Test,
       logging % Test,
+      droste,
       cats("core").value,
       cats("effect").value,
       circe("core").value,
@@ -127,18 +127,5 @@ lazy val mamlSpark = project.in(file("spark"))
       spark("core").value % Provided,
       geotrellis("spark-testkit").value % Test,
       geotrellis("spark").value % Provided
-    ),
-  /** https://github.com/lucidworks/spark-solr/issues/179 */
-    dependencyOverrides ++= {
-      val deps = Seq(
-        "com.fasterxml.jackson.core" % "jackson-core" % "2.6.7",
-        "com.fasterxml.jackson.core" % "jackson-databind" % "2.6.7",
-        "com.fasterxml.jackson.core" % "jackson-annotations" % "2.6.7"
-      )
-      CrossVersion.partialVersion(scalaVersion.value) match {
-        // if Scala 2.12+ is used
-        case Some((2, scalaMajor)) if scalaMajor >= 12 => deps
-        case _ => deps :+ "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.6.7"
-      }
-    }
+    )
   ).dependsOn(mamlJvm)

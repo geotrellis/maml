@@ -56,6 +56,7 @@ object OpDirectives {
    case (DoubleResult(dbl), IntResult(int)) => BoolResult(di(dbl, int))
    case (DoubleResult(dbl1), DoubleResult(dbl2)) => BoolResult(dd(dbl1, dbl2))
    case (IntResult(int), DoubleResult(dbl)) => BoolResult(id(int, dbl))
+   case _ => throw new IllegalArgumentException(s"Cannot reduce: $res1, $res2")
   }
 
   private def tileOrScalarReduction(
@@ -80,6 +81,7 @@ object OpDirectives {
    case (DoubleResult(dbl), IntResult(int)) => DoubleResult(di(dbl, int))
    case (DoubleResult(dbl1), DoubleResult(dbl2)) => DoubleResult(dd(dbl1, dbl2))
    case (IntResult(int), DoubleResult(dbl)) => DoubleResult(id(int, dbl))
+   case _ => throw new IllegalArgumentException(s"Cannot reduce: $res1, $res2")
   }
 
   /** Arithmetic Operations */
