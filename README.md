@@ -2,9 +2,9 @@
 
 [![CircleCI](https://circleci.com/gh/geotrellis/maml.svg?style=svg)](https://circleci.com/gh/geotrellis/maml) [![Join the chat at https://gitter.im/geotrellis/geotrellis](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/geotrellis/geotrellis?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-Azavea has been developing Map Algebra Modeling Language (MAML) as part of NASA grant in [Raster Foundry](https://www.rasterfoundry.com/). MAML is used to create a declarative structure that describes a combination of map algebra operations. This structure may be evaluated against a given collection of datasets to produce a result. Critically, the evaluation logic is not specified in MAML, only the semantic meaning of the operations. This separation allows for multiple interpreters to exist that operate in different computational contexts.
+Azavea has been developing Map Algebra Modeling Language (MAML) as part of a NASA grant in [Raster Foundry](https://www.rasterfoundry.com/). MAML is used to create a declarative structure that describes a combination of map algebra operations. This structure may be evaluated against a given collection of datasets to produce a result. Critically, the evaluation logic is not specified in MAML, only the semantic meaning of the operations. This separation allows for multiple interpreters to exist that operate in different computational contexts.
 
-To keep the discussion of benefits of such scheme from being too academic it is best to examine some use cases that this patter enables.
+To keep the discussion of benefits of such scheme from being too academic, it is best to examine some use cases that this pattern enables.
 
 ## Table of Contents
 
@@ -30,7 +30,7 @@ To keep the discussion of benefits of such scheme from being too academic it is 
 
 ### Remote Evaluation
 
-Because a MAML expression is purely declarative it may be constructed remotely to where it is evaluated, for instance in a client library. It can then be sent to a remote service that evaluates the expression and instantiates a TMS endpoint to present the result.
+Because a MAML expression is purely declarative it may be constructed remotely from where it is evaluated, for instance in a client library. It can then be sent to a remote service that evaluates the expression and instantiates a TMS endpoint to present the result.
 
 Let there be a client library, for instance in JavaScript or Python. It has an object representing a catalog of raster data such that we can construct references to:
 
