@@ -9,8 +9,30 @@ val commonSettings = Seq(
     "locationtech-releases".at("https://repo.locationtech.org/content/groups/releases"),
     "locationtech-snapshots".at("https://repo.locationtech.org/content/groups/snapshots")
   ),
+  scalacOptions := Seq(
+    "-deprecation",
+    "-unchecked",
+    "-feature",
+    "-language:implicitConversions",
+    "-language:reflectiveCalls",
+    "-language:higherKinds",
+    "-language:postfixOps",
+    "-language:existentials",
+    "-language:experimental.macros",
+    "-feature",
+    "-Ypatmat-exhaust-depth",
+    "100"
+  ),
+  libraryDependencies ++= (
+    if (priorTo213(scalaVersion.value)) Seq(compilerPlugin(("org.scalamacros" %% "paradise" % "2.1.1").cross(CrossVersion.full)))
+    else Nil
+  ),
+  scalacOptions ++= (if (priorTo213(scalaVersion.value)) Nil else Seq("-Ymacro-annotations"))
+)
+
+val java17Settings = Seq(
   // JDK17+ https://github.com/apache/spark/blob/v3.5.1/pom.xml#L299-L317
-  ThisBuild / javaOptions ++= {
+  javaOptions ++= {
     if (javaMajorVersion >= 17)
       Seq(
         "-XX:+IgnoreUnrecognizedVMOptions",
@@ -33,26 +55,7 @@ val commonSettings = Seq(
         "-Dio.netty.tryReflectionSetAccessible=true"
       )
     else Nil
-  },
-  scalacOptions := Seq(
-    "-deprecation",
-    "-unchecked",
-    "-feature",
-    "-language:implicitConversions",
-    "-language:reflectiveCalls",
-    "-language:higherKinds",
-    "-language:postfixOps",
-    "-language:existentials",
-    "-language:experimental.macros",
-    "-feature",
-    "-Ypatmat-exhaust-depth",
-    "100"
-  ),
-  libraryDependencies ++= (
-    if (priorTo213(scalaVersion.value)) Seq(compilerPlugin(("org.scalamacros" %% "paradise" % "2.1.1").cross(CrossVersion.full)))
-    else Nil
-  ),
-  scalacOptions ++= (if (priorTo213(scalaVersion.value)) Nil else Seq("-Ymacro-annotations"))
+  }
 )
 
 lazy val noPublishSettings = Seq(
@@ -127,6 +130,7 @@ lazy val mamlSpark = project
   .dependsOn(mamlJvm)
   .settings(commonSettings)
   .settings(publishSettings)
+  .settings(java17Settings)
   .settings(name := "maml-spark")
   .settings(
     libraryDependencies ++= Seq(
