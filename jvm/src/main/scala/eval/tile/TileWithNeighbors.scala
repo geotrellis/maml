@@ -4,7 +4,6 @@ import geotrellis.raster._
 
 import java.lang.IllegalStateException
 
-
 case class NeighboringTiles(
   tl: Tile,
   tm: Tile,
@@ -22,9 +21,15 @@ case class TileWithNeighbors(centerTile: Tile, buffers: Option[NeighboringTiles]
       if (buffer > 0) {
         CompositeTile(
           Seq(
-            buf.tl, buf.tm, buf.tr,
-            buf.ml, centerTile, buf.mr,
-            buf.bl, buf.bm, buf.br
+            buf.tl,
+            buf.tm,
+            buf.tr,
+            buf.ml,
+            centerTile,
+            buf.mr,
+            buf.bl,
+            buf.bm,
+            buf.br
           ),
           TileLayout(3, 3, centerTile.cols, centerTile.rows)
         ).crop(
@@ -33,13 +38,11 @@ case class TileWithNeighbors(centerTile: Tile, buffers: Option[NeighboringTiles]
           centerTile.cols * 2 + buffer - 1,
           centerTile.rows * 2 + buffer - 1
         )
-      }
-      else
+      } else
         centerTile
-    case None if (buffer == 0) =>
+    case None if buffer == 0 =>
       centerTile
     case _ =>
       throw new IllegalStateException(s"tile buffer > 0 ($buffer) but no neighboring tiles found")
   }
 }
-

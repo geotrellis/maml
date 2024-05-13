@@ -15,76 +15,79 @@ import java.util.UUID
 import scala.util.Try
 
 trait MamlUtilityCodecs {
-  implicit val decodeKeyDouble: KeyDecoder[Double] = KeyDecoder.instance[Double] {
-    (key: String) => Try(key.toDouble).toOption
+  implicit val decodeKeyDouble: KeyDecoder[Double] = KeyDecoder.instance[Double] { (key: String) =>
+    Try(key.toDouble).toOption
   }
-  implicit val encodeKeyDouble: KeyEncoder[Double] = KeyEncoder.instance[Double] {
-    (key: Double) => key.toString
+  implicit val encodeKeyDouble: KeyEncoder[Double] = KeyEncoder.instance[Double] { (key: Double) =>
+    key.toString
   }
 
-  implicit val decodeKeyUUID: KeyDecoder[UUID] = KeyDecoder.instance[UUID] {
-    (key: String) => Try(UUID.fromString(key)).toOption
+  implicit val decodeKeyUUID: KeyDecoder[UUID] = KeyDecoder.instance[UUID] { (key: String) =>
+    Try(UUID.fromString(key)).toOption
   }
-  implicit val encodeKeyUUID: KeyEncoder[UUID] = KeyEncoder.instance[UUID] {
-    (key: UUID) => key.toString
+  implicit val encodeKeyUUID: KeyEncoder[UUID] = KeyEncoder.instance[UUID] { (key: UUID) =>
+    key.toString
   }
 
   implicit lazy val classBoundaryDecoder: Decoder[ClassBoundaryType] =
     Decoder[String].emap {
-      case "lessThan" => Right(LessThan)
-      case "lessThanOrEqualTo" => Right(LessThanOrEqualTo)
-      case "exact" => Right(Exact)
+      case "lessThan"             => Right(LessThan)
+      case "lessThanOrEqualTo"    => Right(LessThanOrEqualTo)
+      case "exact"                => Right(Exact)
       case "greaterThanOrEqualTo" => Right(GreaterThanOrEqualTo)
-      case "greaterThan" => Right(GreaterThan)
-      case unrecognized => Left(s"Unable to parse $unrecognized as ClassBoundaryType")
+      case "greaterThan"          => Right(GreaterThan)
+      case unrecognized           => Left(s"Unable to parse $unrecognized as ClassBoundaryType")
     }
 
   implicit lazy val classBoundaryEncoder: Encoder[ClassBoundaryType] =
-    Encoder.encodeString.contramap[ClassBoundaryType]({ cbType =>
+    Encoder.encodeString.contramap[ClassBoundaryType] { cbType =>
       cbType match {
-        case LessThan => "lessThan"
-        case LessThanOrEqualTo => "lessThanOrEqualTo"
-        case Exact => "exact"
+        case LessThan             => "lessThan"
+        case LessThanOrEqualTo    => "lessThanOrEqualTo"
+        case Exact                => "exact"
         case GreaterThanOrEqualTo => "greaterThanOrEqualTo"
-        case GreaterThan => "greaterThan"
+        case GreaterThan          => "greaterThan"
         case unrecognized =>
           throw new InvalidParameterException(s"'$unrecognized' is not a recognized ClassBoundaryType")
       }
-    })
+    }
 
   implicit val colorRampDecoder: Decoder[ColorRamp] =
-    Decoder[Vector[Int]].map({ vec => ColorRamp(vec) })
+    Decoder[Vector[Int]].map { vec => ColorRamp(vec) }
 
   implicit val colorRampEncoder: Encoder[ColorRamp] = new Encoder[ColorRamp] {
     final def apply(cRamp: ColorRamp): Json = cRamp.colors.toArray.asJson
   }
 
-  implicit val histogramDecoder = Decoder.instance[Histogram]({ curs =>
+  implicit val histogramDecoder = Decoder.instance[Histogram] { curs =>
     curs.get[Map[Double, Int]]("counts") match {
       case Right(counts) => Right(Histogram(counts))
-      case Left(err) => Left(DecodingFailure(s"Unable to parse histogram", curs.history))
+      case Left(err)     => Left(DecodingFailure(s"Unable to parse histogram", curs.history))
     }
-  })
+  }
 
   implicit val histogramEncoder: Encoder[Histogram] =
-    Encoder.forProduct1("counts")(hist => (hist.counts))
+    Encoder.forProduct1("counts")(hist => hist.counts)
 
   // This won't actually work - NESW neighborhoods will *always* succeed in decoding to Square
   implicit val neighborhoodDecoder: Decoder[Neighborhood] = Decoder.instance[Neighborhood] { cursor =>
-    cursor.get[String]("type") map {
-      case "square" => Decoder[Square]
-      case "circle" => Decoder[Circle]
-      case "nesw" => Decoder[Nesw]
-      case "wedge" => Decoder[Wedge]
-      case "annulus" => Decoder[Annulus]
-    } flatMap { _.widen(cursor) }
+    cursor
+      .get[String]("type")
+      .map {
+        case "square"  => Decoder[Square]
+        case "circle"  => Decoder[Circle]
+        case "nesw"    => Decoder[Nesw]
+        case "wedge"   => Decoder[Wedge]
+        case "annulus" => Decoder[Annulus]
+      }
+      .flatMap { _.widen(cursor) }
   }
   implicit val neighborhoodEncoder: Encoder[Neighborhood] = new Encoder[Neighborhood] {
     final def apply(n: Neighborhood): Json = n match {
-      case square: Square => square.asJson
-      case circle: Circle => circle.asJson
-      case nesw: Nesw => nesw.asJson
-      case wedge: Wedge => wedge.asJson
+      case square: Square   => square.asJson
+      case circle: Circle   => circle.asJson
+      case nesw: Nesw       => nesw.asJson
+      case wedge: Wedge     => wedge.asJson
       case annulus: Annulus => annulus.asJson
       case unrecognized =>
         throw new InvalidParameterException(s"Unrecognized neighborhood: $unrecognized")
@@ -92,25 +95,24 @@ trait MamlUtilityCodecs {
   }
 
   implicit val mamlKindDecoder: Decoder[MamlKind] = Decoder[String].emap {
-    case "img" => Right(MamlKind.Image)
-    case "int" => Right(MamlKind.Int)
-    case "double" => Right(MamlKind.Double)
-    case "geom" => Right(MamlKind.Geom)
-    case "bool" => Right(MamlKind.Bool)
+    case "img"        => Right(MamlKind.Image)
+    case "int"        => Right(MamlKind.Int)
+    case "double"     => Right(MamlKind.Double)
+    case "geom"       => Right(MamlKind.Geom)
+    case "bool"       => Right(MamlKind.Bool)
     case unrecognized => Left(s"Unrecognized MamlKind: $unrecognized")
   }
 
   implicit val mamlKindEncoder: Encoder[MamlKind] =
     Encoder.encodeString.contramap[MamlKind] {
-      case MamlKind.Image => "img"
-      case MamlKind.Int => "int"
+      case MamlKind.Image  => "img"
+      case MamlKind.Int    => "int"
       case MamlKind.Double => "double"
-      case MamlKind.Geom => "geom"
-      case MamlKind.Bool => "bool"
+      case MamlKind.Geom   => "geom"
+      case MamlKind.Bool   => "bool"
       case unrecognized =>
         throw new InvalidParameterException(s"Unrecognized mamlKind: $unrecognized")
     }
-
 
   implicit val squareNeighborhoodDecoder: Decoder[Square] =
     Decoder.forProduct1("extent")(Square.apply)

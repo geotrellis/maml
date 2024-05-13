@@ -12,7 +12,6 @@ import cats.data.{NonEmptyList => NEL, _}
 
 import scala.reflect.ClassTag
 
-
 object RDDInterpreter {
 
   def DEFAULT = NaiveInterpreter(

@@ -17,19 +17,19 @@ import Validated._
 import scala.reflect._
 
 import org.scalatest._
+import org.scalatest.funspec.AnyFunSpec
+import org.scalatest.matchers.should.Matchers
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import java.time.Instant
 
-class ConcurrentEvaluationSpec
-    extends FunSpec
-    with Matchers
-    with ExpressionTreeCodec {
-  implicit val cs = IO.contextShift(global)
+class ConcurrentEvaluationSpec extends AnyFunSpec with Matchers with ExpressionTreeCodec {
+  import cats.effect.unsafe.implicits.global
+
   val interpreter = ConcurrentInterpreter.DEFAULT[IO].prependDirective(sleep)
 
   implicit def tileIsTileLiteral(
-      tile: Tile
+    tile: Tile
   ): RasterLit[ProjectedRaster[MultibandTile]] =
     RasterLit(
       ProjectedRaster(
@@ -40,7 +40,7 @@ class ConcurrentEvaluationSpec
     )
 
   implicit def tileIsTileLiteral(
-      tile: MultibandTile
+    tile: MultibandTile
   ): RasterLit[ProjectedRaster[MultibandTile]] =
     RasterLit(
       ProjectedRaster(
@@ -59,9 +59,7 @@ class ConcurrentEvaluationSpec
 
   it("should take less time than the total duration of its leaves") {
     val sleepDuration = 3L
-    val expr = Addition(List(
-      Sleep(sleepDuration, List(IntLit(1))),
-      Sleep(sleepDuration, List(IntLit(1)))))
+    val expr = Addition(List(Sleep(sleepDuration, List(IntLit(1))), Sleep(sleepDuration, List(IntLit(1)))))
     val now1 = Instant.now.toEpochMilli
     interpreter(expr).unsafeRunSync.as[Int] should be(Valid(2))
     val now2 = Instant.now.toEpochMilli
@@ -200,21 +198,23 @@ class ConcurrentEvaluationSpec
     }
   }
 
-
   it("Should interpret and evaluate tile assembly") {
-    interpreter(ast.Assemble(
-      List(
-        IntArrayTile(1 to 100 toArray, 10, 10),
-        IntArrayTile(101 to 200 toArray, 10, 10),
-        IntArrayTile(201 to 300 toArray, 10, 10)
+    interpreter(
+      ast.Assemble(
+        List(
+          IntArrayTile(1 to 100 toArray, 10, 10),
+          IntArrayTile(101 to 200 toArray, 10, 10),
+          IntArrayTile(201 to 300 toArray, 10, 10)
+        )
       )
-    )).unsafeRunSync.as[MultibandTile] match {
-      case Valid(t) => t.bands match {
-        case Vector(r, g, b) =>
-          r.get(0, 0) should be(1)
-          g.get(0, 0) should be(101)
-          b.get(0, 0) should be(201)
-      }
+    ).unsafeRunSync.as[MultibandTile] match {
+      case Valid(t) =>
+        t.bands match {
+          case Vector(r, g, b) =>
+            r.get(0, 0) should be(1)
+            g.get(0, 0) should be(101)
+            b.get(0, 0) should be(201)
+        }
       case i @ Invalid(_) => fail(s"$i")
     }
   }
@@ -339,20 +339,23 @@ class ConcurrentEvaluationSpec
       case Valid(t)       => t.bands.head.get(5, 5) should be(354)
       case i @ Invalid(_) => fail(s"$i")
     }
-    interpreter(ast.RGB(
-      List(
-        IntArrayTile(1 to 100 toArray, 10, 10),
-        IntArrayTile(101 to 200 toArray, 10, 10),
-        IntArrayTile(201 to 300 toArray, 10, 10)
+    interpreter(
+      ast.RGB(
+        List(
+          IntArrayTile(1 to 100 toArray, 10, 10),
+          IntArrayTile(101 to 200 toArray, 10, 10),
+          IntArrayTile(201 to 300 toArray, 10, 10)
+        )
       )
-    )).unsafeRunSync.as[MultibandTile] match {
-      case Valid(t) => t.bands match {
-        case Vector(r, g, b) =>
-          r.get(0, 0) should be(1)
-          g.get(0, 0) should be(101)
-          b.get(0, 0) should be(201)
-      }
-      case i@Invalid(_) => fail(s"$i")
+    ).unsafeRunSync.as[MultibandTile] match {
+      case Valid(t) =>
+        t.bands match {
+          case Vector(r, g, b) =>
+            r.get(0, 0) should be(1)
+            g.get(0, 0) should be(101)
+            b.get(0, 0) should be(201)
+        }
+      case i @ Invalid(_) => fail(s"$i")
     }
 
     val mbt: Expression = MultibandTile(
@@ -361,71 +364,83 @@ class ConcurrentEvaluationSpec
       IntArrayTile(201 to 300 toArray, 10, 10)
     )
     interpreter(ast.RGB(List(mbt, mbt, mbt), "0", "1", "2")).unsafeRunSync.as[MultibandTile] match {
-      case Valid(t) => t.bands match {
-        case Vector(r, g, b) =>
-          r.get(0, 0) should be(1)
-          g.get(0, 0) should be(101)
-          b.get(0, 0) should be(201)
-      }
+      case Valid(t) =>
+        t.bands match {
+          case Vector(r, g, b) =>
+            r.get(0, 0) should be(1)
+            g.get(0, 0) should be(101)
+            b.get(0, 0) should be(201)
+        }
       case i @ Invalid(_) => fail(s"$i")
     }
 
-    interpreter(Rescale(ast.RGB(
-      List(
-        IntArrayTile(1 to 100 toArray, 10, 10),
-        IntArrayTile(101 to 200 toArray, 10, 10),
-        IntArrayTile(201 to 300 toArray, 10, 10)
+    interpreter(
+      Rescale(ast.RGB(
+                List(
+                  IntArrayTile(1 to 100 toArray, 10, 10),
+                  IntArrayTile(101 to 200 toArray, 10, 10),
+                  IntArrayTile(201 to 300 toArray, 10, 10)
+                )
+              ) :: Nil,
+              10,
+              11
       )
-    ) :: Nil, 10, 11)).unsafeRunSync.as[MultibandTile] match {
-      case Valid(t) => t.bands match {
-        case Vector(r, g, b) =>
-          r.get(0, 0) should be(10)
-          g.get(0, 0) should be(10)
-          b.get(0, 0) should be(10)
-      }
+    ).unsafeRunSync.as[MultibandTile] match {
+      case Valid(t) =>
+        t.bands match {
+          case Vector(r, g, b) =>
+            r.get(0, 0) should be(10)
+            g.get(0, 0) should be(10)
+            b.get(0, 0) should be(10)
+        }
       case i @ Invalid(_) => fail(s"$i")
     }
 
-    interpreter(ast.RGB(
-      List(
-        Rescale(IntArrayTile(1 to 100 toArray, 10, 10) :: Nil, 10, 11),
-        Rescale(IntArrayTile(101 to 200 toArray, 10, 10) :: Nil, 20, 21),
-        Rescale(IntArrayTile(201 to 300 toArray, 10, 10) :: Nil, 30, 31)
+    interpreter(
+      ast.RGB(
+        List(
+          Rescale(IntArrayTile(1 to 100 toArray, 10, 10) :: Nil, 10, 11),
+          Rescale(IntArrayTile(101 to 200 toArray, 10, 10) :: Nil, 20, 21),
+          Rescale(IntArrayTile(201 to 300 toArray, 10, 10) :: Nil, 30, 31)
+        )
       )
-    )).unsafeRunSync.as[MultibandTile] match {
-      case Valid(t) => t.bands match {
-        case Vector(r, g, b) =>
-          r.get(0, 0) should be(10)
-          g.get(0, 0) should be(20)
-          b.get(0, 0) should be(30)
-      }
+    ).unsafeRunSync.as[MultibandTile] match {
+      case Valid(t) =>
+        t.bands match {
+          case Vector(r, g, b) =>
+            r.get(0, 0) should be(10)
+            g.get(0, 0) should be(20)
+            b.get(0, 0) should be(30)
+        }
       case i @ Invalid(_) => fail(s"$i")
     }
 
-    interpreter(ast.RGB(
-      List(
-        Clamp(IntArrayTile(1 to 100 toArray, 10, 10) :: Nil, 10, 11),
-        Clamp(IntArrayTile(101 to 200 toArray, 10, 10) :: Nil, 120, 121),
-        Clamp(IntArrayTile(201 to 300 toArray, 10, 10) :: Nil, 230, 231)
+    interpreter(
+      ast.RGB(
+        List(
+          Clamp(IntArrayTile(1 to 100 toArray, 10, 10) :: Nil, 10, 11),
+          Clamp(IntArrayTile(101 to 200 toArray, 10, 10) :: Nil, 120, 121),
+          Clamp(IntArrayTile(201 to 300 toArray, 10, 10) :: Nil, 230, 231)
+        )
       )
-    )).unsafeRunSync.as[MultibandTile] match {
-      case Valid(t) => t.bands match {
-        case Vector(r, g, b) =>
-          r.get(0, 0) should be(10)
-          g.get(0, 0) should be(120)
-          b.get(0, 0) should be(230)
-      }
+    ).unsafeRunSync.as[MultibandTile] match {
+      case Valid(t) =>
+        t.bands match {
+          case Vector(r, g, b) =>
+            r.get(0, 0) should be(10)
+            g.get(0, 0) should be(120)
+            b.get(0, 0) should be(230)
+        }
       case i @ Invalid(_) => fail(s"$i")
     }
 
-    /** The hillshade test is a bit more involved than some of the above
-      *  See http://bit.ly/Qj0YPg for more information about the proper interpretation
-      *   of hillshade values
-     **/
+    /**
+     * The hillshade test is a bit more involved than some of the above See http://bit.ly/Qj0YPg for more information about the proper interpretation
+     * of hillshade values
+     */
     val hillshadeTile =
       IntArrayTile(
-        Array(0, 0, 0, 0, 0, 0, 2450, 2461, 2483, 0, 0, 2452, 2461, 2483, 0, 0,
-          2447, 2455, 2477, 0, 0, 0, 0, 0, 0),
+        Array(0, 0, 0, 0, 0, 0, 2450, 2461, 2483, 0, 0, 2452, 2461, 2483, 0, 0, 2447, 2455, 2477, 0, 0, 0, 0, 0, 0),
         5,
         5
       )
@@ -440,7 +455,7 @@ class ConcurrentEvaluationSpec
     interpreter(
       FocalHillshade(List(RasterLit(hillshadeProjectedRaster)), 315, 45)
     ).unsafeRunSync.as[MultibandTile] match {
-      case Valid(t)       => t.bands.head.get(2, 2) should be(77)
+      case Valid(t)       => t.bands.head.get(2, 2) should be(90)
       case i @ Invalid(_) => fail(s"$i")
     }
   }

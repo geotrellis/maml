@@ -6,11 +6,12 @@ import geotrellis.raster._
 import geotrellis.raster.render.BreakMap
 import geotrellis.raster.mapalgebra.local._
 
-
 trait LazyRasterOperations {
   val self: LazyRaster
 
-  /** Arithmetic Operations*/
+  /**
+   * Arithmetic Operations
+   */
   def +(other: LazyRaster): LazyRaster = LazyRaster.DualCombine(List(self, other), Add.combine, Add.combine)
   def +(other: Int): LazyRaster = LazyRaster.DualMap(List(self), { Add.combine(_, other) }, { Add.combine(_, other) })
   def +:(other: Int): LazyRaster = LazyRaster.DualMap(List(self), { Add.combine(other, _) }, { Add.combine(other, _) })
@@ -41,201 +42,168 @@ trait LazyRasterOperations {
   def **(other: Double): LazyRaster = LazyRaster.DualMap(List(self), { Pow.combine(_, d2i(other)) }, { Pow.combine(_, other) })
   def **:(other: Double): LazyRaster = LazyRaster.DualMap(List(self), { Pow.combine(d2i(other), _) }, { Pow.combine(other, _) })
 
+  def logE: LazyRaster =
+    LazyRaster.DualMap(List(self), { z: Int => if (isNoData(z)) z else d2i(math.log(i2d(z))) }, { z => if (isNoData(z)) z else math.log(z) })
 
-  def logE: LazyRaster = LazyRaster.DualMap(List(self),
-    { z: Int => if(isNoData(z)) z else d2i(math.log(i2d(z))) },
-    { z => if(isNoData(z)) z else math.log(z) }
-  )
+  def log10: LazyRaster =
+    LazyRaster.DualMap(List(self), { z: Int => if (isNoData(z)) z else d2i(math.log10(i2d(z))) }, { z => if (isNoData(z)) z else math.log10(z) })
 
-  def log10: LazyRaster = LazyRaster.DualMap(List(self),
-    { z: Int => if(isNoData(z)) z else d2i(math.log10(i2d(z))) },
-    { z => if(isNoData(z)) z else math.log10(z) }
-  )
+  def sqrt: LazyRaster =
+    LazyRaster.DualMap(List(self), { z: Int => if (isNoData(z)) z else d2i(math.sqrt(i2d(z))) }, { z => if (isNoData(z)) z else math.sqrt(z) })
 
-  def sqrt: LazyRaster = LazyRaster.DualMap(List(self),
-    { z: Int => if(isNoData(z)) z else d2i(math.sqrt(i2d(z))) },
-    { z => if(isNoData(z)) z else math.sqrt(z) }
-  )
+  def abs: LazyRaster =
+    LazyRaster.DualMap(List(self), { z: Int => if (isNoData(z)) z else math.abs(z) }, { z => if (isNoData(z)) z else math.abs(z) })
 
-  def abs: LazyRaster = LazyRaster.DualMap(List(self),
-    { z: Int => if(isNoData(z)) z else math.abs(z) },
-    { z => if(isNoData(z)) z else math.abs(z) }
-  )
+  def isDefined: LazyRaster = LazyRaster.DualMap(List(self), { z: Int => if (isData(z)) 1 else 0 }, { z => if (isData(z)) 1.0 else 0.0 })
 
-  def isDefined: LazyRaster = LazyRaster.DualMap(List(self),
-    { z: Int => if (isData(z)) 1 else 0 },
-    { z => if (isData(z)) 1.0 else 0.0 }
-  )
+  def isUndefined: LazyRaster = LazyRaster.DualMap(List(self), { z: Int => if (isNoData(z)) 1 else 0 }, { z => if (isNoData(z)) 1.0 else 0.0 })
 
-  def isUndefined: LazyRaster = LazyRaster.DualMap(List(self),
-    { z: Int => if (isNoData(z)) 1 else 0 },
-    { z => if (isNoData(z)) 1.0 else 0.0 }
-  )
+  def pow(i: Int): LazyRaster = LazyRaster.DualMap(List(self), { z: Int => if (isNoData(z)) 1 else 0 }, { z => if (isNoData(z)) 1.0 else 0.0 })
 
-  def pow(i: Int): LazyRaster = LazyRaster.DualMap(List(self),
-    { z: Int => if (isNoData(z)) 1 else 0 },
-    { z => if (isNoData(z)) 1.0 else 0.0 }
-  )
+  def pow(d: Double): LazyRaster = LazyRaster.DualMap(List(self), { z: Int => if (isNoData(z)) 1 else 0 }, { z => if (isNoData(z)) 1.0 else 0.0 })
 
-  def pow(d: Double): LazyRaster = LazyRaster.DualMap(List(self),
-    { z: Int => if (isNoData(z)) 1 else 0 },
-    { z => if (isNoData(z)) 1.0 else 0.0 }
-  )
+  def changeSign: LazyRaster = LazyRaster.DualMap(List(self), { z: Int => if (isNoData(z)) z else z * -1 }, { z => if (isNoData(z)) z else z * -1 })
 
-  def changeSign: LazyRaster = LazyRaster.DualMap(List(self),
-    { z: Int => if (isNoData(z)) z else z * -1 },
-    { z => if (isNoData(z)) z else z * - 1 }
-  )
-
-  /** Numeric Comparisons */
+  /**
+   * Numeric Comparisons
+   */
   def <(other: LazyRaster): LazyRaster =
     LazyRaster.DualCombine(List(self, other),
-      {(i1: Int, i2: Int) => if (Less.compare(i1, i2)) 1 else 0 },
-      {(d1: Double, d2: Double) => if (Less.compare(d1, d2)) 1.0 else 0.0 }
+                           { (i1: Int, i2: Int) => if (Less.compare(i1, i2)) 1 else 0 },
+                           { (d1: Double, d2: Double) => if (Less.compare(d1, d2)) 1.0 else 0.0 }
     )
   def <(other: Int): LazyRaster =
     LazyRaster.DualMap(List(self),
-      {(i: Int) => if (Less.compare(i, other.toInt)) 1 else 0},
-      {(d: Double) => if (Less.compare(d, other)) 1.0 else 0.0 }
+                       { (i: Int) => if (Less.compare(i, other.toInt)) 1 else 0 },
+                       { (d: Double) => if (Less.compare(d, other)) 1.0 else 0.0 }
     )
   def <(other: Double): LazyRaster =
     LazyRaster.DualMap(List(self),
-      {(i: Int) => if (Less.compare(i, other.toInt)) 1 else 0},
-      {(d: Double) => if (Less.compare(d, other)) 1.0 else 0.0 }
+                       { (i: Int) => if (Less.compare(i, other.toInt)) 1 else 0 },
+                       { (d: Double) => if (Less.compare(d, other)) 1.0 else 0.0 }
     )
 
   def <=(other: LazyRaster): LazyRaster =
     LazyRaster.DualCombine(List(self, other),
-      {(i1: Int, i2: Int) => if (LessOrEqual.compare(i1, i2)) 1 else 0 },
-      {(d1: Double, d2: Double) => if (LessOrEqual.compare(d1, d2)) 1.0 else 0.0 }
+                           { (i1: Int, i2: Int) => if (LessOrEqual.compare(i1, i2)) 1 else 0 },
+                           { (d1: Double, d2: Double) => if (LessOrEqual.compare(d1, d2)) 1.0 else 0.0 }
     )
   def <=(other: Int): LazyRaster =
     LazyRaster.DualMap(List(self),
-      {(i: Int) => if (LessOrEqual.compare(i, other.toInt)) 1 else 0},
-      {(d: Double) => if (LessOrEqual.compare(d, other)) 1.0 else 0.0 }
+                       { (i: Int) => if (LessOrEqual.compare(i, other.toInt)) 1 else 0 },
+                       { (d: Double) => if (LessOrEqual.compare(d, other)) 1.0 else 0.0 }
     )
   def <=(other: Double): LazyRaster =
     LazyRaster.DualMap(List(self),
-      {(i: Int) => if (LessOrEqual.compare(i, other.toInt)) 1 else 0},
-      {(d: Double) => if (LessOrEqual.compare(d, other)) 1.0 else 0.0 }
+                       { (i: Int) => if (LessOrEqual.compare(i, other.toInt)) 1 else 0 },
+                       { (d: Double) => if (LessOrEqual.compare(d, other)) 1.0 else 0.0 }
     )
 
   def ===(other: LazyRaster): LazyRaster =
     LazyRaster.DualCombine(List(self, other),
-      {(i1: Int, i2: Int) => if (Equal.compare(i1, i2)) 1 else 0 },
-      {(d1: Double, d2: Double) => if (Equal.compare(d1, d2)) 1.0 else 0.0 }
+                           { (i1: Int, i2: Int) => if (Equal.compare(i1, i2)) 1 else 0 },
+                           { (d1: Double, d2: Double) => if (Equal.compare(d1, d2)) 1.0 else 0.0 }
     )
   def ===(other: Int): LazyRaster =
     LazyRaster.DualMap(List(self),
-      {(i: Int) => if (Equal.compare(i, other.toInt)) 1 else 0},
-      {(d: Double) => if (Equal.compare(d, other)) 1.0 else 0.0 }
+                       { (i: Int) => if (Equal.compare(i, other.toInt)) 1 else 0 },
+                       { (d: Double) => if (Equal.compare(d, other)) 1.0 else 0.0 }
     )
   def ===(other: Double): LazyRaster =
     LazyRaster.DualMap(List(self),
-      {(i: Int) => if (Equal.compare(i, other.toInt)) 1 else 0},
-      {(d: Double) => if (Equal.compare(d, other)) 1.0 else 0.0 }
+                       { (i: Int) => if (Equal.compare(i, other.toInt)) 1 else 0 },
+                       { (d: Double) => if (Equal.compare(d, other)) 1.0 else 0.0 }
     )
 
   def !==(other: LazyRaster): LazyRaster =
     LazyRaster.DualCombine(List(self, other),
-      {(i1: Int, i2: Int) => if (Unequal.compare(i1, i2)) 1 else 0 },
-      {(d1: Double, d2: Double) => if (Unequal.compare(d1, d2)) 1.0 else 0.0 }
+                           { (i1: Int, i2: Int) => if (Unequal.compare(i1, i2)) 1 else 0 },
+                           { (d1: Double, d2: Double) => if (Unequal.compare(d1, d2)) 1.0 else 0.0 }
     )
   def !==(other: Int): LazyRaster =
     LazyRaster.DualMap(List(self),
-      {(i: Int) => if (Unequal.compare(i, other.toInt)) 1 else 0},
-      {(d: Double) => if (Unequal.compare(d, other)) 1.0 else 0.0 }
+                       { (i: Int) => if (Unequal.compare(i, other.toInt)) 1 else 0 },
+                       { (d: Double) => if (Unequal.compare(d, other)) 1.0 else 0.0 }
     )
   def !==(other: Double): LazyRaster =
     LazyRaster.DualMap(List(self),
-      {(i: Int) => if (Unequal.compare(i, other.toInt)) 1 else 0},
-      {(d: Double) => if (Unequal.compare(d, other)) 1.0 else 0.0 }
+                       { (i: Int) => if (Unequal.compare(i, other.toInt)) 1 else 0 },
+                       { (d: Double) => if (Unequal.compare(d, other)) 1.0 else 0.0 }
     )
 
   def >=(other: LazyRaster): LazyRaster =
     LazyRaster.DualCombine(List(self, other),
-      {(i1: Int, i2: Int) => if (GreaterOrEqual.compare(i1, i2)) 1 else 0 },
-      {(d1: Double, d2: Double) => if (GreaterOrEqual.compare(d1, d2)) 1.0 else 0.0 }
+                           { (i1: Int, i2: Int) => if (GreaterOrEqual.compare(i1, i2)) 1 else 0 },
+                           { (d1: Double, d2: Double) => if (GreaterOrEqual.compare(d1, d2)) 1.0 else 0.0 }
     )
   def >=(other: Int): LazyRaster =
     LazyRaster.DualMap(List(self),
-      {(i: Int) => if (GreaterOrEqual.compare(i, other.toInt)) 1 else 0},
-      {(d: Double) => if (GreaterOrEqual.compare(d, other)) 1.0 else 0.0 }
+                       { (i: Int) => if (GreaterOrEqual.compare(i, other.toInt)) 1 else 0 },
+                       { (d: Double) => if (GreaterOrEqual.compare(d, other)) 1.0 else 0.0 }
     )
   def >=(other: Double): LazyRaster =
     LazyRaster.DualMap(List(self),
-      {(i: Int) => if (GreaterOrEqual.compare(i, other.toInt)) 1 else 0},
-      {(d: Double) => if (GreaterOrEqual.compare(d, other)) 1.0 else 0.0 }
+                       { (i: Int) => if (GreaterOrEqual.compare(i, other.toInt)) 1 else 0 },
+                       { (d: Double) => if (GreaterOrEqual.compare(d, other)) 1.0 else 0.0 }
     )
 
   def >(other: LazyRaster): LazyRaster =
     LazyRaster.DualCombine(List(self, other),
-      {(i1: Int, i2: Int) => if (Greater.compare(i1, i2)) 1 else 0 },
-      {(d1: Double, d2: Double) => if (Greater.compare(d1, d2)) 1.0 else 0.0 }
+                           { (i1: Int, i2: Int) => if (Greater.compare(i1, i2)) 1 else 0 },
+                           { (d1: Double, d2: Double) => if (Greater.compare(d1, d2)) 1.0 else 0.0 }
     )
   def >(other: Int): LazyRaster =
     LazyRaster.DualMap(List(self),
-      {(i: Int) => if (Greater.compare(i, other.toInt)) 1 else 0},
-      {(d: Double) => if (Greater.compare(d, other)) 1.0 else 0.0 }
+                       { (i: Int) => if (Greater.compare(i, other.toInt)) 1 else 0 },
+                       { (d: Double) => if (Greater.compare(d, other)) 1.0 else 0.0 }
     )
   def >(other: Double): LazyRaster =
     LazyRaster.DualMap(List(self),
-      {(i: Int) => if (Greater.compare(i, other.toInt)) 1 else 0},
-      {(d: Double) => if (Greater.compare(d, other)) 1.0 else 0.0 }
+                       { (i: Int) => if (Greater.compare(i, other.toInt)) 1 else 0 },
+                       { (d: Double) => if (Greater.compare(d, other)) 1.0 else 0.0 }
     )
 
-  /** Trigonometric Operations */
-  def sin: LazyRaster = LazyRaster.DualMap(List(self),
-    { z: Int => if(isNoData(z)) z else d2i(math.sin(z)) },
-    { z => if(isNoData(z)) z else math.sin(z) }
-  )
-  def cos: LazyRaster = LazyRaster.DualMap(List(self),
-    { z: Int => if(isNoData(z)) z else d2i(math.cos(z)) },
-    { z => if(isNoData(z)) z else math.cos(z) }
-  )
-  def tan: LazyRaster = LazyRaster.DualMap(List(self),
-    { z: Int => if(isNoData(z)) z else d2i(math.tan(z)) },
-    { z => if(isNoData(z)) z else math.tan(z) }
-  )
+  /**
+   * Trigonometric Operations
+   */
+  def sin: LazyRaster =
+    LazyRaster.DualMap(List(self), { z: Int => if (isNoData(z)) z else d2i(math.sin(z)) }, { z => if (isNoData(z)) z else math.sin(z) })
+  def cos: LazyRaster =
+    LazyRaster.DualMap(List(self), { z: Int => if (isNoData(z)) z else d2i(math.cos(z)) }, { z => if (isNoData(z)) z else math.cos(z) })
+  def tan: LazyRaster =
+    LazyRaster.DualMap(List(self), { z: Int => if (isNoData(z)) z else d2i(math.tan(z)) }, { z => if (isNoData(z)) z else math.tan(z) })
 
-  def sinh: LazyRaster = LazyRaster.DualMap(List(self),
-    { z: Int => if(isNoData(z)) z else d2i(math.sinh(z)) },
-    { z => if(isNoData(z)) z else math.sinh(z) }
-  )
-  def cosh: LazyRaster = LazyRaster.DualMap(List(self),
-    { z: Int => if(isNoData(z)) z else d2i(math.cosh(z)) },
-    { z => if(isNoData(z)) z else math.cosh(z) }
-  )
-  def tanh: LazyRaster = LazyRaster.DualMap(List(self),
-    { z: Int => if(isNoData(z)) z else d2i(math.tanh(z)) },
-    { z => if(isNoData(z)) z else math.tanh(z) }
-  )
+  def sinh: LazyRaster =
+    LazyRaster.DualMap(List(self), { z: Int => if (isNoData(z)) z else d2i(math.sinh(z)) }, { z => if (isNoData(z)) z else math.sinh(z) })
+  def cosh: LazyRaster =
+    LazyRaster.DualMap(List(self), { z: Int => if (isNoData(z)) z else d2i(math.cosh(z)) }, { z => if (isNoData(z)) z else math.cosh(z) })
+  def tanh: LazyRaster =
+    LazyRaster.DualMap(List(self), { z: Int => if (isNoData(z)) z else d2i(math.tanh(z)) }, { z => if (isNoData(z)) z else math.tanh(z) })
 
-  def asin: LazyRaster = LazyRaster.DualMap(List(self),
-    { z: Int => if(isNoData(z)) z else d2i(math.asin(z)) },
-    { z => if(isNoData(z)) z else math.asin(z) }
-  )
-  def acos: LazyRaster = LazyRaster.DualMap(List(self),
-    { z: Int => if(isNoData(z)) z else d2i(math.acos(z)) },
-    { z => if(isNoData(z)) z else math.acos(z) }
-  )
-  def atan: LazyRaster = LazyRaster.DualMap(List(self),
-    { z: Int => if(isNoData(z)) z else d2i(math.atan(z)) },
-    { z => if(isNoData(z)) z else math.atan(z) }
-  )
+  def asin: LazyRaster =
+    LazyRaster.DualMap(List(self), { z: Int => if (isNoData(z)) z else d2i(math.asin(z)) }, { z => if (isNoData(z)) z else math.asin(z) })
+  def acos: LazyRaster =
+    LazyRaster.DualMap(List(self), { z: Int => if (isNoData(z)) z else d2i(math.acos(z)) }, { z => if (isNoData(z)) z else math.acos(z) })
+  def atan: LazyRaster =
+    LazyRaster.DualMap(List(self), { z: Int => if (isNoData(z)) z else d2i(math.atan(z)) }, { z => if (isNoData(z)) z else math.atan(z) })
 
-  def atan2(other: LazyRaster) = LazyRaster.DualCombine(List(self, other), { (z1, z2) => d2i(math.atan2(i2d(z1), i2d(z2))) }, { (z1, z2) => math.atan2(z1, z2) })
+  def atan2(other: LazyRaster) =
+    LazyRaster.DualCombine(List(self, other), { (z1, z2) => d2i(math.atan2(i2d(z1), i2d(z2))) }, { (z1, z2) => math.atan2(z1, z2) })
   def atan2(other: Int): LazyRaster = LazyRaster.DualMap(List(self), { i: Int => d2i(math.atan2(i, other)) }, { math.atan2(_, other) })
   def atan2(other: Double): LazyRaster = LazyRaster.DualMap(List(self), { i: Int => d2i(math.atan2(i, other)) }, { math.atan2(_, other) })
 
-  /** Rounding Operations */
-  def round: LazyRaster = LazyRaster.DualMap(List(self), identity, { z => if(isNoData(z)) z else math.round(z) })
+  /**
+   * Rounding Operations
+   */
+  def round: LazyRaster = LazyRaster.DualMap(List(self), identity, { z => if (isNoData(z)) z else math.round(z) })
 
-  def floor: LazyRaster = LazyRaster.DualMap(List(self), identity, { z => if(isNoData(z)) z else math.floor(z) })
+  def floor: LazyRaster = LazyRaster.DualMap(List(self), identity, { z => if (isNoData(z)) z else math.floor(z) })
 
-  def ceil: LazyRaster = LazyRaster.DualMap(List(self), identity, { z => if(isNoData(z)) z else math.ceil(z) })
+  def ceil: LazyRaster = LazyRaster.DualMap(List(self), identity, { z => if (isNoData(z)) z else math.ceil(z) })
 
-  /** Logical Operations */
+  /**
+   * Logical Operations
+   */
   // TODO: Look into GT implementations for logical operations...
   //       The handling of nodata vs 0 vs false is not obvious
   def &&(other: LazyRaster): LazyRaster = LazyRaster.DualCombine(List(self, other), And.combine, And.combine)
@@ -254,10 +222,12 @@ trait LazyRasterOperations {
   def xor(other: Int): LazyRaster = LazyRaster.DualMap(List(self), { Xor.combine(_, other) }, { Xor.combine(_, other) })
   def xor(other: Double): LazyRaster = LazyRaster.DualMap(List(self), { Xor.combine(_, d2i(other)) }, { Xor.combine(_, other) })
 
-  def not: LazyRaster = LazyRaster.DualMap(List(self), { z => if (isNoData(z)) z else if (z == 0) 1 else 0 }, { z => if (isNoData(z)) z else if (z == 0.0) 1.0 else 0.0 })
+  def not: LazyRaster =
+    LazyRaster.DualMap(List(self), { z => if (isNoData(z)) z else if (z == 0) 1 else 0 }, { z => if (isNoData(z)) z else if (z == 0.0) 1.0 else 0.0 })
 
-  /** Tile specific methods */
+  /**
+   * Tile specific methods
+   */
   def classify(breaks: BreakMap[Double, Int]) = LazyRaster.DualMap(List(self), { i => breaks(i2d(i)) }, { d => i2d(breaks(d)) })
 
 }
-

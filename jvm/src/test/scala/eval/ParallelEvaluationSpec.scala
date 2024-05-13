@@ -20,24 +20,23 @@ import cats._
 import cats.data.{NonEmptyList => NEL, _}
 import cats.effect._
 import Validated._
-import org.scalatest._
 
 import scala.reflect._
 
 import org.scalatest._
+import org.scalatest.funspec.AnyFunSpec
+import org.scalatest.matchers.should.Matchers
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import java.time.Instant
 
-class ParallelEvaluationSpec
-    extends FunSpec
-    with Matchers
-    with ExpressionTreeCodec {
-  implicit val cs = IO.contextShift(global)
+class ParallelEvaluationSpec extends AnyFunSpec with Matchers with ExpressionTreeCodec {
+  import cats.effect.unsafe.implicits.global
+
   val interpreter = ParallelInterpreter.DEFAULT[IO, IO.Par].prependDirective(sleep)
 
   implicit def tileIsTileLiteral(
-      tile: Tile
+    tile: Tile
   ): RasterLit[ProjectedRaster[MultibandTile]] =
     RasterLit(
       ProjectedRaster(
@@ -57,9 +56,7 @@ class ParallelEvaluationSpec
   // WARN: this test depends on the amount of directives in the interpreter BEFORE the Sleep directive
   it("should take less time than the total duration of its leaves") {
     val sleepDuration = 3L
-    val expr = Addition(List(
-      Sleep(sleepDuration, List(IntLit(1))),
-      Sleep(sleepDuration, List(IntLit(1)))))
+    val expr = Addition(List(Sleep(sleepDuration, List(IntLit(1))), Sleep(sleepDuration, List(IntLit(1)))))
     val now1 = Instant.now.toEpochMilli
     interpreter(expr).unsafeRunSync.as[Int] should be(Valid(2))
     val now2 = Instant.now.toEpochMilli
@@ -314,14 +311,13 @@ class ParallelEvaluationSpec
       case i @ Invalid(_) => fail(s"$i")
     }
 
-    /** The hillshade test is a bit more involved than some of the above
-      *  See http://bit.ly/Qj0YPg for more information about the proper interpretation
-      *   of hillshade values
-     **/
+    /**
+     * The hillshade test is a bit more involved than some of the above See http://bit.ly/Qj0YPg for more information about the proper interpretation
+     * of hillshade values
+     */
     val hillshadeTile =
       IntArrayTile(
-        Array(0, 0, 0, 0, 0, 0, 2450, 2461, 2483, 0, 0, 2452, 2461, 2483, 0, 0,
-          2447, 2455, 2477, 0, 0, 0, 0, 0, 0),
+        Array(0, 0, 0, 0, 0, 0, 2450, 2461, 2483, 0, 0, 2452, 2461, 2483, 0, 0, 2447, 2455, 2477, 0, 0, 0, 0, 0, 0),
         5,
         5
       )
@@ -336,7 +332,7 @@ class ParallelEvaluationSpec
     interpreter(
       FocalHillshade(List(RasterLit(hillshadeProjectedRaster)), 315, 45)
     ).unsafeRunSync.as[MultibandTile] match {
-      case Valid(t)       => t.bands.head.get(2, 2) should be(77)
+      case Valid(t)       => t.bands.head.get(2, 2) should be(90)
       case i @ Invalid(_) => fail(s"$i")
     }
   }

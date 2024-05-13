@@ -1,53 +1,61 @@
-*.class
-*.log
+# Operating System Files
 
-index.html
-index.js
-package.html
-lib
-site/
-docs/_build/
+*.DS_Store
+Thumbs.db
 
-project/.boot
-project/boot
-project/plugins/project
-project/plugins/target
-project/target
+# Build Files
+
+bin
 target
-.ensime
-\#*#
-*~
-.#*
-.lib
-*.aux.xml
-*.jar
-*.crc
-_SUCCESS
+build/
+.gradle
+cmake-build-debug
 
-*.ivy
-*.pyc
-.project
+# Eclipse Project Files
+
 .classpath
-.cache
+.project
 .settings
-.history
-.idea
-.DS_Store
+
+# IntelliJ IDEA Files
+
 *.iml
-*.swp
-*.swo
-*.sublime-*
-.vagrant
+*.ipr
+*.iws
+*.idea
 
-lib
-index.html
-index.js
-.ensime*
+# Spring Bootstrap artifacts
 
-nohup.out
+dependency-reduced-pom.xml
+README.html
 
-site/
-.metadata/
+# Sublime files
+
+*.sublime-workspace
+
+# VSCode files
+
+.vscode
+.history
+
+# Metals
 
 .metals
 .bloop
+metals.sbt
+
+# SBT
+
+.bsp
+
+# Test data files #
+
+java/data
+
+# Compiled libs #
+
+java/*.dylib
+java/*.so
+java/*dll
+
+*.log

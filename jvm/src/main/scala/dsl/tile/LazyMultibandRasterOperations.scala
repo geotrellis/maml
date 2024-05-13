@@ -6,11 +6,12 @@ import geotrellis.raster._
 import geotrellis.raster.render.BreakMap
 import geotrellis.raster.mapalgebra.local._
 
-
 trait LazyMultibandRasterOperations {
   val self: LazyMultibandRaster
 
-  /** Arithmetic Operations*/
+  /**
+   * Arithmetic Operations
+   */
   def +(other: LazyMultibandRaster): LazyMultibandRaster =
     self.dualCombine(other, Add.combine, Add.combine)
   def +(other: Int): LazyMultibandRaster =
@@ -126,29 +127,28 @@ trait LazyMultibandRasterOperations {
       { Pow.combine(other, _) }
     )
 
-
   def logE: LazyMultibandRaster =
     self.dualMap(
-      { z: Int => if(isNoData(z)) z else d2i(math.log(i2d(z))) },
-      { z => if(isNoData(z)) z else math.log(z) }
+      { z: Int => if (isNoData(z)) z else d2i(math.log(i2d(z))) },
+      { z => if (isNoData(z)) z else math.log(z) }
     )
 
   def log10: LazyMultibandRaster =
     self.dualMap(
-      { z: Int => if(isNoData(z)) z else d2i(math.log10(i2d(z))) },
-      { z => if(isNoData(z)) z else math.log10(z) }
+      { z: Int => if (isNoData(z)) z else d2i(math.log10(i2d(z))) },
+      { z => if (isNoData(z)) z else math.log10(z) }
     )
 
   def sqrt: LazyMultibandRaster =
     self.dualMap(
-      { z: Int => if(isNoData(z)) z else d2i(math.sqrt(i2d(z))) },
-      { z => if(isNoData(z)) z else math.sqrt(z) }
+      { z: Int => if (isNoData(z)) z else d2i(math.sqrt(i2d(z))) },
+      { z => if (isNoData(z)) z else math.sqrt(z) }
     )
 
   def abs: LazyMultibandRaster =
     self.dualMap(
-      { z: Int => if(isNoData(z)) z else math.abs(z) },
-      { z => if(isNoData(z)) z else math.abs(z) }
+      { z: Int => if (isNoData(z)) z else math.abs(z) },
+      { z => if (isNoData(z)) z else math.abs(z) }
     )
 
   def isDefined: LazyMultibandRaster =
@@ -178,14 +178,16 @@ trait LazyMultibandRasterOperations {
   def changeSign: LazyMultibandRaster =
     self.dualMap(
       { z: Int => if (isNoData(z)) z else z * -1 },
-      { z => if (isNoData(z)) z else z * - 1 }
+      { z => if (isNoData(z)) z else z * -1 }
     )
 
-  /** Numeric Comparisons */
+  /**
+   * Numeric Comparisons
+   */
   def <(other: LazyMultibandRaster): LazyMultibandRaster =
     self.dualCombine(other,
-      { (i1: Int, i2: Int) => if (Less.compare(i1, i2)) 1 else 0 },
-      { (d1: Double, d2: Double) => if (Less.compare(d1, d2)) 1.0 else 0.0 }
+                     { (i1: Int, i2: Int) => if (Less.compare(i1, i2)) 1 else 0 },
+                     { (d1: Double, d2: Double) => if (Less.compare(d1, d2)) 1.0 else 0.0 }
     )
   def <(other: Int): LazyMultibandRaster =
     self.dualMap(
@@ -200,8 +202,8 @@ trait LazyMultibandRasterOperations {
 
   def <=(other: LazyMultibandRaster): LazyMultibandRaster =
     self.dualCombine(other,
-      { (i1: Int, i2: Int) => if (LessOrEqual.compare(i1, i2)) 1 else 0 },
-      { (d1: Double, d2: Double) => if (LessOrEqual.compare(d1, d2)) 1.0 else 0.0 }
+                     { (i1: Int, i2: Int) => if (LessOrEqual.compare(i1, i2)) 1 else 0 },
+                     { (d1: Double, d2: Double) => if (LessOrEqual.compare(d1, d2)) 1.0 else 0.0 }
     )
   def <=(other: Int): LazyMultibandRaster =
     self.dualMap(
@@ -216,8 +218,8 @@ trait LazyMultibandRasterOperations {
 
   def ===(other: LazyMultibandRaster): LazyMultibandRaster =
     self.dualCombine(other,
-      { (i1: Int, i2: Int) => if (Equal.compare(i1, i2)) 1 else 0 },
-      { (d1: Double, d2: Double) => if (Equal.compare(d1, d2)) 1.0 else 0.0 }
+                     { (i1: Int, i2: Int) => if (Equal.compare(i1, i2)) 1 else 0 },
+                     { (d1: Double, d2: Double) => if (Equal.compare(d1, d2)) 1.0 else 0.0 }
     )
   def ===(other: Int): LazyMultibandRaster =
     self.dualMap(
@@ -232,8 +234,8 @@ trait LazyMultibandRasterOperations {
 
   def !==(other: LazyMultibandRaster): LazyMultibandRaster =
     self.dualCombine(other,
-      { (i1: Int, i2: Int) => if (Unequal.compare(i1, i2)) 1 else 0 },
-      { (d1: Double, d2: Double) => if (Unequal.compare(d1, d2)) 1.0 else 0.0 }
+                     { (i1: Int, i2: Int) => if (Unequal.compare(i1, i2)) 1 else 0 },
+                     { (d1: Double, d2: Double) => if (Unequal.compare(d1, d2)) 1.0 else 0.0 }
     )
   def !==(other: Int): LazyMultibandRaster =
     self.dualMap(
@@ -248,8 +250,8 @@ trait LazyMultibandRasterOperations {
 
   def >=(other: LazyMultibandRaster): LazyMultibandRaster =
     self.dualCombine(other,
-      { (i1: Int, i2: Int) => if (GreaterOrEqual.compare(i1, i2)) 1 else 0 },
-      { (d1: Double, d2: Double) => if (GreaterOrEqual.compare(d1, d2)) 1.0 else 0.0 }
+                     { (i1: Int, i2: Int) => if (GreaterOrEqual.compare(i1, i2)) 1 else 0 },
+                     { (d1: Double, d2: Double) => if (GreaterOrEqual.compare(d1, d2)) 1.0 else 0.0 }
     )
   def >=(other: Int): LazyMultibandRaster =
     self.dualMap(
@@ -264,8 +266,8 @@ trait LazyMultibandRasterOperations {
 
   def >(other: LazyMultibandRaster): LazyMultibandRaster =
     self.dualCombine(other,
-      { (i1: Int, i2: Int) => if (Greater.compare(i1, i2)) 1 else 0 },
-      { (d1: Double, d2: Double) => if (Greater.compare(d1, d2)) 1.0 else 0.0 }
+                     { (i1: Int, i2: Int) => if (Greater.compare(i1, i2)) 1 else 0 },
+                     { (d1: Double, d2: Double) => if (Greater.compare(d1, d2)) 1.0 else 0.0 }
     )
   def >(other: Int): LazyMultibandRaster =
     self.dualMap(
@@ -278,60 +280,59 @@ trait LazyMultibandRasterOperations {
       { (d: Double) => if (Greater.compare(d, other)) 1.0 else 0.0 }
     )
 
-  /** Trigonometric Operations */
+  /**
+   * Trigonometric Operations
+   */
   def sin: LazyMultibandRaster =
     self.dualMap(
-    { z: Int => if(isNoData(z)) z else d2i(math.sin(z)) },
-    { z => if(isNoData(z)) z else math.sin(z) }
-  )
+      { z: Int => if (isNoData(z)) z else d2i(math.sin(z)) },
+      { z => if (isNoData(z)) z else math.sin(z) }
+    )
   def cos: LazyMultibandRaster =
     self.dualMap(
-    { z: Int => if(isNoData(z)) z else d2i(math.cos(z)) },
-    { z => if(isNoData(z)) z else math.cos(z) }
-  )
+      { z: Int => if (isNoData(z)) z else d2i(math.cos(z)) },
+      { z => if (isNoData(z)) z else math.cos(z) }
+    )
   def tan: LazyMultibandRaster =
     self.dualMap(
-    { z: Int => if(isNoData(z)) z else d2i(math.tan(z)) },
-    { z => if(isNoData(z)) z else math.tan(z) }
-  )
+      { z: Int => if (isNoData(z)) z else d2i(math.tan(z)) },
+      { z => if (isNoData(z)) z else math.tan(z) }
+    )
 
   def sinh: LazyMultibandRaster =
     self.dualMap(
-    { z: Int => if(isNoData(z)) z else d2i(math.sinh(z)) },
-    { z => if(isNoData(z)) z else math.sinh(z) }
-  )
+      { z: Int => if (isNoData(z)) z else d2i(math.sinh(z)) },
+      { z => if (isNoData(z)) z else math.sinh(z) }
+    )
   def cosh: LazyMultibandRaster =
     self.dualMap(
-    { z: Int => if(isNoData(z)) z else d2i(math.cosh(z)) },
-    { z => if(isNoData(z)) z else math.cosh(z) }
-  )
+      { z: Int => if (isNoData(z)) z else d2i(math.cosh(z)) },
+      { z => if (isNoData(z)) z else math.cosh(z) }
+    )
   def tanh: LazyMultibandRaster =
     self.dualMap(
-    { z: Int => if(isNoData(z)) z else d2i(math.tanh(z)) },
-    { z => if(isNoData(z)) z else math.tanh(z) }
-  )
+      { z: Int => if (isNoData(z)) z else d2i(math.tanh(z)) },
+      { z => if (isNoData(z)) z else math.tanh(z) }
+    )
 
   def asin: LazyMultibandRaster =
     self.dualMap(
-    { z: Int => if(isNoData(z)) z else d2i(math.asin(z)) },
-    { z => if(isNoData(z)) z else math.asin(z) }
-  )
+      { z: Int => if (isNoData(z)) z else d2i(math.asin(z)) },
+      { z => if (isNoData(z)) z else math.asin(z) }
+    )
   def acos: LazyMultibandRaster =
     self.dualMap(
-    { z: Int => if(isNoData(z)) z else d2i(math.acos(z)) },
-    { z => if(isNoData(z)) z else math.acos(z) }
-  )
+      { z: Int => if (isNoData(z)) z else d2i(math.acos(z)) },
+      { z => if (isNoData(z)) z else math.acos(z) }
+    )
   def atan: LazyMultibandRaster =
     self.dualMap(
-    { z: Int => if(isNoData(z)) z else d2i(math.atan(z)) },
-    { z => if(isNoData(z)) z else math.atan(z) }
-  )
+      { z: Int => if (isNoData(z)) z else d2i(math.atan(z)) },
+      { z => if (isNoData(z)) z else math.atan(z) }
+    )
 
   def atan2(other: LazyMultibandRaster) =
-    self.dualCombine(other,
-      { (z1, z2) => d2i(math.atan2(i2d(z1), i2d(z2))) },
-      { (z1, z2) => math.atan2(z1, z2) }
-    )
+    self.dualCombine(other, { (z1, z2) => d2i(math.atan2(i2d(z1), i2d(z2))) }, { (z1, z2) => math.atan2(z1, z2) })
   def atan2(other: Int): LazyMultibandRaster =
     self.dualMap(
       { i: Int => d2i(math.atan2(i, other)) },
@@ -343,26 +344,30 @@ trait LazyMultibandRasterOperations {
       { math.atan2(_, other) }
     )
 
-  /** Rounding Operations */
+  /**
+   * Rounding Operations
+   */
   def round: LazyMultibandRaster =
     self.dualMap(
       identity,
-      { z => if(isNoData(z)) z else math.round(z) }
+      { z => if (isNoData(z)) z else math.round(z) }
     )
 
   def floor: LazyMultibandRaster =
     self.dualMap(
       identity,
-      { z => if(isNoData(z)) z else math.floor(z) }
+      { z => if (isNoData(z)) z else math.floor(z) }
     )
 
   def ceil: LazyMultibandRaster =
     self.dualMap(
       identity,
-      { z => if(isNoData(z)) z else math.ceil(z) }
+      { z => if (isNoData(z)) z else math.ceil(z) }
     )
 
-  /** Logical Operations */
+  /**
+   * Logical Operations
+   */
   // TODO: Look into GT implementations for logical operations...
   //       The handling of nodata vs 0 vs false is not obvious
   def &&(other: LazyMultibandRaster): LazyMultibandRaster =
@@ -391,13 +396,13 @@ trait LazyMultibandRasterOperations {
   def ||(other: LazyMultibandRaster): LazyMultibandRaster =
     self.dualCombine(other, Or.combine, Or.combine)
   def ||(other: Int): LazyMultibandRaster =
-    self.dualMap( { Or.combine(_, other) }, { Or.combine(_, other) })
+    self.dualMap({ Or.combine(_, other) }, { Or.combine(_, other) })
   def ||:(other: Int): LazyMultibandRaster =
-    self.dualMap( { Or.combine(_, other) }, { Or.combine(_, other) })
+    self.dualMap({ Or.combine(_, other) }, { Or.combine(_, other) })
   def ||(other: Double): LazyMultibandRaster =
-    self.dualMap( { Or.combine(_, d2i(other)) }, { Or.combine(_, other) })
+    self.dualMap({ Or.combine(_, d2i(other)) }, { Or.combine(_, other) })
   def ||:(other: Double): LazyMultibandRaster =
-    self.dualMap( { Or.combine(_, d2i(other)) }, { Or.combine(_, other) })
+    self.dualMap({ Or.combine(_, d2i(other)) }, { Or.combine(_, other) })
 
   def xor(other: LazyMultibandRaster): LazyMultibandRaster =
     self.dualCombine(other, Xor.combine, Xor.combine)
@@ -418,7 +423,9 @@ trait LazyMultibandRasterOperations {
       { z => if (isNoData(z)) z else if (z == 0.0) 1.0 else 0.0 }
     )
 
-  /** Tile specific methods */
+  /**
+   * Tile specific methods
+   */
   def classify(breaks: BreakMap[Double, Int]) =
     self.dualMap(
       { i => breaks(i2d(i)) },
@@ -426,4 +433,3 @@ trait LazyMultibandRasterOperations {
     )
 
 }
-

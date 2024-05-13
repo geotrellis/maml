@@ -5,24 +5,28 @@ import com.azavea.maml.ast._
 import io.circe._
 import io.circe.syntax._
 
-
-/** Custom, MAML-specific errors */
+/**
+ * Custom, MAML-specific errors
+ */
 trait MamlError {
   def repr: String
 }
-
 
 object MamlError {
   implicit val encodeMamlError: Encoder[MamlError] =
     Encoder.encodeString.contramap[MamlError](_.repr)
 }
 
-/** Error to which signifies that a nodes aregument count is incorrect */
+/**
+ * Error to which signifies that a nodes aregument count is incorrect
+ */
 case class IncorrectArgCount(exp: Expression, expectedArgs: Int) extends MamlError {
   def repr = s"Expected $expectedArgs arguments to ${exp}; instead, found ${exp.children.size}"
 }
 
-/** Error to use when an unhandled node is encountered during evaluation  */
+/**
+ * Error to use when an unhandled node is encountered during evaluation
+ */
 case class UnhandledCase(exp: Expression, kind: MamlKind) extends MamlError {
   def repr = s"A branch of Interpreter logic has yet to be implemented for the expression ${exp} and the kind $kind"
 }

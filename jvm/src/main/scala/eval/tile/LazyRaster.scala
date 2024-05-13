@@ -2,7 +2,7 @@ package com.azavea.maml.eval.tile
 
 import cats.Semigroup
 import geotrellis.raster._
-import geotrellis.raster.mapalgebra.focal.{Neighborhood, Square, TargetCell, Aspect => GTAspect, Slope => GTFocalSlope}
+import geotrellis.raster.mapalgebra.focal.{Aspect => GTAspect, Neighborhood, Slope => GTFocalSlope, Square, TargetCell}
 import geotrellis.raster.mapalgebra.focal.hillshade.{Hillshade => GTHillshade}
 import geotrellis.vector.Extent
 import geotrellis.proj4.CRS
@@ -55,18 +55,20 @@ object LazyRaster {
   def apply(raster: Raster[Tile], crs: CRS): LazyRaster =
     Bound(raster.tile, raster.rasterExtent, crs)
 
-  /** A LazyRaster.Tree has a left and right. */
+  /**
+   * A LazyRaster.Tree has a left and right.
+   */
   trait Branch extends LazyRaster {
     lazy val cols = {
       val colList = children.map(_.cols).distinct
       // This require block breaks things when there's an imbalance of focal operations on the children
-      //require(colList.length == 1, "Ambiguous column count")
+      // require(colList.length == 1, "Ambiguous column count")
       colList.head
     }
     lazy val rows = {
       val rowList = children.map(_.rows).distinct
       // This require block breaks things when there's an imbalance of focal operations on the children
-      //require(rowList.length == 1, "Ambiguous row count")
+      // require(rowList.length == 1, "Ambiguous row count")
       rowList.head
     }
   }
@@ -92,11 +94,13 @@ object LazyRaster {
     def children: List[LazyRaster] = List.empty
   }
 
-  /** This object represents tile data sources */
+  /**
+   * This object represents tile data sources
+   */
   case class Bound(tile: Tile, rasterExtent: RasterExtent, crs: CRS) extends Terminal {
     def cols: Int = tile.cols
     def rows: Int = tile.rows
-    def get(col: Int, row: Int): Int = tile.get(col,row)
+    def get(col: Int, row: Int): Int = tile.get(col, row)
     def getDouble(col: Int, row: Int): Double = tile.getDouble(col, row)
   }
 
@@ -177,12 +181,18 @@ object LazyRaster {
     val maxInt = max.toInt
 
     def clampInt(z: Int): Int =
-      if(isData(z)) { if(z > maxInt) { maxInt } else if(z < minInt) { minInt } else { z } }
-      else { z }
+      if (isData(z)) {
+        if (z > maxInt) { maxInt }
+        else if (z < minInt) { minInt }
+        else { z }
+      } else { z }
 
     def clampDouble(z: Double): Double =
-      if(isData(z)) { if(z > max) { max } else if(z < min) { min } else { z } }
-      else { z }
+      if (isData(z)) {
+        if (z > max) { max }
+        else if (z < min) { min }
+        else { z }
+      } else { z }
 
     lazy val intTile = fst.evaluate.map(clampInt _)
     lazy val dblTile = fst.evaluateDouble.mapDouble(clampDouble _)
@@ -217,7 +227,7 @@ object LazyRaster {
     override lazy val cols: Int = gridbounds.map(_.width).getOrElse(fst.cols)
     override lazy val rows: Int = gridbounds.map(_.height).getOrElse(fst.rows)
     lazy val intTile = GTFocalSlope(fst.evaluate, Square(1), gridbounds, cs, zFactor, target)
-    lazy val dblTile = GTFocalSlope(fst.evaluateDouble, Square(1),  gridbounds, cs, zFactor, target)
+    lazy val dblTile = GTFocalSlope(fst.evaluateDouble, Square(1), gridbounds, cs, zFactor, target)
 
     def get(col: Int, row: Int) = intTile.get(col, row)
     def getDouble(col: Int, row: Int) = dblTile.getDouble(col, row)

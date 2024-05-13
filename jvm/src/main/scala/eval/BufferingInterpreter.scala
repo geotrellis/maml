@@ -31,13 +31,11 @@ case class BufferingInterpreter(
     }
   }
 
-  val fallbackDirective: ScopedDirective[BufferingInterpreter.Scope] =
-    { case (exp, res, scope) => Invalid(NEL.of(UnhandledCase(exp, exp.kind))) }
+  val fallbackDirective: ScopedDirective[BufferingInterpreter.Scope] = { case (exp, res, scope) => Invalid(NEL.of(UnhandledCase(exp, exp.kind))) }
 
   def instructions(expression: Expression, children: Seq[Result], scope: BufferingInterpreter.Scope): Interpreted[Result] =
     directives.reduceLeft(_ orElse _).orElse(fallbackDirective)((expression, children, scope))
 }
-
 
 object BufferingInterpreter {
   case class Scope(buffer: Int, tileSize: Int)
@@ -50,13 +48,15 @@ object BufferingInterpreter {
       ScopedDirective.pure[DblLit](SourceDirectives.dblLiteral),
       ScopedDirective.pure[BoolLit](SourceDirectives.boolLiteral),
       ScopedDirective.pure[GeomLit](SourceDirectives.geoJson),
-      ScopedDirective.pure[Addition](OpDirectives.additionTile orElse OpDirectives.additionInt orElse OpDirectives.additionDouble),
+      ScopedDirective.pure[Addition](OpDirectives.additionTile.orElse(OpDirectives.additionInt).orElse(OpDirectives.additionDouble)),
       ScopedDirective.pure[Subtraction](OpDirectives.subtraction),
-      ScopedDirective.pure[Multiplication](OpDirectives.multiplicationTile orElse OpDirectives.multiplicationInt orElse OpDirectives.multiplicationDouble),
+      ScopedDirective.pure[Multiplication](
+        OpDirectives.multiplicationTile.orElse(OpDirectives.multiplicationInt).orElse(OpDirectives.multiplicationDouble)
+      ),
       ScopedDirective.pure[Division](OpDirectives.division),
       ScopedDirective.pure[Pow](OpDirectives.pow),
-      ScopedDirective.pure[Max](OpDirectives.maxTile orElse OpDirectives.maxInt orElse OpDirectives.maxDouble),
-      ScopedDirective.pure[Min](OpDirectives.minTile orElse OpDirectives.minInt orElse OpDirectives.minDouble),
+      ScopedDirective.pure[Max](OpDirectives.maxTile.orElse(OpDirectives.maxInt).orElse(OpDirectives.maxDouble)),
+      ScopedDirective.pure[Min](OpDirectives.minTile.orElse(OpDirectives.minInt).orElse(OpDirectives.minDouble)),
       ScopedDirective.pure[Lesser](OpDirectives.lessThan),
       ScopedDirective.pure[LesserOrEqual](OpDirectives.lessThanOrEqualTo),
       ScopedDirective.pure[Equal](OpDirectives.equalTo),
@@ -99,7 +99,8 @@ object BufferingInterpreter {
       focalStandardDeviation,
       ScopedDirective.pure[FocalSlope](FocalDirectives.slope),
       ScopedDirective.pure[FocalHillshade](FocalDirectives.hillshade)
-    ), Options(256)
+    ),
+    Options(256)
   )
 
   val focalMax = ScopedDirective[Scope] { case (FocalMax(_, neighborhood, target), childResults, scope) =>

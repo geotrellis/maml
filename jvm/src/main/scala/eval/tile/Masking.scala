@@ -8,15 +8,15 @@ case class MaskingNode(children: List[LazyRaster], mask: MultiPolygon) extends L
     val masky = ArrayTile.empty(BitCellType, this.cols, this.rows)
 
     rasterExtent
-      .foreach(mask)({ (col, row) => masky.set(col, row, 1) })
+      .foreach(mask) { (col, row) => masky.set(col, row, 1) }
 
     masky
   }
 
-  /** Perform the NODATA checks ahead of time, in case the underlying Tile
-    * is sparse. This will then only check for Mask intersection if the value to
-    * give back could be something other than NODATA.
-    */
+  /**
+   * Perform the NODATA checks ahead of time, in case the underlying Tile is sparse. This will then only check for Mask intersection if the value to
+   * give back could be something other than NODATA.
+   */
   def get(col: Int, row: Int): Int = {
     val v: Int = fst.get(col, row)
 
@@ -28,4 +28,3 @@ case class MaskingNode(children: List[LazyRaster], mask: MultiPolygon) extends L
     if (isNoData(v)) v else if (cellMask.get(col, row) == 1) v else Double.NaN
   }
 }
-

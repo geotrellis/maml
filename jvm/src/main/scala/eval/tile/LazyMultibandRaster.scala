@@ -37,14 +37,17 @@ case class LazyMultibandRaster(bands: Map[String, LazyRaster]) {
     f: (Int, Int) => Int,
     g: (Double, Double) => Double
   ): LazyMultibandRaster = {
-    val newBands = bands.values.zip(other.bands.values).map { case (v1, v2) =>
-      LazyRaster.DualCombine(List(v1, v2), f, g)
-    }.toList
+    val newBands = bands.values
+      .zip(other.bands.values)
+      .map { case (v1, v2) =>
+        LazyRaster.DualCombine(List(v1, v2), f, g)
+      }
+      .toList
     LazyMultibandRaster(newBands)
   }
 
   def dualMap(f: Int => Int, g: Double => Double): LazyMultibandRaster =
-    LazyMultibandRaster(bands.mapValues({ lt => LazyRaster.DualMap(List(lt), f, g) }))
+    LazyMultibandRaster(bands.map { case (key, lt) => key -> LazyRaster.DualMap(List(lt), f, g) })
 
   def focal(
     neighborhood: Neighborhood,
@@ -52,7 +55,7 @@ case class LazyMultibandRaster(bands: Map[String, LazyRaster]) {
     target: TargetCell,
     focalFn: (Tile, Neighborhood, Option[GridBounds[Int]], TargetCell) => Tile
   ): LazyMultibandRaster = {
-    val lztiles = bands.mapValues({ lt => LazyRaster.Focal(List(lt), neighborhood, gridbounds, target, focalFn) })
+    val lztiles = bands.map { case (key, lt) => key -> LazyRaster.Focal(List(lt), neighborhood, gridbounds, target, focalFn) }
     LazyMultibandRaster(lztiles)
   }
 
@@ -62,7 +65,7 @@ case class LazyMultibandRaster(bands: Map[String, LazyRaster]) {
     cs: CellSize,
     target: TargetCell
   ): LazyMultibandRaster = {
-    val lztiles = bands.mapValues({ lt => LazyRaster.Slope(List(lt), gridbounds, zFactor, cs, target) })
+    val lztiles = bands.map { case (key, lt) => key -> LazyRaster.Slope(List(lt), gridbounds, zFactor, cs, target) }
     LazyMultibandRaster(lztiles)
   }
 
@@ -74,7 +77,7 @@ case class LazyMultibandRaster(bands: Map[String, LazyRaster]) {
     altitude: Double,
     target: TargetCell
   ): LazyMultibandRaster = {
-    val lztiles = bands.mapValues({ lt => LazyRaster.Hillshade(List(lt), gridbounds, zFactor, cs, azimuth, altitude, target) })
+    val lztiles = bands.map { case (key, lt) => key -> LazyRaster.Hillshade(List(lt), gridbounds, zFactor, cs, azimuth, altitude, target) }
     LazyMultibandRaster(lztiles)
   }
 
@@ -83,31 +86,32 @@ case class LazyMultibandRaster(bands: Map[String, LazyRaster]) {
     cs: CellSize,
     target: TargetCell
   ): LazyMultibandRaster = {
-    val lztiles = bands.mapValues({ lt =>
-      LazyRaster.Aspect(List(lt), gridbounds, cs, target)
-    })
+    val lztiles = bands.map { case (key, lt) =>
+      key ->
+        LazyRaster.Aspect(List(lt), gridbounds, cs, target)
+    }
     LazyMultibandRaster(lztiles)
   }
 
   def mask(
     maskPoly: MultiPolygon
   ): LazyMultibandRaster = {
-    val lztiles = bands.mapValues({ lt => MaskingNode(List(lt), maskPoly) })
+    val lztiles = bands.map { case (key, lt) => key -> MaskingNode(List(lt), maskPoly) }
     LazyMultibandRaster(lztiles)
   }
 
   def rescale(newMin: Double, newMax: Double): LazyMultibandRaster = {
-    val lztiles = bands.mapValues({ lt => LazyRaster.Rescale(List(lt), newMin, newMax) })
+    val lztiles = bands.map { case (key, lt) => key -> LazyRaster.Rescale(List(lt), newMin, newMax) }
     LazyMultibandRaster(lztiles)
   }
 
   def normalize(oldMin: Double, oldMax: Double, newMin: Double, newMax: Double): LazyMultibandRaster = {
-    val lztiles = bands.mapValues({ lt => LazyRaster.Normalize(List(lt), oldMin, oldMax, newMin, newMax) })
+    val lztiles = bands.map { case (key, lt) => key -> LazyRaster.Normalize(List(lt), oldMin, oldMax, newMin, newMax) }
     LazyMultibandRaster(lztiles)
   }
 
   def clamp(min: Double, max: Double): LazyMultibandRaster = {
-    val lztiles = bands.mapValues({ lt => LazyRaster.Clamp(List(lt), min, max) })
+    val lztiles = bands.map { case (key, lt) => key -> LazyRaster.Clamp(List(lt), min, max) }
     LazyMultibandRaster(lztiles)
   }
 }

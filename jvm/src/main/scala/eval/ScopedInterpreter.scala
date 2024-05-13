@@ -9,7 +9,6 @@ import cats.data.Validated._
 import cats.data.{NonEmptyList => NEL, _}
 import geotrellis.raster.GridBounds
 
-
 trait ScopedInterpreter[Scope] extends Interpreter[Id] {
   def scopeFor(exp: Expression, previous: Option[Scope]): Scope
   def appendDirective(directive: ScopedDirective[Scope]): ScopedInterpreter[Scope]
@@ -20,13 +19,12 @@ trait ScopedInterpreter[Scope] extends Interpreter[Id] {
   def apply(exp: Expression): Interpreted[Result] = {
     def eval(exp: Expression, maybeScope: Option[Scope] = None): Interpreted[Result] = {
       val currentScope = scopeFor(exp, maybeScope)
-      val children: Interpreted[List[Result]] = exp.children.traverse({ childTree =>
+      val children: Interpreted[List[Result]] = exp.children.traverse { childTree =>
         val childScope = scopeFor(childTree, Some(currentScope))
         eval(childTree, Some(childScope))
-      })
-      children.andThen({ childResult => instructions(exp, childResult, currentScope) })
+      }
+      children.andThen { childResult => instructions(exp, childResult, currentScope) }
     }
     eval(exp)
   }
 }
-

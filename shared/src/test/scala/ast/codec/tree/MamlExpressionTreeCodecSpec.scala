@@ -10,13 +10,13 @@ import cats.syntax.either._
 import org.scalacheck.Prop.forAll
 import org.scalatest._
 import org.scalatest.prop._
+import propspec._
 
-
-class ExpressionTreeCodecSpec extends PropSpec with Checkers with ExpressionTreeCodec {
+class ExpressionTreeCodecSpec extends AnyPropSpec with ExpressionTreeCodec {
   @transient private[this] lazy val logger = getLogger
 
   property("bijective serialization on whole tree") {
-    check(forAll(Generators.genExpression()) { (ast: Expression) =>
+    forAll(Generators.genExpression()) { (ast: Expression) =>
       logger.debug(s"Attempting to encode AST: $ast")
       val encoded = ast.asJson.noSpaces
       logger.debug(s"Encoded AST: $encoded")
@@ -29,6 +29,6 @@ class ExpressionTreeCodecSpec extends PropSpec with Checkers with ExpressionTree
           logger.debug(f)(f.toString)
           fail(f)
       }
-    })
+    }
   }
 }

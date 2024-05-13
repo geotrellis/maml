@@ -1,6 +1,8 @@
 package com.azavea.maml.ast
 
-/** Operations which should only have one argument. */
+/**
+ * Operations which should only have one argument.
+ */
 trait UnaryExpression { expression: Expression =>
   require(expression.children.length == 1, s"Incorrect number of arguments to a unary expression. Expected 1, found ${expression.children.length}")
   lazy val kind = kindDerivation(expression.children.head.kind)
@@ -15,4 +17,3 @@ object UnaryExpression {
   val scalar = intOnly ++ dblOnly
   val imageOrScalar = imageOnly ++ intOnly ++ dblOnly
 }
-

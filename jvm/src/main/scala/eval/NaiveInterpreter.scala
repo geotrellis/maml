@@ -11,12 +11,11 @@ import cats.data.{NonEmptyList => NEL, _}
 
 import scala.reflect.ClassTag
 
-
 case class NaiveInterpreter(directives: List[Directive]) extends Interpreter[Id] {
 
   def apply(exp: Expression): Interpreted[Result] = {
     val children: Interpreted[List[Result]] = exp.children.traverse(apply)
-    children.andThen({ childRes => instructions(exp, childRes) })
+    children.andThen { childRes => instructions(exp, childRes) }
   }
 
   def prependDirective(directive: Directive): Interpreter[Id] =
@@ -25,8 +24,7 @@ case class NaiveInterpreter(directives: List[Directive]) extends Interpreter[Id]
   def appendDirective(directive: Directive): Interpreter[Id] =
     NaiveInterpreter(directives :+ directive)
 
-  val fallbackDirective: Directive =
-    { case (exp, res) => Invalid(NEL.of(UnhandledCase(exp, exp.kind))) }
+  val fallbackDirective: Directive = { case (exp, res) => Invalid(NEL.of(UnhandledCase(exp, exp.kind))) }
 
   def instructions(expression: Expression, children: List[Result]): Interpreted[Result] =
     directives.reduceLeft(_ orElse _).orElse(fallbackDirective)((expression, children))
@@ -41,13 +39,13 @@ object NaiveInterpreter {
       SourceDirectives.dblLiteral,
       SourceDirectives.boolLiteral,
       SourceDirectives.geoJson,
-      OpDirectives.additionTile orElse OpDirectives.additionInt orElse OpDirectives.additionDouble,
+      OpDirectives.additionTile.orElse(OpDirectives.additionInt).orElse(OpDirectives.additionDouble),
       OpDirectives.subtraction,
-      OpDirectives.multiplicationTile orElse OpDirectives.multiplicationInt orElse OpDirectives.multiplicationDouble,
+      OpDirectives.multiplicationTile.orElse(OpDirectives.multiplicationInt).orElse(OpDirectives.multiplicationDouble),
       OpDirectives.division,
       OpDirectives.pow,
-      OpDirectives.maxTile orElse OpDirectives.maxInt orElse OpDirectives.maxDouble,
-      OpDirectives.minTile orElse OpDirectives.minInt orElse OpDirectives.minDouble,
+      OpDirectives.maxTile.orElse(OpDirectives.maxInt).orElse(OpDirectives.maxDouble),
+      OpDirectives.minTile.orElse(OpDirectives.minInt).orElse(OpDirectives.minDouble),
       OpDirectives.lessThan,
       OpDirectives.lessThanOrEqualTo,
       OpDirectives.equalTo,

@@ -13,11 +13,10 @@ import geotrellis.layer._
 
 import scala.reflect.ClassTag
 
-
 case class RDDResult(res: TileLayerRDD[SpatialKey]) extends Result {
   def as[T](implicit ct: ClassTag[T]): Interpreted[T] = {
     val cls = ct.runtimeClass
-    if (classOf[ContextRDD[SpatialKey, Tile, TileLayerMetadata[SpatialKey]]] isAssignableFrom cls)
+    if (classOf[ContextRDD[SpatialKey, Tile, TileLayerMetadata[SpatialKey]]].isAssignableFrom(cls))
       Valid(res.asInstanceOf[T])
     else
       Invalid(NEL.of(DivergingTypes(cls.getName, List("SpatialRDD"))))
