@@ -73,7 +73,6 @@ lazy val publishSettings = Seq(
 ) ++ sonatypeSettings
 
 lazy val sonatypeSettings = Seq(
-  publishMavenStyle := true,
   sonatypeProfileName := "com.azavea",
   developers := List(
     Developer("moradology", "Nathan Zimmerman", "nzimmerman@azavea.com", url("https://github.com/moradology")),
@@ -89,7 +88,7 @@ lazy val root = project
   .aggregate(mamlJs, mamlJvm, mamlSpark)
   .settings(commonSettings)
   .settings(publishSettings)
-  .settings(noPublishSettings)
+  .settings(publish / skip := true, publishLocal / skip := true)
 
 lazy val maml = crossProject(JSPlatform, JVMPlatform)
   .in(file("."))
