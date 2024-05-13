@@ -3,12 +3,37 @@ import Dependencies._
 ThisBuild / libraryDependencySchemes += "org.scala-lang.modules" %% "scala-xml" % VersionScheme.Always
 
 val commonSettings = Seq(
-  scalaVersion := "2.12.19",
+  scalaVersion := "2.13.14",
   crossScalaVersions := Seq("2.12.19", "2.13.14"),
   resolvers ++= Resolver.sonatypeOssRepos("releases") ++ Resolver.sonatypeOssRepos("snapshots") ++ Seq(
     "locationtech-releases".at("https://repo.locationtech.org/content/groups/releases"),
     "locationtech-snapshots".at("https://repo.locationtech.org/content/groups/snapshots")
   ),
+  // JDK17+ https://github.com/apache/spark/blob/v3.5.1/pom.xml#L299-L317
+  ThisBuild / javaOptions ++= {
+    if (javaMajorVersion >= 17)
+      Seq(
+        "-XX:+IgnoreUnrecognizedVMOptions",
+        "--add-modules=jdk.incubator.vector",
+        "--add-opens=java.base/java.lang=ALL-UNNAMED",
+        "--add-opens=java.base/java.lang.invoke=ALL-UNNAMED",
+        "--add-opens=java.base/java.lang.reflect=ALL-UNNAMED",
+        "--add-opens=java.base/java.io=ALL-UNNAMED",
+        "--add-opens=java.base/java.net=ALL-UNNAMED",
+        "--add-opens=java.base/java.nio=ALL-UNNAMED",
+        "--add-opens=java.base/java.util=ALL-UNNAMED",
+        "--add-opens=java.base/java.util.concurrent=ALL-UNNAMED",
+        "--add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED",
+        "--add-opens=java.base/jdk.internal.ref=ALL-UNNAMED",
+        "--add-opens=java.base/sun.nio.ch=ALL-UNNAMED",
+        "--add-opens=java.base/sun.nio.cs=ALL-UNNAMED",
+        "--add-opens=java.base/sun.security.action=ALL-UNNAMED",
+        "--add-opens=java.base/sun.util.calendar=ALL-UNNAMED",
+        "-Djdk.reflect.useDirectMethodHandle=false",
+        "-Dio.netty.tryReflectionSetAccessible=true"
+      )
+    else Nil
+  },
   scalacOptions := Seq(
     "-deprecation",
     "-unchecked",
@@ -112,7 +137,7 @@ lazy val mamlSpark = project
     )
   )
   .settings(
-    Test / fork := false,
+    Test / fork := true,
     Test / parallelExecution := false
   )
 
@@ -121,3 +146,5 @@ def priorTo213(scalaVersion: String): Boolean =
     case Some((2, minor)) if minor < 13 => true
     case _                              => false
   }
+
+def javaMajorVersion: Int = System.getProperty("java.version").split("\\.").head.toInt
