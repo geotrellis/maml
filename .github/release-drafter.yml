@@ -17,6 +17,6 @@ exclude-labels:
   - 'skip-changelog'
   - 'docs'
   - 'build'
-change-template: '- $TITLE [#$NUMBER](https://github.com/pomadchin/tagless-mid/pull/$NUMBER) (@$AUTHOR)'
+change-template: '- $TITLE [#$NUMBER](https://github.com/geotrellis/maml/pull/$NUMBER) (@$AUTHOR)'
 template: |
   $CHANGES
