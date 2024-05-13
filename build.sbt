@@ -28,10 +28,23 @@ val commonSettings = Seq(
     if (priorTo213(scalaVersion.value)) Seq(compilerPlugin(("org.scalamacros" %% "paradise" % "2.1.1").cross(CrossVersion.full)))
     else Nil
   ),
-  scalacOptions ++= (if (priorTo213(scalaVersion.value)) Nil else Seq("-Ymacro-annotations"))
+  scalacOptions ++= (if (priorTo213(scalaVersion.value)) Nil else Seq("-Ymacro-annotations")),
+  organization := "com.azavea.geotrellis",
+  organizationName := "GeoTrellis",
+  organizationHomepage := Some(url("https://geotrellis.io/")),
+  homepage := Some(url("https://github.com/geotrellis/maml")),
+  description := "MAML is used to create a declarative structure that describes a combination of map algebra operations.",
+  Test / publishArtifact := false,
+  sonatypeProfileName := "com.azavea",
+  developers := List(
+    Developer("moradology", "Nathan Zimmerman", "nzimmerman@azavea.com", url("https://github.com/moradology")),
+    Developer("echeipesh", "Eugene Cheipesh", "echeipesh@azavea.com", url("https://github.com/echeipesh")),
+    Developer("lossyrob", "Rob Emanuele", "remanuele@azavea.com", url("https://github.com/lossyrob"))
+  ),
+  licenses := Seq("Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0.txt"))
 )
 
-val java17Settings = Seq(
+val java17SparkSettings = Seq(
   // JDK17+ https://github.com/apache/spark/blob/v3.5.1/pom.xml#L299-L317
   javaOptions ++= {
     if (javaMajorVersion >= 17)
@@ -61,39 +74,20 @@ val java17Settings = Seq(
 
 lazy val noPublishSettings = Seq(
   publish / skip := true,
-  publishLocal / skip := true
-)
-
-lazy val publishSettings = Seq(
-  organization := "com.azavea.geotrellis",
-  organizationName := "GeoTrellis",
-  organizationHomepage := Some(url("https://geotrellis.io/")),
-  description := "MAML is used to create a declarative structure that describes a combination of map algebra operations.",
-  Test / publishArtifact := false
-) ++ sonatypeSettings
-
-lazy val sonatypeSettings = Seq(
-  sonatypeProfileName := "com.azavea",
-  developers := List(
-    Developer("moradology", "Nathan Zimmerman", "nzimmerman@azavea.com", url("https://github.com/moradology")),
-    Developer("echeipesh", "Eugene Cheipesh", "echeipesh@azavea.com", url("https://github.com/echeipesh")),
-    Developer("lossyrob", "Rob Emanuele", "remanuele@azavea.com", url("https://github.com/lossyrob"))
-  ),
-  licenses := Seq("Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0.txt"))
+  publishLocal / skip := true,
+  publish := {},
+  publishLocal := {}
 )
 
 lazy val root = project
   .in(file("."))
-  .enablePlugins(ScalaJSPlugin)
   .aggregate(mamlJs, mamlJvm, mamlSpark)
   .settings(commonSettings)
-  .settings(publishSettings)
-  .settings(publish / skip := true, publishLocal / skip := true)
+  .settings(noPublishSettings)
 
 lazy val maml = crossProject(JSPlatform, JVMPlatform)
   .in(file("."))
   .settings(commonSettings)
-  .settings(publishSettings)
   .settings(
     libraryDependencies ++= Seq(
       scalacheck % Test,
@@ -127,8 +121,7 @@ lazy val mamlSpark = project
   .in(file("spark"))
   .dependsOn(mamlJvm)
   .settings(commonSettings)
-  .settings(publishSettings)
-  .settings(java17Settings)
+  .settings(java17SparkSettings)
   .settings(name := "maml-spark")
   .settings(
     libraryDependencies ++= Seq(
