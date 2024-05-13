@@ -60,9 +60,8 @@ val java17Settings = Seq(
 )
 
 lazy val noPublishSettings = Seq(
-  publish := {},
-  publishLocal := {},
-  publishArtifact := false
+  publish / skip := true,
+  publishLocal / skip := true
 )
 
 lazy val publishSettings = Seq(
@@ -88,8 +87,8 @@ lazy val sonatypeSettings = Seq(
 lazy val root = project
   .in(file("."))
   .settings(commonSettings)
-  .settings(publishSettings) // these settings are needed to release all aggregated modules under this root module
-  .settings(noPublishSettings) // this is to exclue the root module itself from being published
+  .settings(publishSettings)
+  .settings(noPublishSettings)
   .aggregate(mamlJs, mamlJvm, mamlSpark)
   .enablePlugins(ScalaJSPlugin)
 
