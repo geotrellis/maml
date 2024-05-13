@@ -64,7 +64,7 @@ lazy val noPublishSettings = Seq(
 lazy val publishSettings = Seq(
   organization := "com.azavea.geotrellis",
   organizationName := "GeoTrellis",
-  organizationHomepage := Some(new URL("https://geotrellis.io/")),
+  organizationHomepage := Some(url("https://geotrellis.io/")),
   description := "MAML is used to create a declarative structure that describes a combination of map algebra operations.",
   Test / publishArtifact := false
 ) ++ sonatypeSettings
