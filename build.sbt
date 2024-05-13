@@ -61,10 +61,7 @@ val java17Settings = Seq(
 
 lazy val noPublishSettings = Seq(
   publish / skip := true,
-  publishLocal / skip := true,
-  publish := {},
-  publishLocal := {},
-  publishArtifact := false
+  publishLocal / skip := true
 )
 
 lazy val publishSettings = Seq(
@@ -83,8 +80,7 @@ lazy val sonatypeSettings = Seq(
     Developer("echeipesh", "Eugene Cheipesh", "echeipesh@azavea.com", url("https://github.com/echeipesh")),
     Developer("lossyrob", "Rob Emanuele", "remanuele@azavea.com", url("https://github.com/lossyrob"))
   ),
-  licenses := Seq("Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0.txt")),
-  publishTo := sonatypePublishTo.value
+  licenses := Seq("Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0.txt"))
 )
 
 lazy val root = project
