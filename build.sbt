@@ -3,6 +3,7 @@ import Dependencies._
 ThisBuild / libraryDependencySchemes += "org.scala-lang.modules" %% "scala-xml" % VersionScheme.Always
 
 val commonSettings = Seq(
+  versionScheme := Some("early-semver"),
   scalaVersion := "2.13.14",
   crossScalaVersions := Seq("2.12.19", "2.13.14"),
   resolvers ++= Resolver.sonatypeOssRepos("releases") ++ Resolver.sonatypeOssRepos("snapshots") ++ Seq(
