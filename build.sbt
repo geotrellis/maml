@@ -61,7 +61,9 @@ val java17Settings = Seq(
 
 lazy val noPublishSettings = Seq(
   publish / skip := true,
-  publishLocal / skip := true
+  publishLocal / skip := true,
+  publish := {},
+  publishLocal := {}
 )
 
 lazy val publishSettings = Seq(
@@ -86,11 +88,11 @@ lazy val sonatypeSettings = Seq(
 
 lazy val root = project
   .in(file("."))
+  .enablePlugins(ScalaJSPlugin)
+  .aggregate(mamlJs, mamlJvm, mamlSpark)
   .settings(commonSettings)
   .settings(publishSettings)
   .settings(noPublishSettings)
-  .aggregate(mamlJs, mamlJvm, mamlSpark)
-  .enablePlugins(ScalaJSPlugin)
 
 lazy val maml = crossProject(JSPlatform, JVMPlatform)
   .in(file("."))
