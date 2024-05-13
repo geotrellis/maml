@@ -6,14 +6,12 @@ import io.circe._
 import io.circe.syntax._
 import io.circe.generic.JsonCodec
 
-
 trait ClassBoundaryType
 case object LessThan extends ClassBoundaryType
 case object LessThanOrEqualTo extends ClassBoundaryType
 case object Exact extends ClassBoundaryType
 case object GreaterThanOrEqualTo extends ClassBoundaryType
 case object GreaterThan extends ClassBoundaryType
-
 
 @JsonCodec
 case class ClassMap(

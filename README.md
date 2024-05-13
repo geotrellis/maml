@@ -1,6 +1,6 @@
 # Map Algebra Modeling Language
 
-[![CircleCI](https://circleci.com/gh/geotrellis/maml.svg?style=svg)](https://circleci.com/gh/geotrellis/maml) [![Join the chat at https://gitter.im/geotrellis/geotrellis](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/geotrellis/geotrellis?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![CI](https://github.com/geotrellis/maml/actions/workflows/ci.yml/badge.svg)](https://github.com/geotrellis/maml/actions/workflows/ci.yml) [![Join the chat at https://gitter.im/geotrellis/geotrellis](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/geotrellis/geotrellis?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 Azavea has been developing Map Algebra Modeling Language (MAML) as part of a NASA grant in [Raster Foundry](https://www.rasterfoundry.com/). MAML is used to create a declarative structure that describes a combination of map algebra operations. This structure may be evaluated against a given collection of datasets to produce a result. Critically, the evaluation logic is not specified in MAML, only the semantic meaning of the operations. This separation allows for multiple interpreters to exist that operate in different computational contexts.
 

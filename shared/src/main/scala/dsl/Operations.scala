@@ -2,7 +2,6 @@ package com.azavea.maml.dsl
 
 import com.azavea.maml.ast._
 
-
 trait Operations {
   implicit class LocalExpressionMethods[Exp <: Expression](e: Exp) {
     def +(other: Expression) = Addition(List(e, other))

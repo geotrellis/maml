@@ -11,49 +11,49 @@ trait MamlCodecInstances extends MamlUtilityCodecs {
   implicit def totalEncoder: Encoder[Expression]
 
   implicit lazy val decodeAddition: Decoder[Addition] =
-    Decoder.forProduct1("args"){ args: List[Expression] => Addition(args) }
+    Decoder.forProduct1("args") { args: List[Expression] => Addition(args) }
   implicit lazy val encodeAddition: Encoder[Addition] =
     Encoder.forProduct2("args", "symbol")(u => (u.children, u.sym))
 
   implicit lazy val decodeSubtraction: Decoder[Subtraction] =
-    Decoder.forProduct1("args"){ args: List[Expression] => Subtraction(args) }
+    Decoder.forProduct1("args") { args: List[Expression] => Subtraction(args) }
   implicit lazy val encodeSubtraction: Encoder[Subtraction] =
     Encoder.forProduct2("args", "symbol")(u => (u.children, u.sym))
 
   implicit lazy val decodeMultiplication: Decoder[Multiplication] =
-    Decoder.forProduct1("args"){ args: List[Expression] => Multiplication(args) }
+    Decoder.forProduct1("args") { args: List[Expression] => Multiplication(args) }
   implicit lazy val encodeMultiplication: Encoder[Multiplication] =
     Encoder.forProduct2("args", "symbol")(u => (u.children, u.sym))
 
   implicit lazy val decodeDivision: Decoder[Division] =
-    Decoder.forProduct1("args"){ args: List[Expression] => Division(args) }
+    Decoder.forProduct1("args") { args: List[Expression] => Division(args) }
   implicit lazy val encodeDivision: Encoder[Division] =
     Encoder.forProduct2("args", "symbol")(u => (u.children, u.sym))
 
   implicit lazy val decodeMax: Decoder[Max] =
-    Decoder.forProduct1("args"){ args: List[Expression] => Max(args) }
+    Decoder.forProduct1("args") { args: List[Expression] => Max(args) }
   implicit lazy val encodeMax: Encoder[Max] =
     Encoder.forProduct2("args", "symbol")(u => (u.children, u.sym))
 
   implicit lazy val decodeMin: Decoder[Min] =
-    Decoder.forProduct1("args"){ args: List[Expression] => Min(args) }
+    Decoder.forProduct1("args") { args: List[Expression] => Min(args) }
   implicit lazy val encodeMin: Encoder[Min] =
     Encoder.forProduct2("args", "symbol")(u => (u.children, u.sym))
 
   implicit lazy val decodeMasking: Decoder[Masking] =
-    Decoder.forProduct1("args"){ args: List[Expression] => Masking(args) }
+    Decoder.forProduct1("args") { args: List[Expression] => Masking(args) }
   implicit lazy val encodeMasking: Encoder[Masking] =
     Encoder.forProduct2("args", "symbol")(u => (u.children, u.sym))
 
   implicit lazy val decoderSleep: Decoder[Sleep] =
-    Decoder.forProduct2("seconds", "args"){
-      (seconds: Long, args: List[Expression]) => Sleep(seconds, args)
+    Decoder.forProduct2("seconds", "args") { (seconds: Long, args: List[Expression]) =>
+      Sleep(seconds, args)
     }
   implicit lazy val encoderSleep: Encoder[Sleep] =
     Encoder.forProduct2("seconds", "args")(u => (u.seconds, u.children))
 
   implicit lazy val decodePow: Decoder[Pow] =
-    Decoder.forProduct1("args"){ args: List[Expression] => Pow(args) }
+    Decoder.forProduct1("args") { args: List[Expression] => Pow(args) }
   implicit lazy val encodePow: Encoder[Pow] =
     Encoder.forProduct2("args", "symbol")(u => (u.children, u.sym))
 
@@ -63,22 +63,22 @@ trait MamlCodecInstances extends MamlUtilityCodecs {
     Encoder.forProduct3("args", "classifications", "symbol")(u => (u.children, u.classMap, u.sym))
 
   implicit lazy val decodeFocalMax: Decoder[FocalMax] =
-    Decoder.forProduct3[FocalMax, List[Expression], Neighborhood, Option[TargetCell]]("args", "neighborhood", "target") {
-      (args, zFactor, target) => FocalMax(args, zFactor, target.getOrElse(TargetCell.All))
+    Decoder.forProduct3[FocalMax, List[Expression], Neighborhood, Option[TargetCell]]("args", "neighborhood", "target") { (args, zFactor, target) =>
+      FocalMax(args, zFactor, target.getOrElse(TargetCell.All))
     }
   implicit lazy val encodeFocalMax: Encoder[FocalMax] =
-    Encoder.forProduct4("args", "neighborhood", "target","symbol")(u => (u.children, u.neighborhood, u.target, u.sym))
+    Encoder.forProduct4("args", "neighborhood", "target", "symbol")(u => (u.children, u.neighborhood, u.target, u.sym))
 
   implicit lazy val decodeFocalMin: Decoder[FocalMin] =
-    Decoder.forProduct3[FocalMin, List[Expression], Neighborhood, Option[TargetCell]]("args", "neighborhood", "target") {
-      (args, zFactor, target) => FocalMin(args, zFactor, target.getOrElse(TargetCell.All))
+    Decoder.forProduct3[FocalMin, List[Expression], Neighborhood, Option[TargetCell]]("args", "neighborhood", "target") { (args, zFactor, target) =>
+      FocalMin(args, zFactor, target.getOrElse(TargetCell.All))
     }
   implicit lazy val encodeFocalMin: Encoder[FocalMin] =
     Encoder.forProduct4("args", "neighborhood", "target", "symbol")(u => (u.children, u.neighborhood, u.target, u.sym))
 
   implicit lazy val decodeFocalMean: Decoder[FocalMean] =
-    Decoder.forProduct3[FocalMean, List[Expression], Neighborhood, Option[TargetCell]]("args", "neighborhood", "target") {
-      (args, zFactor, target) => FocalMean(args, zFactor, target.getOrElse(TargetCell.All))
+    Decoder.forProduct3[FocalMean, List[Expression], Neighborhood, Option[TargetCell]]("args", "neighborhood", "target") { (args, zFactor, target) =>
+      FocalMean(args, zFactor, target.getOrElse(TargetCell.All))
     }
   implicit lazy val encodeFocalMean: Encoder[FocalMean] =
     Encoder.forProduct4("args", "neighborhood", "target", "symbol")(u => (u.children, u.neighborhood, u.target, u.sym))
@@ -91,15 +91,15 @@ trait MamlCodecInstances extends MamlUtilityCodecs {
     Encoder.forProduct4("args", "neighborhood", "target", "symbol")(u => (u.children, u.neighborhood, u.target, u.sym))
 
   implicit lazy val decodeFocalMode: Decoder[FocalMode] =
-    Decoder.forProduct3[FocalMode, List[Expression], Neighborhood, Option[TargetCell]]("args", "neighborhood", "target") {
-      (args, zFactor, target) => FocalMode(args, zFactor, target.getOrElse(TargetCell.All))
+    Decoder.forProduct3[FocalMode, List[Expression], Neighborhood, Option[TargetCell]]("args", "neighborhood", "target") { (args, zFactor, target) =>
+      FocalMode(args, zFactor, target.getOrElse(TargetCell.All))
     }
   implicit lazy val encodeFocalMode: Encoder[FocalMode] =
     Encoder.forProduct4("args", "neighborhood", "target", "symbol")(u => (u.children, u.neighborhood, u.target, u.sym))
 
   implicit lazy val decodeFocalSum: Decoder[FocalSum] =
-    Decoder.forProduct3[FocalSum, List[Expression], Neighborhood, Option[TargetCell]]("args", "neighborhood", "target") {
-      (args, zFactor, target) => FocalSum(args, zFactor, target.getOrElse(TargetCell.All))
+    Decoder.forProduct3[FocalSum, List[Expression], Neighborhood, Option[TargetCell]]("args", "neighborhood", "target") { (args, zFactor, target) =>
+      FocalSum(args, zFactor, target.getOrElse(TargetCell.All))
     }
   implicit lazy val encodeFocalSum: Encoder[FocalSum] =
     Encoder.forProduct4("args", "neighborhood", "target", "symbol")(u => (u.children, u.neighborhood, u.target, u.sym))
@@ -112,15 +112,20 @@ trait MamlCodecInstances extends MamlUtilityCodecs {
     Encoder.forProduct4("args", "neighborhood", "target", "symbol")(u => (u.children, u.neighborhood, u.target, u.sym))
 
   implicit lazy val decodeFocalSlope: Decoder[FocalSlope] =
-    Decoder.forProduct3[FocalSlope, List[Expression], Option[Double], Option[TargetCell]]("args", "zFactor", "target") {
-      (args, zFactor, target) => FocalSlope(args, zFactor, target.getOrElse(TargetCell.All))
+    Decoder.forProduct3[FocalSlope, List[Expression], Option[Double], Option[TargetCell]]("args", "zFactor", "target") { (args, zFactor, target) =>
+      FocalSlope(args, zFactor, target.getOrElse(TargetCell.All))
     }
   implicit lazy val encodeFocalSlope: Encoder[FocalSlope] =
     Encoder.forProduct4("args", "zFactor", "target", "symbol")(u => (u.children, u.zFactor, u.target, u.sym))
 
   implicit lazy val decodeFocalHillshade: Decoder[FocalHillshade] =
-    Decoder.forProduct5[FocalHillshade, List[Expression], Double, Double, Option[Double], Option[TargetCell]]("args", "azimuth", "altitude", "zFactor", "target") {
-      (args, azimuth, altitude, zFactor, target) => FocalHillshade(args, azimuth, altitude, zFactor, target.getOrElse(TargetCell.All))
+    Decoder.forProduct5[FocalHillshade, List[Expression], Double, Double, Option[Double], Option[TargetCell]]("args",
+                                                                                                              "azimuth",
+                                                                                                              "altitude",
+                                                                                                              "zFactor",
+                                                                                                              "target"
+    ) { (args, azimuth, altitude, zFactor, target) =>
+      FocalHillshade(args, azimuth, altitude, zFactor, target.getOrElse(TargetCell.All))
     }
   implicit lazy val encodeFocalHillshade: Encoder[FocalHillshade] =
     Encoder.forProduct6("args", "azimuth", "altitude", "zFactor", "target", "symbol")(u =>
@@ -128,116 +133,114 @@ trait MamlCodecInstances extends MamlUtilityCodecs {
     )
 
   implicit lazy val decodeFocalAspect: Decoder[FocalAspect] =
-    Decoder.forProduct2[FocalAspect, List[Expression], Option[TargetCell]]("args", "target") {
-      (args, target) => FocalAspect(args, target.getOrElse(TargetCell.All))
+    Decoder.forProduct2[FocalAspect, List[Expression], Option[TargetCell]]("args", "target") { (args, target) =>
+      FocalAspect(args, target.getOrElse(TargetCell.All))
     }
   implicit lazy val encodeFocalAspect: Encoder[FocalAspect] =
-    Encoder.forProduct3("args", "target", "symbol")(u =>
-      (u.children, u.target, u.sym)
-    )
+    Encoder.forProduct3("args", "target", "symbol")(u => (u.children, u.target, u.sym))
 
   implicit lazy val decodeGreater: Decoder[Greater] =
-    Decoder.forProduct1("args"){ args: List[Expression] => Greater(args) }
+    Decoder.forProduct1("args") { args: List[Expression] => Greater(args) }
   implicit lazy val encodeGreater: Encoder[Greater] =
     Encoder.forProduct2("args", "symbol")(u => (u.children, u.sym))
 
   implicit lazy val decodeGreaterOrEqual: Decoder[GreaterOrEqual] =
-    Decoder.forProduct1("args"){ args: List[Expression] => GreaterOrEqual(args) }
+    Decoder.forProduct1("args") { args: List[Expression] => GreaterOrEqual(args) }
   implicit lazy val encodeGreaterOrEqual: Encoder[GreaterOrEqual] =
     Encoder.forProduct2("args", "symbol")(u => (u.children, u.sym))
 
   implicit lazy val decodeLesserOrEqual: Decoder[LesserOrEqual] =
-    Decoder.forProduct1("args"){ args: List[Expression] => LesserOrEqual(args) }
+    Decoder.forProduct1("args") { args: List[Expression] => LesserOrEqual(args) }
   implicit lazy val encodeLesserOrEqual: Encoder[LesserOrEqual] =
     Encoder.forProduct2("args", "symbol")(u => (u.children, u.sym))
 
   implicit lazy val decodeLesser: Decoder[Lesser] =
-    Decoder.forProduct1("args"){ args: List[Expression] => Lesser(args) }
+    Decoder.forProduct1("args") { args: List[Expression] => Lesser(args) }
   implicit lazy val encodeLesser: Encoder[Lesser] =
     Encoder.forProduct2("args", "symbol")(u => (u.children, u.sym))
 
   implicit lazy val decodeUnequal: Decoder[Unequal] =
-    Decoder.forProduct1("args"){ args: List[Expression] => Unequal(args) }
+    Decoder.forProduct1("args") { args: List[Expression] => Unequal(args) }
   implicit lazy val encodeUnequal: Encoder[Unequal] =
     Encoder.forProduct2("args", "symbol")(u => (u.children, u.sym))
 
   implicit lazy val decodeEqual: Decoder[Equal] =
-    Decoder.forProduct1("args"){ args: List[Expression] => Equal(args) }
+    Decoder.forProduct1("args") { args: List[Expression] => Equal(args) }
   implicit lazy val encodeEqual: Encoder[Equal] =
     Encoder.forProduct2("args", "symbol")(u => (u.children, u.sym))
 
   implicit lazy val decodeOr: Decoder[Or] =
-    Decoder.forProduct1("args"){ args: List[Expression] => Or(args) }
+    Decoder.forProduct1("args") { args: List[Expression] => Or(args) }
   implicit lazy val encodeOr: Encoder[Or] =
     Encoder.forProduct2("args", "symbol")(u => (u.children, u.sym))
 
   implicit lazy val decodeXor: Decoder[Xor] =
-    Decoder.forProduct1("args"){ args: List[Expression] => Xor(args) }
+    Decoder.forProduct1("args") { args: List[Expression] => Xor(args) }
   implicit lazy val encodeXor: Encoder[Xor] =
     Encoder.forProduct2("args", "symbol")(u => (u.children, u.sym))
 
   implicit lazy val decodeAnd: Decoder[And] =
-    Decoder.forProduct1("args"){ args: List[Expression] => And(args) }
+    Decoder.forProduct1("args") { args: List[Expression] => And(args) }
   implicit lazy val encodeAnd: Encoder[And] =
     Encoder.forProduct2("args", "symbol")(u => (u.children, u.sym))
 
   implicit lazy val decodeAtan2: Decoder[Atan2] =
-    Decoder.forProduct1("args"){ args: List[Expression] => Atan2(args) }
+    Decoder.forProduct1("args") { args: List[Expression] => Atan2(args) }
   implicit lazy val encodeAtan2: Encoder[Atan2] =
     Encoder.forProduct2("args", "symbol")(u => (u.children, u.sym))
 
   implicit lazy val decodeBranch: Decoder[Branch] =
-    Decoder.forProduct1("args"){ args: List[Expression] => Branch(args) }
+    Decoder.forProduct1("args") { args: List[Expression] => Branch(args) }
   implicit lazy val encodeBranch: Encoder[Branch] =
     Encoder.forProduct2("args", "symbol")(u => (u.children, u.sym))
 
   implicit lazy val decodeSin: Decoder[Sin] =
-    Decoder.forProduct1("args"){ args: List[Expression] => Sin(args) }
+    Decoder.forProduct1("args") { args: List[Expression] => Sin(args) }
   implicit lazy val encodeSin: Encoder[Sin] =
     Encoder.forProduct2("args", "symbol")(u => (u.children, u.sym))
 
   implicit lazy val decodeCos: Decoder[Cos] =
-    Decoder.forProduct1("args"){ args: List[Expression] => Cos(args) }
+    Decoder.forProduct1("args") { args: List[Expression] => Cos(args) }
   implicit lazy val encodeCos: Encoder[Cos] =
     Encoder.forProduct2("args", "symbol")(u => (u.children, u.sym))
 
   implicit lazy val decodeTan: Decoder[Tan] =
-    Decoder.forProduct1("args"){ args: List[Expression] => Tan(args) }
+    Decoder.forProduct1("args") { args: List[Expression] => Tan(args) }
   implicit lazy val encodeTan: Encoder[Tan] =
     Encoder.forProduct2("args", "symbol")(u => (u.children, u.sym))
 
   implicit lazy val decodeSinh: Decoder[Sinh] =
-    Decoder.forProduct1("args"){ args: List[Expression] => Sinh(args) }
+    Decoder.forProduct1("args") { args: List[Expression] => Sinh(args) }
   implicit lazy val encodeSinh: Encoder[Sinh] =
     Encoder.forProduct2("args", "symbol")(u => (u.children, u.sym))
 
   implicit lazy val decodeCosh: Decoder[Cosh] =
-    Decoder.forProduct1("args"){ args: List[Expression] => Cosh(args) }
+    Decoder.forProduct1("args") { args: List[Expression] => Cosh(args) }
   implicit lazy val encodeCosh: Encoder[Cosh] =
     Encoder.forProduct2("args", "symbol")(u => (u.children, u.sym))
 
   implicit lazy val decodeTanh: Decoder[Tanh] =
-    Decoder.forProduct1("args"){ args: List[Expression] => Tanh(args) }
+    Decoder.forProduct1("args") { args: List[Expression] => Tanh(args) }
   implicit lazy val encodeTanh: Encoder[Tanh] =
     Encoder.forProduct2("args", "symbol")(u => (u.children, u.sym))
 
   implicit lazy val decodeAsin: Decoder[Asin] =
-    Decoder.forProduct1("args"){ args: List[Expression] => Asin(args) }
+    Decoder.forProduct1("args") { args: List[Expression] => Asin(args) }
   implicit lazy val encodeAsin: Encoder[Asin] =
     Encoder.forProduct2("args", "symbol")(u => (u.children, u.sym))
 
   implicit lazy val decodeAcos: Decoder[Acos] =
-    Decoder.forProduct1("args"){ args: List[Expression] => Acos(args) }
+    Decoder.forProduct1("args") { args: List[Expression] => Acos(args) }
   implicit lazy val encodeAcos: Encoder[Acos] =
     Encoder.forProduct2("args", "symbol")(u => (u.children, u.sym))
 
   implicit lazy val decodeAtan: Decoder[Atan] =
-    Decoder.forProduct1("args"){ args: List[Expression] => Atan(args) }
+    Decoder.forProduct1("args") { args: List[Expression] => Atan(args) }
   implicit lazy val encodeAtan: Encoder[Atan] =
     Encoder.forProduct2("args", "symbol")(u => (u.children, u.sym))
 
   implicit lazy val decodeRound: Decoder[Round] =
-    Decoder.forProduct1("args"){ args: List[Expression] => Round(args) }
+    Decoder.forProduct1("args") { args: List[Expression] => Round(args) }
   implicit lazy val encodeRound: Encoder[Round] =
     Encoder.forProduct2("args", "symbol")(u => (u.children, u.sym))
 
@@ -349,8 +352,8 @@ trait MamlCodecInstances extends MamlUtilityCodecs {
     Encoder.forProduct5("args", "redBand", "greenBand", "blueBand", "symbol")(u => (u.children, u.redBand, u.greenBand, u.blueBand, u.sym))
 
   implicit lazy val decodeAssemble: Decoder[Assemble] =
-    Decoder.forProduct1[Assemble, List[Expression]]("args") {
-      (args) => Assemble(args)
+    Decoder.forProduct1[Assemble, List[Expression]]("args") { args =>
+      Assemble(args)
     }
   implicit lazy val encodeAssemble: Encoder[Assemble] =
     Encoder.forProduct2("args", "symbol")(u => (u.children, u.sym))
@@ -363,7 +366,9 @@ trait MamlCodecInstances extends MamlUtilityCodecs {
   implicit lazy val decodeNormalize: Decoder[Normalize] =
     Decoder.forProduct6("args", "oldMin", "oldMax", "newMin", "newMax", "band")(Normalize.apply)
   implicit lazy val encodeNormalize: Encoder[Normalize] =
-    Encoder.forProduct7("args", "oldMin", "oldMax", "newMin", "newMax", "band", "symbol")(u => (u.children, u.oldMin, u.oldMax, u.newMin, u.newMax, u.band, u.sym))
+    Encoder.forProduct7("args", "oldMin", "oldMax", "newMin", "newMax", "band", "symbol")(u =>
+      (u.children, u.oldMin, u.oldMax, u.newMin, u.newMax, u.band, u.sym)
+    )
 
   implicit lazy val decodeClamp: Decoder[Clamp] =
     Decoder.forProduct4("args", "min", "max", "band")(Clamp.apply)

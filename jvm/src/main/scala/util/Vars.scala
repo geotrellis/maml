@@ -9,7 +9,6 @@ import cats.implicits._
 
 import java.security.InvalidParameterException
 
-
 object Vars {
   def vars(expr: Expression): Map[String, MamlKind] =
     varsWithBuffer(expr).map { case (name, (kind, _)) => name -> kind }
@@ -28,9 +27,8 @@ object Vars {
     // max by the buffer to ensure that we have enough data for all operations
     eval(expr, 0)
       .groupBy(_._1)
-      .mapValues({ values => values.maxBy(_._3) })
-      .map({ case (name, (_, kind, buffer)) => name -> (kind, buffer) })
+      .mapValues { values => values.maxBy(_._3) }
+      .map { case (name, (_, kind, buffer)) => name -> (kind, buffer) }
       .toMap
   }
 }
-

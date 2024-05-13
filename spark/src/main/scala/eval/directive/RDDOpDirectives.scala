@@ -21,7 +21,6 @@ import geotrellis.vector._
 
 import org.apache.spark.rdd._
 
-
 object RDDOpDirectives {
   private def doubleResults(grouped: Map[MamlKind, Seq[Result]]): Interpreted[List[Double]] =
     grouped.getOrElse(MamlKind.Double, List.empty).map(_.as[Double]).toList.sequence
@@ -32,11 +31,15 @@ object RDDOpDirectives {
   private def spatialRDDResults(grouped: Map[MamlKind, Seq[Result]]): Interpreted[List[TileLayerRDD[SpatialKey]]] =
     grouped(MamlKind.Image).map(_.as[TileLayerRDD[SpatialKey]]).toList.sequence
 
-  /** Some sugar to wrap a common pattern. */
-  def unary(f: RDD[(SpatialKey,Tile)] => RDD[(SpatialKey,Tile)], r: TileLayerRDD[SpatialKey]): Interpreted[Result] =
+  /**
+   * Some sugar to wrap a common pattern.
+   */
+  def unary(f: RDD[(SpatialKey, Tile)] => RDD[(SpatialKey, Tile)], r: TileLayerRDD[SpatialKey]): Interpreted[Result] =
     Valid(RDDResult(r.withContext(f(_))))
 
-  /** Perform a binary operation on RDDs, while preserving any metadata they had. */
+  /**
+   * Perform a binary operation on RDDs, while preserving any metadata they had.
+   */
   private def binary(
     fn: (RDD[(SpatialKey, Tile)], RDD[(SpatialKey, Tile)]) => RDD[(SpatialKey, Tile)],
     rdd1: TileLayerRDD[SpatialKey],
@@ -45,9 +48,9 @@ object RDDOpDirectives {
     TileLayerRDD(fn(rdd1, rdd2), rdd1.metadata.combine(rdd2.metadata))
   }
 
-  /** No, `ri` and `ir` are not the same thing, since order is significant for
-    * subtraction and division.
-    */
+  /**
+   * No, `ri` and `ir` are not the same thing, since order is significant for subtraction and division.
+   */
   private def reduce(
     ri: (RDD[(SpatialKey, Tile)], Int) => RDD[(SpatialKey, Tile)],
     ir: (Int, RDD[(SpatialKey, Tile)]) => RDD[(SpatialKey, Tile)],
@@ -57,54 +60,56 @@ object RDDOpDirectives {
     res1: Result,
     res2: Result
   ): Result = (res1, res2) match {
-    case (RDDResult(r1), RDDResult(r2)) => RDDResult(binary(rr, r1, r2))
-    case (RDDResult(rdd), IntResult(int)) => RDDResult(rdd.withContext(ri(_, int)))
-    case (IntResult(int), RDDResult(rdd)) => RDDResult(rdd.withContext(ir(int, _)))
+    case (RDDResult(r1), RDDResult(r2))         => RDDResult(binary(rr, r1, r2))
+    case (RDDResult(rdd), IntResult(int))       => RDDResult(rdd.withContext(ri(_, int)))
+    case (IntResult(int), RDDResult(rdd))       => RDDResult(rdd.withContext(ir(int, _)))
     case (RDDResult(rdd), DoubleResult(double)) => RDDResult(rdd.withContext(rd(_, double)))
     case (DoubleResult(double), RDDResult(rdd)) => RDDResult(rdd.withContext(dr(double, _)))
   }
 
-  /** Sugar for a common pattern with the unary math operations. */
+  /**
+   * Sugar for a common pattern with the unary math operations.
+   */
   private def mathy(
     fr: RDD[(SpatialKey, Tile)] => RDD[(SpatialKey, Tile)],
     fi: Int => Result,
     fd: Double => Result,
     res: Result
   ): Interpreted[Result] = res match {
-    case RDDResult(r) => unary(fr, r)
-    case IntResult(i) => Valid(fi(i))
+    case RDDResult(r)    => unary(fr, r)
+    case IntResult(i)    => Valid(fi(i))
     case DoubleResult(d) => Valid(fd(d))
   }
 
   /* --- FOLDABLE EXPRESSIONS --- */
 
-  val addition = Directive { case (a@Addition(_), childResults) =>
+  val addition = Directive { case (a @ Addition(_), childResults) =>
     val results: Result = childResults.reduce { (res1, res2) =>
-      reduce({_ + _}, {_ +: _}, {_ + _}, {_ +: _}, {_ + _}, res1, res2)
+      reduce({ _ + _ }, { _ +: _ }, { _ + _ }, { _ +: _ }, { _ + _ }, res1, res2)
     }
 
     Valid(results)
   }
 
-  val subtraction = Directive { case (a@Subtraction(_), childResults) =>
+  val subtraction = Directive { case (a @ Subtraction(_), childResults) =>
     val results: Result = childResults.reduce { (res1, res2) =>
-      reduce({_ - _}, {_ -: _}, {_ - _}, {_ -: _}, {_ - _}, res1, res2)
+      reduce({ _ - _ }, { _ -: _ }, { _ - _ }, { _ -: _ }, { _ - _ }, res1, res2)
     }
 
     Valid(results)
   }
 
-  val multiplication = Directive { case (a@Multiplication(_), childResults) =>
+  val multiplication = Directive { case (a @ Multiplication(_), childResults) =>
     val results: Result = childResults.reduce { (res1, res2) =>
-      reduce({_ * _}, {_ *: _}, {_ * _}, {_ *: _}, {_ * _}, res1, res2)
+      reduce({ _ * _ }, { _ *: _ }, { _ * _ }, { _ *: _ }, { _ * _ }, res1, res2)
     }
 
     Valid(results)
   }
 
-  val division = Directive { case (a@Division(_), childResults) =>
+  val division = Directive { case (a @ Division(_), childResults) =>
     val results: Result = childResults.reduce { (res1, res2) =>
-      reduce({_ / _}, {_ /: _}, {_ / _}, {_ /: _}, {_ / _}, res1, res2)
+      reduce({ _ / _ }, { _ /: _ }, { _ / _ }, { _ /: _ }, { _ / _ }, res1, res2)
     }
 
     Valid(results)
@@ -112,7 +117,7 @@ object RDDOpDirectives {
 
   val max = Directive { case (Max(_), childResults) =>
     val results: Result = childResults.reduce { (res1, res2) =>
-      reduce({_.localMax(_)}, {(i,r) => r.localMax(i)}, {_.localMax(_)}, {(d,r) => r.localMax(d)}, {_.localMax(_)}, res1, res2)
+      reduce({ _.localMax(_) }, { (i, r) => r.localMax(i) }, { _.localMax(_) }, { (d, r) => r.localMax(d) }, { _.localMax(_) }, res1, res2)
     }
 
     Valid(results)
@@ -120,7 +125,7 @@ object RDDOpDirectives {
 
   val min = Directive { case (Min(_), childResults) =>
     val results: Result = childResults.reduce { (res1, res2) =>
-      reduce({_.localMin(_)}, {(i,r) => r.localMin(i)}, {_.localMin(_)}, {(d,r) => r.localMin(d)}, {_.localMin(_)}, res1, res2)
+      reduce({ _.localMin(_) }, { (i, r) => r.localMin(i) }, { _.localMin(_) }, { (d, r) => r.localMin(d) }, { _.localMin(_) }, res1, res2)
     }
 
     Valid(results)
@@ -128,7 +133,7 @@ object RDDOpDirectives {
 
   val or = Directive { case (Or(_), childResults) =>
     val results: Result = childResults.reduce { (res1, res2) =>
-      reduce({_ | _}, {_ |: _}, {_ | d2i(_)}, {d2i(_) |: _}, {_ | _}, res1, res2)
+      reduce({ _ | _ }, { _ |: _ }, { _ | d2i(_) }, { d2i(_) |: _ }, { _ | _ }, res1, res2)
     }
 
     Valid(results)
@@ -136,7 +141,7 @@ object RDDOpDirectives {
 
   val and = Directive { case (And(_), childResults) =>
     val results: Result = childResults.reduce { (res1, res2) =>
-      reduce({_ & _}, {_ &: _}, {_ & d2i(_)}, {d2i(_) &: _}, {_ localAnd _}, res1, res2)
+      reduce({ _ & _ }, { _ &: _ }, { _ & d2i(_) }, { d2i(_) &: _ }, { _ localAnd _ }, res1, res2)
     }
 
     Valid(results)
@@ -148,7 +153,7 @@ object RDDOpDirectives {
     }
 
     val results: Result = childResults.reduce { (res1, res2) =>
-      reduce({_ ^ _}, {_ ^: _}, {_ ^ d2i(_)}, {d2i(_) ^: _}, rr, res1, res2)
+      reduce({ _ ^ _ }, { _ ^: _ }, { _ ^ d2i(_) }, { d2i(_) ^: _ }, rr, res1, res2)
     }
 
     Valid(results)
@@ -158,43 +163,44 @@ object RDDOpDirectives {
 
   val equalTo = Directive { case (Equal(_), res1 :: res2 :: Nil) =>
     val results: Result =
-      reduce(
-        {_.localEqual(_)}, {(i,r) => r.localEqual(i)},
-        {_.localEqual(_)}, {(d,r) => r.localEqual(d)},
-        {_.localEqual(_)}, res1, res2)
+      reduce({ _.localEqual(_) }, { (i, r) => r.localEqual(i) }, { _.localEqual(_) }, { (d, r) => r.localEqual(d) }, { _.localEqual(_) }, res1, res2)
 
     Valid(results)
   }
 
   val unequalTo = Directive { case (Unequal(_), res1 :: res2 :: Nil) =>
     val results: Result =
-      reduce(
-        {_.localUnequal(_)}, {(i,r) => r.localUnequal(i)},
-        {_.localUnequal(_)}, {(d,r) => r.localUnequal(d)},
-        {_.localUnequal(_)}, res1, res2)
+      reduce({ _.localUnequal(_) },
+             { (i, r) => r.localUnequal(i) },
+             { _.localUnequal(_) },
+             { (d, r) => r.localUnequal(d) },
+             { _.localUnequal(_) },
+             res1,
+             res2
+      )
 
     Valid(results)
   }
 
   val lessThan = Directive { case (Lesser(_), res1 :: res2 :: Nil) =>
-    Valid(reduce({_ < _}, {_ <<: _}, {_ < _}, {_ <<: _}, {_ < _}, res1, res2))
+    Valid(reduce({ _ < _ }, { _ <<: _ }, { _ < _ }, { _ <<: _ }, { _ < _ }, res1, res2))
   }
 
   val lessThanOrEqualTo = Directive { case (LesserOrEqual(_), res1 :: res2 :: Nil) =>
-    Valid(reduce({_ <= _}, {_ <=: _}, {_ <= _}, {_ <=: _}, {_ <= _}, res1, res2))
+    Valid(reduce({ _ <= _ }, { _ <=: _ }, { _ <= _ }, { _ <=: _ }, { _ <= _ }, res1, res2))
   }
 
   val greaterThan = Directive { case (Greater(_), res1 :: res2 :: Nil) =>
-    Valid(reduce({_ > _}, {_ >>: _}, {_ > _}, {_ >>: _}, {_ > _}, res1, res2))
+    Valid(reduce({ _ > _ }, { _ >>: _ }, { _ > _ }, { _ >>: _ }, { _ > _ }, res1, res2))
   }
 
   val greaterThanOrEqualTo = Directive { case (GreaterOrEqual(_), res1 :: res2 :: Nil) =>
-    Valid(reduce({_ >= _}, {_ >=: _}, {_ >= _}, {_ >=: _}, {_ >= _}, res1, res2))
+    Valid(reduce({ _ >= _ }, { _ >=: _ }, { _ >= _ }, { _ >=: _ }, { _ >= _ }, res1, res2))
   }
 
   val masking = Directive {
-    case (Masking(_), RDDResult(r) :: GeomResult(g: Polygon) :: Nil) => Valid(RDDResult(r.mask(g)))
-    case (Masking(_), GeomResult(g: Polygon) :: RDDResult(r) :: Nil) => Valid(RDDResult(r.mask(g)))
+    case (Masking(_), RDDResult(r) :: GeomResult(g: Polygon) :: Nil)      => Valid(RDDResult(r.mask(g)))
+    case (Masking(_), GeomResult(g: Polygon) :: RDDResult(r) :: Nil)      => Valid(RDDResult(r.mask(g)))
     case (Masking(_), RDDResult(r) :: GeomResult(g: MultiPolygon) :: Nil) => Valid(RDDResult(r.mask(g)))
     case (Masking(_), GeomResult(g: MultiPolygon) :: RDDResult(r) :: Nil) => Valid(RDDResult(r.mask(g)))
   }
@@ -210,9 +216,9 @@ object RDDOpDirectives {
 
     val results: Result = childResults match {
       case (RDDResult(r1) :: RDDResult(r2) :: Nil) =>
-        RDDResult(binary({ (a,b) => a.combineValues(b) { (t1,t2) => t1.combineDouble(t2)(math.atan2) }}, r1, r2))
-      case (RDDResult(r) :: IntResult(i) :: Nil) => RDDResult(ri(r, i))
-      case (IntResult(i) :: RDDResult(r) :: Nil) => RDDResult(ri(r, i))
+        RDDResult(binary({ (a, b) => a.combineValues(b) { (t1, t2) => t1.combineDouble(t2)(math.atan2) } }, r1, r2))
+      case (RDDResult(r) :: IntResult(i) :: Nil)    => RDDResult(ri(r, i))
+      case (IntResult(i) :: RDDResult(r) :: Nil)    => RDDResult(ri(r, i))
       case (RDDResult(r) :: DoubleResult(d) :: Nil) => RDDResult(rd(r, d))
       case (DoubleResult(d) :: RDDResult(r) :: Nil) => RDDResult(rd(r, d))
     }
@@ -221,11 +227,11 @@ object RDDOpDirectives {
   }
 
   val pow = Directive { case (Pow(_), res1 :: res2 :: Nil) =>
-    val f: (RDD[(SpatialKey, Tile)], RDD[(SpatialKey, Tile)]) => RDD[(SpatialKey, Tile)] = { (a,b) =>
-      a.combineValues(b) { (t1,t2) => t1.combineDouble(t2)(math.pow) }
+    val f: (RDD[(SpatialKey, Tile)], RDD[(SpatialKey, Tile)]) => RDD[(SpatialKey, Tile)] = { (a, b) =>
+      a.combineValues(b) { (t1, t2) => t1.combineDouble(t2)(math.pow) }
     }
 
-    Valid(reduce({_ localPow _}, { (i,r) => r.localPow(i) }, { _ localPow _ }, { (d,r) => r.localPow(d) }, f, res1, res2))
+    Valid(reduce({ _ localPow _ }, { (i, r) => r.localPow(i) }, { _ localPow _ }, { (d, r) => r.localPow(d) }, f, res1, res2))
   }
 
   /* --- UNARY EXPRESSIONS --- */
@@ -235,33 +241,33 @@ object RDDOpDirectives {
   }
 
   val sin = Directive { case (Sin(_), res :: Nil) =>
-    mathy({_.localMapDouble(math.sin(_))}, { i => DoubleResult(math.sin(i.toDouble)) }, { d => DoubleResult(math.sin(d)) }, res)
+    mathy({ _.localMapDouble(math.sin(_)) }, { i => DoubleResult(math.sin(i.toDouble)) }, { d => DoubleResult(math.sin(d)) }, res)
   }
   val cos = Directive { case (Cos(_), res :: Nil) =>
-    mathy({_.localMapDouble(math.cos(_))}, { i => DoubleResult(math.cos(i.toDouble)) }, { d => DoubleResult(math.cos(d)) }, res)
+    mathy({ _.localMapDouble(math.cos(_)) }, { i => DoubleResult(math.cos(i.toDouble)) }, { d => DoubleResult(math.cos(d)) }, res)
   }
   val tan = Directive { case (Tan(_), res :: Nil) =>
-    mathy({_.localMapDouble(math.tan(_))}, { i => DoubleResult(math.tan(i.toDouble)) }, { d => DoubleResult(math.tan(d)) }, res)
+    mathy({ _.localMapDouble(math.tan(_)) }, { i => DoubleResult(math.tan(i.toDouble)) }, { d => DoubleResult(math.tan(d)) }, res)
   }
 
   val sinh = Directive { case (Sinh(_), res :: Nil) =>
-    mathy({_.localMapDouble(math.sinh(_))}, { i => DoubleResult(math.sinh(i.toDouble)) }, { d => DoubleResult(math.sinh(d)) }, res)
+    mathy({ _.localMapDouble(math.sinh(_)) }, { i => DoubleResult(math.sinh(i.toDouble)) }, { d => DoubleResult(math.sinh(d)) }, res)
   }
   val cosh = Directive { case (Cosh(_), res :: Nil) =>
-    mathy({_.localMapDouble(math.cosh(_))}, { i => DoubleResult(math.cosh(i.toDouble)) }, { d => DoubleResult(math.cosh(d)) }, res)
+    mathy({ _.localMapDouble(math.cosh(_)) }, { i => DoubleResult(math.cosh(i.toDouble)) }, { d => DoubleResult(math.cosh(d)) }, res)
   }
   val tanh = Directive { case (Tanh(_), res :: Nil) =>
-    mathy({_.localMapDouble(math.tanh(_))}, { i => DoubleResult(math.tanh(i.toDouble)) }, { d => DoubleResult(math.tanh(d)) }, res)
+    mathy({ _.localMapDouble(math.tanh(_)) }, { i => DoubleResult(math.tanh(i.toDouble)) }, { d => DoubleResult(math.tanh(d)) }, res)
   }
 
   val asin = Directive { case (Asin(_), res :: Nil) =>
-    mathy({_.localMapDouble(math.asin(_))}, { i => DoubleResult(math.asin(i.toDouble)) }, { d => DoubleResult(math.asin(d)) }, res)
+    mathy({ _.localMapDouble(math.asin(_)) }, { i => DoubleResult(math.asin(i.toDouble)) }, { d => DoubleResult(math.asin(d)) }, res)
   }
   val acos = Directive { case (Acos(_), res :: Nil) =>
-    mathy({_.localMapDouble(math.acos(_))}, { i => DoubleResult(math.acos(i.toDouble)) }, { d => DoubleResult(math.acos(d)) }, res)
+    mathy({ _.localMapDouble(math.acos(_)) }, { i => DoubleResult(math.acos(i.toDouble)) }, { d => DoubleResult(math.acos(d)) }, res)
   }
   val atan = Directive { case (Atan(_), res :: Nil) =>
-    mathy({_.localMapDouble(math.atan(_))}, { i => DoubleResult(math.atan(i.toDouble)) }, { d => DoubleResult(math.atan(d)) }, res)
+    mathy({ _.localMapDouble(math.atan(_)) }, { i => DoubleResult(math.atan(i.toDouble)) }, { d => DoubleResult(math.atan(d)) }, res)
   }
 
   val floor = Directive { case (Floor(_), res :: Nil) =>
@@ -271,7 +277,7 @@ object RDDOpDirectives {
     mathy({ _.localCeil }, { IntResult(_) }, { d => IntResult(math.ceil(d).toInt) }, res)
   }
 
-  val loge  = Directive { case (LogE(_),  res :: Nil) =>
+  val loge = Directive { case (LogE(_), res :: Nil) =>
     mathy({ _.localLog }, { i => DoubleResult(math.log(i)) }, { d => DoubleResult(math.log(d)) }, res)
   }
   val log10 = Directive { case (Log10(_), res :: Nil) =>

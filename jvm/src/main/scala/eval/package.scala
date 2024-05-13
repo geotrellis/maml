@@ -12,7 +12,6 @@ import cats.data._
 import cats.data.Validated._
 import cats.implicits._
 
-
 package object eval {
   type Directive = PartialFunction[(Expression, Seq[Result]), Interpreted[Result]]
   type ScopedDirective[Scope] = PartialFunction[(Expression, Seq[Result], Scope), Interpreted[Result]]

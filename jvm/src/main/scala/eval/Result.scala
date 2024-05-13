@@ -13,7 +13,6 @@ import Validated._
 
 import scala.reflect.ClassTag
 
-
 trait Result {
   def as[T](implicit ct: ClassTag[T]): Interpreted[T]
   def kind: MamlKind
@@ -22,9 +21,9 @@ trait Result {
 case class DoubleResult(res: Double) extends Result {
   def as[T](implicit ct: ClassTag[T]): Interpreted[T] = {
     val cls = ct.runtimeClass
-    if (classOf[Int] isAssignableFrom cls)
+    if (classOf[Int].isAssignableFrom(cls))
       Valid(res.toInt.asInstanceOf[T])
-    else if (classOf[Double] isAssignableFrom cls)
+    else if (classOf[Double].isAssignableFrom(cls))
       Valid(res.asInstanceOf[T])
     else
       Invalid(NEL.of(DivergingTypes(cls.getName, List("int", "double"))))
@@ -35,9 +34,9 @@ case class DoubleResult(res: Double) extends Result {
 case class IntResult(res: Int) extends Result {
   def as[T](implicit ct: ClassTag[T]): Interpreted[T] = {
     val cls = ct.runtimeClass
-    if (classOf[Int] isAssignableFrom cls)
+    if (classOf[Int].isAssignableFrom(cls))
       Valid(res.toInt.asInstanceOf[T])
-    else if (classOf[Double] isAssignableFrom cls)
+    else if (classOf[Double].isAssignableFrom(cls))
       Valid(res.toDouble.asInstanceOf[T])
     else
       Invalid(NEL.of(DivergingTypes(cls.getName, List("int", "double"))))
@@ -48,7 +47,7 @@ case class IntResult(res: Int) extends Result {
 case class GeomResult(res: Geometry) extends Result {
   def as[T](implicit ct: ClassTag[T]): Interpreted[T] = {
     val cls = ct.runtimeClass
-    if (classOf[Geometry] isAssignableFrom cls)
+    if (classOf[Geometry].isAssignableFrom(cls))
       Valid(res.asInstanceOf[T])
     else
       Invalid(NEL.of(DivergingTypes(cls.getName, List("geom"))))
@@ -59,11 +58,11 @@ case class GeomResult(res: Geometry) extends Result {
 case class ImageResult(res: LazyMultibandRaster) extends Result {
   def as[T](implicit ct: ClassTag[T]): Interpreted[T] = {
     val cls = ct.runtimeClass
-    if (classOf[LazyMultibandRaster] isAssignableFrom cls)
+    if (classOf[LazyMultibandRaster].isAssignableFrom(cls))
       Valid(res.asInstanceOf[T])
-    else if (classOf[ProjectedRaster[MultibandTile]] isAssignableFrom cls)
+    else if (classOf[ProjectedRaster[MultibandTile]].isAssignableFrom(cls))
       Valid(res.evaluateDouble.asInstanceOf[T])
-    else if (classOf[MultibandTile] isAssignableFrom cls)
+    else if (classOf[MultibandTile].isAssignableFrom(cls))
       Valid(res.evaluateDouble.raster.tile.asInstanceOf[T])
     else
       Invalid(NEL.of(DivergingTypes(cls.getName, List("img"))))
@@ -74,11 +73,10 @@ case class ImageResult(res: LazyMultibandRaster) extends Result {
 case class BoolResult(res: Boolean) extends Result {
   def as[T](implicit ct: ClassTag[T]): Interpreted[T] = {
     val cls = ct.runtimeClass
-    if (classOf[Boolean] isAssignableFrom cls)
+    if (classOf[Boolean].isAssignableFrom(cls))
       Valid(res.asInstanceOf[T])
     else
       Invalid(NEL.of(DivergingTypes(cls.getName, List("bool"))))
   }
   def kind: MamlKind = MamlKind.Bool
 }
-

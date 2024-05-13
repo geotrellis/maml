@@ -16,7 +16,7 @@ import geotrellis.layer._
 import cats.data.{NonEmptyList => NEL, _}
 import Validated._
 
-import scala.util.{Try, Success, Failure}
+import scala.util.{Failure, Success, Try}
 
 object SourceDirectives {
   val intLiteral = Directive { case (IntLit(int), _) => Valid(IntResult(int)) }
@@ -32,7 +32,7 @@ object SourceDirectives {
     case (RasterLit(r), _) if r.isInstanceOf[LazyMultibandRaster] =>
       val mbRaster = r.asInstanceOf[LazyMultibandRaster]
       Valid(ImageResult(mbRaster))
-    case (rl@RasterLit(r), _) =>
+    case (rl @ RasterLit(r), _) =>
       Invalid(NEL.of(NonEvaluableNode(rl, Some("Unable to treat raster literal contents as type Raster"))))
   }
 
@@ -41,7 +41,7 @@ object SourceDirectives {
       case Success(geom) => Valid(GeomResult(geom))
       case Failure(e) =>
         parse(jsonString) match {
-          case Right(json) => Invalid(NEL.of(ASTDecodeError(json, "provided JSON is not valid GeoJson")))
+          case Right(json)          => Invalid(NEL.of(ASTDecodeError(json, "provided JSON is not valid GeoJson")))
           case Left(parsingFailure) => Invalid(NEL.of(ASTParseError(jsonString, parsingFailure.message)))
         }
     }

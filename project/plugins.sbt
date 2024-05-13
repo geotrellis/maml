@@ -1,21 +1,10 @@
-addSbtPlugin("com.timushev.sbt" % "sbt-updates" % "0.4.0")
+addDependencyTreePlugin
 
-addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "0.14.9")
+addSbtPlugin("com.github.sbt" % "sbt-ci-release" % "1.5.12")
+addSbtPlugin("com.timushev.sbt" % "sbt-updates" % "0.6.4")
+addSbtPlugin("com.47deg" % "sbt-microsites" % "1.4.4")
+addSbtPlugin("org.scala-js" % "sbt-scalajs" % "1.16.0")
+addSbtPlugin("org.portable-scala" % "sbt-scalajs-crossproject" % "1.3.2")
+addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.5.2")
 
-addSbtPlugin("net.virtual-void" % "sbt-dependency-graph" % "0.9.2")
-
-addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.27")
-
-addSbtPlugin("io.spray" % "sbt-revolver" % "0.9.1")
-
-addSbtPlugin("com.typesafe.sbt" % "sbt-native-packager" % "1.3.19")
-
-addSbtPlugin("com.47deg"  % "sbt-microsites" % "0.9.0")
-
-addSbtPlugin("com.scalapenos" % "sbt-prompt" % "1.0.2")
-
-addSbtPlugin("org.xerial.sbt" % "sbt-sonatype" % "2.5")
-
-addSbtPlugin("io.crashbox" % "sbt-gpg" % "0.2.0")
-
-addSbtPlugin("com.typesafe.sbt" % "sbt-git" % "1.0.0")
+ThisBuild / libraryDependencySchemes += "org.scala-lang.modules" %% "scala-xml" % VersionScheme.Always

@@ -17,41 +17,47 @@ import cats._
 import cats.data.{NonEmptyList => NEL, _}
 import Validated._
 import org.scalatest._
+import org.scalatest.funspec.AnyFunSpec
+import org.scalatest.matchers.should.Matchers
 
 import scala.reflect._
 
-
-class VariableSpec extends FunSpec with Matchers {
+class VariableSpec extends AnyFunSpec with Matchers {
 
   implicit class TypeRefinement(self: Interpreted[Result]) {
     def as[T: ClassTag]: Interpreted[T] = self match {
-      case Valid(r) => r.as[T]
-      case i@Invalid(_) => i
+      case Valid(r)       => r.as[T]
+      case i @ Invalid(_) => i
     }
   }
 
   val interpreter = NaiveInterpreter.DEFAULT
 
   it("should produce an accurate variable map in a simple case") {
-    Vars.vars(BoolVar("predicate1")) should be (Map("predicate1" -> MamlKind.Bool))
+    Vars.vars(BoolVar("predicate1")) should be(Map("predicate1" -> MamlKind.Bool))
   }
 
   it("should produce an accurate variable map in a complex case") {
-    Vars.vars(Addition(List(IntVar("arg1"), IntVar("arg2")))) should be (Map("arg1" -> MamlKind.Int, "arg2" -> MamlKind.Int))
+    Vars.vars(Addition(List(IntVar("arg1"), IntVar("arg2")))) should be(Map("arg1" -> MamlKind.Int, "arg2" -> MamlKind.Int))
   }
 
   it("should produce an accurate variable map with buffer in a simple case") {
-    Vars.varsWithBuffer(FocalMax(List(RasterVar("someRaster")), Square(1))) should be (Map("someRaster" -> (MamlKind.Image, 1)))
+    Vars.varsWithBuffer(FocalMax(List(RasterVar("someRaster")), Square(1))) should be(Map("someRaster" -> (MamlKind.Image, 1)))
   }
 
   it("should produce an accurate variable map with buffer in an ambiguous case") {
-    val ast = Addition(List(
+    val ast = Addition(
+      List(
         FocalMax(List(
-          FocalMax(List(RasterVar("someRaster")), Square(1))
-        ), Square(1), TargetCell.All),
+                   FocalMax(List(RasterVar("someRaster")), Square(1))
+                 ),
+                 Square(1),
+                 TargetCell.All
+        ),
         RasterVar("someRaster")
-    ))
+      )
+    )
 
-    Vars.varsWithBuffer(ast) should be (Map("someRaster" -> (MamlKind.Image, 2)))
+    Vars.varsWithBuffer(ast) should be(Map("someRaster" -> (MamlKind.Image, 2)))
   }
 }

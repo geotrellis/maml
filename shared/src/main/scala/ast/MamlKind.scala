@@ -6,7 +6,6 @@ import cats.implicits._
 
 import scala.util.Try
 
-
 sealed trait MamlKind { def repr: String }
 object MamlKind {
   case object Bool extends MamlKind { def repr: String = "bool" }
@@ -19,11 +18,11 @@ object MamlKind {
 
   def fromString(str: String): Option[MamlKind] = Try {
     str match {
-      case "bool" => MamlKind.Bool
-      case "int" => MamlKind.Int
-      case "double" => MamlKind.Double
-      case "img" => MamlKind.Image
-      case "geom" => MamlKind.Geom
+      case "bool"    => MamlKind.Bool
+      case "int"     => MamlKind.Int
+      case "double"  => MamlKind.Double
+      case "img"     => MamlKind.Image
+      case "geom"    => MamlKind.Geom
       case "nothing" => MamlKind.Nothing
     }
   }.toOption
